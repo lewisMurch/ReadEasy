@@ -1,0 +1,16 @@
+.selection-mode * {
+  cursor: crosshair !important;
+}
+
+.word-overlay {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background-color: black;
+  color: white;
+  font-size: 3em;
+  padding: 20px;
+  border-radius: 50%;
+  z-index: 10000;
+}
