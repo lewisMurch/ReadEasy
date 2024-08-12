@@ -21,9 +21,8 @@ function startSelection(speed) {
       args: [parseFloat(speed)]
     });
   });
-
-  // Show the "Cancel Selection Mode" button
-  document.getElementById('cancelSelection').style.display = 'block';
+  
+  document.getElementById('cancelSelection').style.display = 'block'; // Show the "Cancel Selection Mode" button
 }
 
 // Update the speed in both the slider and the number input
@@ -34,9 +33,6 @@ function updateSpeed(event) {
 
   // Save the new speed value in Chrome storage
   chrome.storage.sync.set({ readingSpeed: parseFloat(speed) });
-
-  // Restart selection mode with the new speed
-  startSelection(speed);
 }
 
 // Cancel selection mode when the cancel button is clicked
@@ -59,31 +55,37 @@ function startSelectionMode(speed) {
 
   document.addEventListener('click', function handleParagraphClick(event) {
     if (document.body.classList.contains('selection-mode')) {
+      
+      // Re-check the speed from storage when a click is registered
+      chrome.storage.sync.get(['readingSpeed'], (result) => {
+        const currentSpeed = result.readingSpeed || speed;
 
-      // Check if any text is selected
-      const selectedText = window.getSelection().toString().trim();
-      console.log('Selected Text:', selectedText);
+        // Check if any text is selected
+        const selectedText = window.getSelection().toString().trim();
+        console.log('Selected Text:', selectedText);
 
-      if (selectedText) {
-        // If text is selected, read it
-        displayWords(selectedText, speed);
-        cancelSelectionMode();
-      } else {
-        // If no text is selected, proceed with paragraph click behavior
-        let target = event.target;
+        if (selectedText) {
+          // If text is selected, read it
+          displayWords(selectedText, currentSpeed);
+          cancelSelectionMode();
+        } else {
+          // If no text is selected, proceed with paragraph click behavior
+          let target = event.target;
 
-        // Check if the clicked element is a paragraph
-        if (target.tagName.toLowerCase() === 'p') {
-          const paragraphText = target.textContent.trim();
-          console.log('Paragraph Text:', paragraphText);
+          // Check if the clicked element is a paragraph
+          if (target.tagName.toLowerCase() === 'p') {
+            const paragraphText = target.textContent.trim();
+            console.log('Paragraph Text:', paragraphText);
 
-          if (paragraphText) {
-            event.preventDefault();
-            displayWords(paragraphText, speed);
-            cancelSelectionMode();
+            if (paragraphText) {
+              event.preventDefault();
+              displayWords(paragraphText, currentSpeed);
+              cancelSelectionMode();
+            }
           }
         }
-      }
+      });
+
     }
   }, { once: true });
 }
@@ -92,5 +94,4 @@ function startSelectionMode(speed) {
 function cancelSelectionMode() {
   console.log('Selection mode canceled');
   document.body.classList.remove('selection-mode');
-  document.removeEventListener('click', handleParagraphClick);
 }
