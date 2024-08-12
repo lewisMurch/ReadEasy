@@ -27,18 +27,31 @@ function startSelectionMode(speed) {
 
   document.addEventListener('click', function handleParagraphClick(event) {
     if (document.body.classList.contains('selection-mode')) {
-      let target = event.target;
 
-      // Check if the clicked element is a paragraph
-      if (target.tagName.toLowerCase() === 'p') {
-        const selectedText = target.textContent.trim();
-        console.log('Selected Text:', selectedText);
+      // Check if any text is selected
+      const selectedText = window.getSelection().toString().trim();
+      console.log('Selected Text:', selectedText);
 
-        if (selectedText) {
-          event.preventDefault();
-          displayWords(selectedText, speed);  // Ensure displayWords is defined
-          document.body.classList.remove('selection-mode');
-          document.removeEventListener('click', handleParagraphClick);
+      if (selectedText) {
+        // If text is selected, read it
+        displayWords(selectedText, speed);
+        document.body.classList.remove('selection-mode');
+        document.removeEventListener('click', handleParagraphClick);
+      } else {
+        // If no text is selected, proceed with paragraph click behavior
+        let target = event.target;
+
+        // Check if the clicked element is a paragraph
+        if (target.tagName.toLowerCase() === 'p') {
+          const paragraphText = target.textContent.trim();
+          console.log('Paragraph Text:', paragraphText);
+
+          if (paragraphText) {
+            event.preventDefault();
+            displayWords(paragraphText, speed);
+            document.body.classList.remove('selection-mode');
+            document.removeEventListener('click', handleParagraphClick);
+          }
         }
       }
     }
