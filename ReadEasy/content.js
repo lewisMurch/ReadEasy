@@ -10,11 +10,10 @@ function displayWords(text, speed) {
     if (currentIndex < words.length) {
       overlay.textContent = words[currentIndex];
       currentIndex++;
-      setTimeout(showWord, 1000 / speed);
+      setTimeout(showWord, 1000 / (speed * 2));
     } else {
       overlay.remove();
     }
   }
-
   showWord();
 }

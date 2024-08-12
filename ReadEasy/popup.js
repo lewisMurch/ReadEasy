@@ -62,7 +62,7 @@ function startSelectionMode(speed) {
 
         // Check if any text is selected
         const selectedText = window.getSelection().toString().trim();
-        console.log('Selected Text:', selectedText);
+        console.log('Highlighted Text:', selectedText);
 
         if (selectedText) {
           // If text is selected, read it
@@ -73,16 +73,14 @@ function startSelectionMode(speed) {
           let target = event.target;
 
           // Check if the clicked element is a paragraph
-          if (target.tagName.toLowerCase() === 'p') {
             const paragraphText = target.textContent.trim();
-            console.log('Paragraph Text:', paragraphText);
+            console.log('Clicked-Text:', paragraphText);
 
             if (paragraphText) {
               event.preventDefault();
               displayWords(paragraphText, currentSpeed);
               cancelSelectionMode();
             }
-          }
         }
       });
 
