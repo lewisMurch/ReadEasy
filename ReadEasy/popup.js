@@ -4,9 +4,20 @@ document.addEventListener('DOMContentLoaded', () => {
     const savedSpeed = result.readingSpeed || 2;
     document.getElementById('speedRange').value = savedSpeed;
     document.getElementById('speedNumber').value = savedSpeed;
+
+    // Start selection mode with the saved speed
     startSelection(savedSpeed);
+
+    // Automatically process any highlighted text
+    chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
+      chrome.scripting.executeScript({
+        target: { tabId: tabs[0].id },
+        func: processHighlightedText,
+        args: [parseFloat(savedSpeed)]
+      });
+    });
   });
-  
+
   // Add event listeners for the slider and number input
   document.getElementById('speedRange').addEventListener('input', updateSpeed);
   document.getElementById('speedNumber').addEventListener('input', updateSpeed);
@@ -21,8 +32,17 @@ function startSelection(speed) {
       args: [parseFloat(speed)]
     });
   });
-  
+
   document.getElementById('cancelSelection').style.display = 'block'; // Show the "Cancel Selection Mode" button
+}
+
+// Function to automatically process any highlighted text
+function processHighlightedText(speed) {
+  const selectedText = window.getSelection().toString().trim();
+  if (selectedText) {
+    displayWords(selectedText, speed);
+    cancelSelectionMode();
+  }
 }
 
 // Update the speed in both the slider and the number input
@@ -55,7 +75,7 @@ function startSelectionMode(speed) {
 
   document.addEventListener('click', function handleParagraphClick(event) {
     if (document.body.classList.contains('selection-mode')) {
-      
+
       // Re-check the speed from storage when a click is registered
       chrome.storage.sync.get(['readingSpeed'], (result) => {
         const currentSpeed = result.readingSpeed || speed;
@@ -68,19 +88,20 @@ function startSelectionMode(speed) {
           // If text is selected, read it
           displayWords(selectedText, currentSpeed);
           cancelSelectionMode();
+
         } else {
           // If no text is selected, proceed with paragraph click behavior
           let target = event.target;
 
           // Check if the clicked element is a paragraph
-            const paragraphText = target.textContent.trim();
-            console.log('Clicked-Text:', paragraphText);
+          const paragraphText = target.textContent.trim();
+          console.log('Clicked-Text:', paragraphText);
 
-            if (paragraphText) {
-              event.preventDefault();
-              displayWords(paragraphText, currentSpeed);
-              cancelSelectionMode();
-            }
+          if (paragraphText) {
+            event.preventDefault();
+            displayWords(paragraphText, currentSpeed);
+            cancelSelectionMode();
+          }
         }
       });
 
