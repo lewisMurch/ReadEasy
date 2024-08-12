@@ -1,4 +1,4 @@
- - Fix selection mode so as soon as the plugin is opened, any selected text is instantly read out.
+ - F̶i̶x̶ s̶e̶l̶e̶c̶t̶i̶o̶n̶ m̶o̶d̶e̶ s̶o̶ a̶s̶ s̶o̶o̶n̶ a̶s̶ t̶h̶e̶ p̶l̶u̶g̶i̶n̶ i̶s̶ o̶p̶e̶n̶e̶d̶, a̶n̶y̶ s̶e̶l̶e̶c̶t̶e̶d̶ t̶e̶x̶t̶ i̶s̶ i̶n̶s̶t̶a̶n̶t̶l̶y̶ r̶e̶a̶d̶ o̶u̶t̶
  - Make it so the cursor goes back to normal (exciting selection mode) as soon as text starts to be 'read' out
  - Make it so when cancel button is pressed, it doesn't disapear and instead becomes a 'Start Selection Mode' button again
  - Make a settings menu that has:
