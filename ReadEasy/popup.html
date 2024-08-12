@@ -28,13 +28,14 @@
 </head>
 <body>
   <h3>Dyslexia Reader</h3>
-  <button id="startSelection">Start Selection Mode</button>
   
   <div class="speed-control">
     <label for="speedRange">Speed:</label>
     <input type="range" id="speedRange" min="1" max="10" value="2">
     <input type="number" id="speedNumber" min="1" max="10" value="2">
   </div>
+
+  <button id="cancelSelection" style="display: none;">Cancel Selection Mode</button>
 
   <script src="popup.js"></script>
 </body>

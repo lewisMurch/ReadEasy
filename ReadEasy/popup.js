@@ -1,4 +1,9 @@
-document.getElementById('startSelection').addEventListener('click', () => {
+// Start selection mode automatically when the popup opens
+document.addEventListener('DOMContentLoaded', () => {
+  startSelection();
+});
+
+function startSelection() {
   const speed = document.getElementById('speedNumber').value;
   chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
     chrome.scripting.executeScript({
@@ -7,20 +12,25 @@ document.getElementById('startSelection').addEventListener('click', () => {
       args: [parseFloat(speed)]
     });
   });
+
+  // Show the "Cancel Selection Mode" button
+  document.getElementById('cancelSelection').style.display = 'block';
+}
+
+// Cancel selection mode when the cancel button is clicked
+document.getElementById('cancelSelection').addEventListener('click', () => {
+  chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
+    chrome.scripting.executeScript({
+      target: { tabId: tabs[0].id },
+      func: cancelSelectionMode
+    });
+  });
+
+  // Hide the "Cancel Selection Mode" button
+  document.getElementById('cancelSelection').style.display = 'none';
 });
 
-// Synchronize slider and number input
-const speedRange = document.getElementById('speedRange');
-const speedNumber = document.getElementById('speedNumber');
-
-speedRange.addEventListener('input', () => {
-  speedNumber.value = speedRange.value;
-});
-
-speedNumber.addEventListener('input', () => {
-  speedRange.value = speedNumber.value;
-});
-
+// Function to start selection mode
 function startSelectionMode(speed) {
   console.log('Selection mode started with speed:', speed);
   document.body.classList.add('selection-mode');
@@ -35,8 +45,7 @@ function startSelectionMode(speed) {
       if (selectedText) {
         // If text is selected, read it
         displayWords(selectedText, speed);
-        document.body.classList.remove('selection-mode');
-        document.removeEventListener('click', handleParagraphClick);
+        cancelSelectionMode();
       } else {
         // If no text is selected, proceed with paragraph click behavior
         let target = event.target;
@@ -49,11 +58,17 @@ function startSelectionMode(speed) {
           if (paragraphText) {
             event.preventDefault();
             displayWords(paragraphText, speed);
-            document.body.classList.remove('selection-mode');
-            document.removeEventListener('click', handleParagraphClick);
+            cancelSelectionMode();
           }
         }
       }
     }
   }, { once: true });
+}
+
+// Function to cancel selection mode
+function cancelSelectionMode() {
+  console.log('Selection mode canceled');
+  document.body.classList.remove('selection-mode');
+  document.removeEventListener('click', handleParagraphClick);
 }
