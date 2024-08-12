@@ -1,3 +1,5 @@
+let isPopupClosed = false; // Flag to track if the popup has been closed
+
 // Load the saved speed value from Chrome storage when the popup is opened
 document.addEventListener('DOMContentLoaded', () => {
   chrome.storage.sync.get(['readingSpeed'], (result) => {
@@ -14,6 +16,9 @@ document.addEventListener('DOMContentLoaded', () => {
         target: { tabId: tabs[0].id },
         func: processHighlightedText,
         args: [parseFloat(savedSpeed)]
+      }, () => {
+        isPopupClosed = true; // Set flag to true when popup is closed
+        window.close();  // Close the popup immediately after processing highlighted text
       });
     });
   });
@@ -41,7 +46,9 @@ function processHighlightedText(speed) {
   const selectedText = window.getSelection().toString().trim();
   if (selectedText) {
     displayWords(selectedText, speed);
-    cancelSelectionMode();
+    cancelSelectionMode(); // End selection mode immediately
+    isPopupClosed = true; // Set flag to true when popup is closed
+    window.close();  // Close the popup
   }
 }
 
@@ -73,7 +80,12 @@ function startSelectionMode(speed) {
   console.log('Selection mode started with speed:', speed);
   document.body.classList.add('selection-mode');
 
-  document.addEventListener('click', function handleParagraphClick(event) {
+  const handleClick = function(event) {
+    if (isPopupClosed) {
+      // If the popup has been closed, do nothing
+      return;
+    }
+
     if (document.body.classList.contains('selection-mode')) {
 
       // Re-check the speed from storage when a click is registered
@@ -87,7 +99,9 @@ function startSelectionMode(speed) {
         if (selectedText) {
           // If text is selected, read it
           displayWords(selectedText, currentSpeed);
-          cancelSelectionMode();
+          cancelSelectionMode(); // End selection mode immediately
+          document.removeEventListener('click', handleClick); // Remove click event listener
+          window.close();  // Close the popup
 
         } else {
           // If no text is selected, proceed with paragraph click behavior
@@ -100,13 +114,17 @@ function startSelectionMode(speed) {
           if (paragraphText) {
             event.preventDefault();
             displayWords(paragraphText, currentSpeed);
-            cancelSelectionMode();
+            cancelSelectionMode(); // End selection mode immediately
+            document.removeEventListener('click', handleClick); // Remove click event listener
+            window.close();  // Close the popup
           }
         }
       });
 
     }
-  }, { once: true });
+  };
+
+  document.addEventListener('click', handleClick, { once: true });
 }
 
 // Function to cancel selection mode
