@@ -11,14 +11,31 @@
       width: 100%;
       padding: 10px;
       font-size: 16px;
+      margin-top: 10px;
+    }
+    input[type="range"] {
+      width: 100%;
+    }
+    input[type="number"] {
+      width: 50px;
+    }
+    .speed-control {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
     }
   </style>
 </head>
 <body>
   <h3>Dyslexia Reader</h3>
   <button id="startSelection">Start Selection Mode</button>
-  <label for="speed">Speed (words/second):</label>
-  <input type="number" id="speed" min="1" value="2">
+  
+  <div class="speed-control">
+    <label for="speedRange">Speed:</label>
+    <input type="range" id="speedRange" min="1" max="10" value="2">
+    <input type="number" id="speedNumber" min="1" max="10" value="2">
+  </div>
+
+  <script src="popup.js"></script>
 </body>
-<script src="popup.js"></script>
 </html>

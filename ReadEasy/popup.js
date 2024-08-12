@@ -1,5 +1,5 @@
 document.getElementById('startSelection').addEventListener('click', () => {
-  const speed = document.getElementById('speed').value;
+  const speed = document.getElementById('speedNumber').value;
   chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
     chrome.scripting.executeScript({
       target: { tabId: tabs[0].id },
@@ -9,19 +9,38 @@ document.getElementById('startSelection').addEventListener('click', () => {
   });
 });
 
+// Synchronize slider and number input
+const speedRange = document.getElementById('speedRange');
+const speedNumber = document.getElementById('speedNumber');
+
+speedRange.addEventListener('input', () => {
+  speedNumber.value = speedRange.value;
+});
+
+speedNumber.addEventListener('input', () => {
+  speedRange.value = speedNumber.value;
+});
+
 function startSelectionMode(speed) {
-  console.log('Selection mode started with speed:', speed);  // Debugging line
+  console.log('Selection mode started with speed:', speed);
   document.body.classList.add('selection-mode');
 
-  document.addEventListener('mouseup', function handleTextSelection(event) {
-    const selectedText = window.getSelection().toString().trim();
-    console.log('Selected Text:', selectedText);  // Debugging line
+  document.addEventListener('click', function handleParagraphClick(event) {
+    if (document.body.classList.contains('selection-mode')) {
+      let target = event.target;
 
-    if (selectedText && document.body.classList.contains('selection-mode')) {
-      event.preventDefault();
-      displayWords(selectedText, speed);
-      document.body.classList.remove('selection-mode');
-      document.removeEventListener('mouseup', handleTextSelection);
+      // Check if the clicked element is a paragraph
+      if (target.tagName.toLowerCase() === 'p') {
+        const selectedText = target.textContent.trim();
+        console.log('Selected Text:', selectedText);
+
+        if (selectedText) {
+          event.preventDefault();
+          displayWords(selectedText, speed);  // Ensure displayWords is defined
+          document.body.classList.remove('selection-mode');
+          document.removeEventListener('click', handleParagraphClick);
+        }
+      }
     }
-  });
+  }, { once: true });
 }
