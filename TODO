@@ -1,0 +1,8 @@
+ - Fix selection mode so as soon as the plugin is opened, any selected text is instantly read out.
+ - Make it so the cursor goes back to normal (exciting selection mode) as soon as text starts to be 'read' out
+ - Make a settings menu that has:
+    - Changing text colour
+    - Changing background colour
+    - Changing text size
+ - Add a cancel button while it is still reading out
+ - Add TTS mode
