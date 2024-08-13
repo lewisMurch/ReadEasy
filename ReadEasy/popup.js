@@ -17,25 +17,18 @@ document.addEventListener('DOMContentLoaded', () => {
                     return selectedText;
                 }
             }, (results) => {
-                if (chrome.runtime.lastError) {
-                    console.error('Script execution failed: ', chrome.runtime.lastError);
-                    return;
+                const highlightedText = results[0].result;
+
+                if (highlightedText) {
+                        console.log('Popup opened, highlighted text found: ', highlightedText);
+                        injectProcessHighlightedText(highlightedText, savedSpeed)
                 }
 
-                if (results && results[0] && results[0].result) {
-                    const highlightedText = results[0].result;
-                    console.log('Popup opened, highlighted text found: ', highlightedText);
-
-                    if (highlightedText) {
-                        processHighlightedText(highlightedText, savedSpeed);
-                    } else {
-                        console.log("No highlighted text found, starting selection mode");
-                        startSelection(savedSpeed);
-                    }
-                } else {
+                else {
                     console.error('No highlighted text found.');
-                    startSelection(savedSpeed);
+                    injectSelectionMode(savedSpeed);
                 }
+
             });
         });
     });
@@ -51,16 +44,29 @@ document.addEventListener('DOMContentLoaded', () => {
 });
 
 // Function to automatically process any highlighted text
-function processHighlightedText(selectedText, speed) {
-    console.log("Processing highlighted text:", selectedText, "at speed:", speed); // Debug output
-    if (selectedText) {
-        displayWords(selectedText, speed);
-        closePopup(); // Close the popup after processing highlighted text
-    }
+function injectProcessHighlightedText(text, speed) {
+  console.log("Injecting processHighlightedText with text:", text, "and speed:", speed); // Debug output
+  
+  chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
+      chrome.scripting.executeScript({
+          target: { tabId: tabs[0].id },
+          func: processHighlightedText,
+          args: [text, parseFloat(speed)]
+      });
+  });
+}
+
+// The function to be injected into the webpage
+function processHighlightedText(text, speed) {
+  console.log("Processing passed-in text:", text, "at speed:", speed); // Debug output
+  if (text) {
+      displayWords(text, speed);
+      closePopup(); // Close the popup after processing the text
+  }
 }
 
 // Function to start selection mode with the given speed
-function startSelection(speed) {
+function injectSelectionMode(speed) {
     console.log("Starting selection mode with speed:", speed); // Debug output
     chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
         chrome.scripting.executeScript({
@@ -69,7 +75,6 @@ function startSelection(speed) {
             args: [parseFloat(speed)]
         });
     });
-
     document.getElementById('cancelSelection').style.display = 'block'; // Show the "Cancel Selection Mode" button
 }
 
@@ -115,7 +120,7 @@ function updateSpeed(event) {
     chrome.storage.sync.set({ readingSpeed: parseFloat(speed) });
 
     // Optionally restart selection mode with the new speed
-    startSelection(speed);
+    injectSelectionMode(speed);
 }
 
 // Cancel selection mode when the cancel button is clicked
