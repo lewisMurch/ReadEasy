@@ -186,3 +186,12 @@ document.addEventListener('DOMContentLoaded', () => {
           window.close();
       }
     }
+
+
+// Preferences
+    function setFixedSizeBackgroundPreference(value) {
+      chrome.storage.sync.set({ fixedSizeBackground: value }, function() {
+        console.log('Preference saved:', value);
+      });
+    }
+setFixedSizeBackgroundPreference(true);
