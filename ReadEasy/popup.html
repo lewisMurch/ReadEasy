@@ -37,7 +37,8 @@
       color: #303030;
       display: flex;
       align-items: center;
-      margin-right: 0;
+      margin-right: 3;
+      font-weight: bold;
     }
 
     input[type="range"] {
@@ -79,36 +80,43 @@
     }
 
     /* Custom checkbox styling */
+    .settings {
+      display: flex;
+      align-items: center;
+      justify-content: center; /* Center items horizontally */
+      background-color: #f9f9f9;
+      padding: 0.0001px;
+      border-radius: 8px;
+      box-shadow: 0 4px 6px rgba(0,0,0,0);
+    }
+
     .settings input[type="checkbox"] {
       display: none;
     }
 
     .settings label {
-      position: relative;
+      display: flex; /* Use flexbox to center content inside label */
+      align-items: center; /* Center vertically inside label */
+      justify-content: center; /* Center horizontally inside label */
+      padding: 10px; /* Adjust padding as needed */
+      border-radius: 8px;
+      background-color: #ddd; /* Default background color (unchecked) */
+      transition: background-color 0.2s;
       cursor: pointer;
-      padding-left: 50px; /* Adjust as needed */
+      width: 300px; /* Remove fixed width */
+      text-align: center; /* Ensure text is centered */
+      color: #f9f9f9;
+      font-weight: bold;
     }
 
-    .settings label::before {
-      content: '';
-      position: absolute;
-      left: 0;
-      top: 50%;
-      transform: translateY(-50%);
-      width: 30px;
-      height: 30px;
-      border-radius: 5px;
-      background-color: #ddd;
-      transition: background-color 0.3s;
+    .settings input[type="checkbox"]:checked + label {
+      background-color: #4CAF50; /* Green background (checked) */
     }
 
-    .settings input[type="checkbox"]:checked + label::before {
-      background-color: #4CAF50; /* Green for checked */
+    .settings input[type="checkbox"]:not(:checked) + label {
+      background-color: #F44336; /* Red background (unchecked) */
     }
 
-    .settings input[type="checkbox"]:not(:checked) + label::before {
-      background-color: #F44336; /* Red for unchecked */
-    }
   </style>
 </head>
 <body>
@@ -122,7 +130,7 @@
 
   <div class="settings">
     <input type="checkbox" id="fixedSizeBackgroundToggle">
-    <label for="fixedSizeBackgroundToggle">Fixed Size Background</label>
+    <label for="fixedSizeBackgroundToggle">Constant background size</label>
   </div>
 
   <button id="cancelSelection" style="display: none;">Cancel Selection Mode</button>
