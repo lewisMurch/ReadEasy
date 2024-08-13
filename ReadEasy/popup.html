@@ -33,9 +33,11 @@
     }
 
     label {
-      font-size: 1.1em;
-      color: #666;
-      margin-right: 10px;
+      font-size: 1.3em;
+      color: #303030;
+      display: flex;
+      align-items: center;
+      margin-right: 0;
     }
 
     input[type="range"] {
@@ -45,10 +47,10 @@
     }
 
     input[type="number"] {
-      width: 60px;
+      width: 50px;
       padding: 6px;
-      text-align: center;
-      font-size: 1.1em;
+      text-align: left;
+      font-size: 1.4em;
       border: 1px solid #ddd;
       border-radius: 4px;
     }
@@ -75,6 +77,38 @@
       background-color: #b0bec5;
       cursor: not-allowed;
     }
+
+    /* Custom checkbox styling */
+    .settings input[type="checkbox"] {
+      display: none;
+    }
+
+    .settings label {
+      position: relative;
+      cursor: pointer;
+      padding-left: 50px; /* Adjust as needed */
+    }
+
+    .settings label::before {
+      content: '';
+      position: absolute;
+      left: 0;
+      top: 50%;
+      transform: translateY(-50%);
+      width: 30px;
+      height: 30px;
+      border-radius: 5px;
+      background-color: #ddd;
+      transition: background-color 0.3s;
+    }
+
+    .settings input[type="checkbox"]:checked + label::before {
+      background-color: #4CAF50; /* Green for checked */
+    }
+
+    .settings input[type="checkbox"]:not(:checked) + label::before {
+      background-color: #F44336; /* Red for unchecked */
+    }
   </style>
 </head>
 <body>
@@ -87,9 +121,8 @@
   </div>
 
   <div class="settings">
-    <label for="fixedSizeBackgroundToggle">
-      <input type="checkbox" id="fixedSizeBackgroundToggle"> Fixed Size Background
-    </label>
+    <input type="checkbox" id="fixedSizeBackgroundToggle">
+    <label for="fixedSizeBackgroundToggle">Fixed Size Background</label>
   </div>
 
   <button id="cancelSelection" style="display: none;">Cancel Selection Mode</button>
