@@ -128,6 +128,13 @@ document.getElementById('cancelSelection').addEventListener('click', () => {
     cancelSelection();
 });
 
+// Start selection mode when the cancel button is clicked
+document.getElementById('startSelection').addEventListener('click', () => {
+  startSelectionAgain();
+});
+
+
+
 // Function to cancel selection mode
 function cancelSelection() {
     console.log("Cancelling selection mode"); // Debug output
@@ -140,15 +147,31 @@ function cancelSelection() {
 
     // Hide the "Cancel Selection Mode" button
     document.getElementById('cancelSelection').style.display = 'none';
+    document.getElementById('startSelection').style.display = 'block';
+
 }
 
-// Function to close the popup
-function closePopup() {
-    console.log("Closing popup"); // Debug output
-    if (!isPopupClosed) {
-        isPopupClosed = true;
-        window.close();
-    }
+// Function to start selection mode again
+function startSelectionAgain() {
+  console.log("Starting selection mode"); // Debug output
+  chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
+      chrome.scripting.executeScript({
+          target: { tabId: tabs[0].id },
+          func: startSelectionAgainMode
+      });
+  });
+
+  // Hide the "Start Selection Mode" button
+  document.getElementById('startSelection').style.display = 'none';
+  document.getElementById('cancelSelection').style.display = 'block';
+
+}
+
+
+function startSelectionAgainMode() {
+  console.log('Selection mode started');
+  document.body.classList.add('selection-mode');
+  document.body.style.cursor = ''; // Reset the cursor to the default state
 }
 
 // Function to cancel selection mode
@@ -162,4 +185,13 @@ function cancelSelectionMode() {
 function exitSelectionMode() {
     cancelSelectionMode(); // Cancel selection mode
     closePopup(); // Close the popup window
+}
+
+// Function to close the popup
+function closePopup() {
+  console.log("Closing popup"); // Debug output
+  if (!isPopupClosed) {
+      isPopupClosed = true;
+      window.close();
+  }
 }
