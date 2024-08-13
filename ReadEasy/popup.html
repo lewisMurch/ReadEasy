@@ -6,68 +6,73 @@
   <title>Dyslexia Reader</title>
   <style>
     body {
-      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      font-family: 'Helvetica Neue', Arial, sans-serif;
       margin: 0;
       padding: 20px;
-      max-width: 400px;
-      background-color: #f4f4f4;
+      max-width: 500px;
+      background-color: #f9f9f9;
+      color: #333;
     }
 
     h3 {
       margin-top: 0;
-      color: #333;
-      font-size: 1.5em;
+      color: #222;
+      font-size: 1.75em;
+      font-weight: 600;
     }
 
     .speed-control, .settings {
       display: flex;
       align-items: center;
       justify-content: space-between;
-      margin-bottom: 15px;
-      background-color: #fff;
-      padding: 10px;
+      margin-bottom: 20px;
+      background-color: #ffffff;
+      padding: 15px;
       border-radius: 8px;
-      box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+      box-shadow: 0 4px 6px rgba(0,0,0,0.1);
     }
 
     label {
-      font-size: 1em;
-      color: #555;
+      font-size: 1.1em;
+      color: #666;
+      margin-right: 10px;
     }
 
     input[type="range"] {
       flex: 1;
       margin: 0 10px;
+      cursor: pointer;
     }
 
     input[type="number"] {
       width: 60px;
-      padding: 5px;
+      padding: 6px;
       text-align: center;
-      font-size: 1em;
-      border: 1px solid #ccc;
+      font-size: 1.1em;
+      border: 1px solid #ddd;
       border-radius: 4px;
     }
 
     button {
       width: 100%;
-      padding: 12px;
-      font-size: 1em;
+      padding: 14px;
+      font-size: 1.1em;
       color: #fff;
-      background-color: #007BFF;
+      background-color: #0056b3;
       border: none;
-      border-radius: 4px;
+      border-radius: 6px;
       cursor: pointer;
-      margin-top: 10px;
-      transition: background-color 0.3s;
+      margin-top: 15px;
+      transition: background-color 0.3s, box-shadow 0.3s;
     }
 
     button:hover {
-      background-color: #0056b3;
+      background-color: #004494;
+      box-shadow: 0 4px 8px rgba(0,0,0,0.2);
     }
 
     button:disabled {
-      background-color: #ccc;
+      background-color: #b0bec5;
       cursor: not-allowed;
     }
   </style>
