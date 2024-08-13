@@ -1,17 +1,14 @@
 let isPopupClosed = false; // Flag to track if the popup has been closed
 
-// Load the saved speed value and fixedSizeBackground preference from Chrome storage when the popup is opened
 document.addEventListener('DOMContentLoaded', () => {
-  console.log("Popup loaded");
-
-  // Retrieve both the reading speed and fixed size background preference from storage
   chrome.storage.sync.get(['readingSpeed', 'fixedSizeBackground'], (result) => {
       const savedSpeed = result.readingSpeed || 2;
-      const fixedSizeBackground = result.fixedSizeBackground || false;
+      const fixedSizeBackground = result.fixedSizeBackground !== undefined ? result.fixedSizeBackground : false;
 
       document.getElementById('speedRange').value = savedSpeed;
       document.getElementById('speedNumber').value = savedSpeed;
       document.getElementById('fixedSizeBackgroundToggle').checked = fixedSizeBackground;
+
 
       chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
           chrome.scripting.executeScript({
@@ -36,23 +33,16 @@ document.addEventListener('DOMContentLoaded', () => {
       });
   });
 
-  // Add event listeners for the speed slider and number input
-  document.getElementById('speedRange').addEventListener('input', updateSpeed);
-  document.getElementById('speedNumber').addEventListener('input', updateSpeed);
-
-  // Add event listener to update the fixedSizeBackground preference
-  document.getElementById('fixedSizeBackgroundToggle').addEventListener('change', () => {
-      const isChecked = document.getElementById('fixedSizeBackgroundToggle').checked;
-      chrome.storage.sync.set({ fixedSizeBackground: isChecked }, () => {
-          console.log('Fixed Size Background preference saved:', isChecked);
-      });
-  });
-
-  // Add event listener to close the popup manually
-  document.getElementById('closePopup').addEventListener('click', () => {
-      closePopup();
+    // Add event listeners
+    document.getElementById('speedRange').addEventListener('input', updateSpeed);
+    document.getElementById('speedNumber').addEventListener('input', updateSpeed);
+    document.getElementById('fixedSizeBackgroundToggle').addEventListener('change', updateBackgroundSize);
+    document.getElementById('closePopup').addEventListener('click', () => {
+        closePopup();
   });
 });
+
+
 // Functions to automatically process any highlighted text
     function injectProcessHighlightedText(text, speed) {
       console.log("Injecting processHighlightedText with text:", text, "and speed:", speed); // Debug output
@@ -121,13 +111,17 @@ document.addEventListener('DOMContentLoaded', () => {
         document.getElementById('speedRange').value = speed;
         document.getElementById('speedNumber').value = speed;
 
-        console.log("Speed updated to:", speed); // Debug output
-
         // Save the new speed value in Chrome storage
         chrome.storage.sync.set({ readingSpeed: parseFloat(speed) });
 
-        // Optionally restart selection mode with the new speed
+        // restart selection mode with the new speed
         injectSelectionMode(speed);
+    }
+
+// Upadte the background checkbox
+    function updateBackgroundSize(event) {
+      const isChecked = event.target.checked; // Get the current state of the checkbox
+      chrome.storage.sync.set({ fixedSizeBackground: isChecked }); // Save the current state to storage
     }
 
 //BUTTON STUFF
@@ -141,7 +135,6 @@ document.addEventListener('DOMContentLoaded', () => {
       startSelectionAgain();
     });
 //BUTTON STUFF
-
 
 // Functions to cancel selection mode
     function cancelSelection() {
@@ -164,7 +157,6 @@ document.addEventListener('DOMContentLoaded', () => {
       document.body.classList.remove('selection-mode');
       document.body.style.cursor = ''; // Reset the cursor to the default state
     }
-
 
 // Functions to start selection mode again
     function startSelectionAgain() {
@@ -196,12 +188,3 @@ document.addEventListener('DOMContentLoaded', () => {
           window.close();
       }
     }
-
-
-// Preferences
-    function setFixedSizeBackgroundPreference(value) {
-      chrome.storage.sync.set({ fixedSizeBackground: value }, function() {
-        console.log('Preference saved:', value);
-      });
-    }
-setFixedSizeBackgroundPreference(true);
