@@ -43,155 +43,147 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 });
 
-// Function to automatically process any highlighted text
-function injectProcessHighlightedText(text, speed) {
-  console.log("Injecting processHighlightedText with text:", text, "and speed:", speed); // Debug output
-  
-  chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
-      chrome.scripting.executeScript({
-          target: { tabId: tabs[0].id },
-          func: processHighlightedText,
-          args: [text, parseFloat(speed)]
+// Functions to automatically process any highlighted text
+    function injectProcessHighlightedText(text, speed) {
+      console.log("Injecting processHighlightedText with text:", text, "and speed:", speed); // Debug output
+      
+      chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
+          chrome.scripting.executeScript({
+              target: { tabId: tabs[0].id },
+              func: processHighlightedText,
+              args: [text, parseFloat(speed)]
+          });
       });
-  });
-}
-
-// The function to be injected into the webpage
-function processHighlightedText(text, speed) {
-  console.log("Processing passed-in text:", text, "at speed:", speed); // Debug output
-  if (text) {
-      displayWords(text, speed);
       closePopup(); // Close the popup after processing the text
-  }
-}
+    }
 
-// Function to start selection mode with the given speed
-function injectSelectionMode(speed) {
-    console.log("Starting selection mode with speed:", speed); // Debug output
-    chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
-        chrome.scripting.executeScript({
-            target: { tabId: tabs[0].id },
-            func: startSelectionMode,
-            args: [parseFloat(speed)]
-        });
-    });
-    document.getElementById('cancelSelection').style.display = 'block'; // Show the "Cancel Selection Mode" button
-}
+    function processHighlightedText(text, speed) {
+      console.log("Processing passed-in text:", text, "at speed:", speed); // Debug output
+      if (text) {
+          displayWords(text, speed);
 
-// Function to start selection mode
-function startSelectionMode(speed) {
-    console.log('Selection mode started with speed:', speed);
-    document.body.classList.add('selection-mode');
+      }
+    }
 
-    const handleClick = function(event) {
-        if (document.body.classList.contains('selection-mode')) {
-            // Re-check the speed from storage when a click is registered
-            chrome.storage.sync.get(['readingSpeed'], (result) => {
-                const currentSpeed = result.readingSpeed || speed;
-
-                // Proceed with paragraph click behavior
-                let target = event.target;
-
-                // Check if the clicked element is a paragraph
-                const paragraphText = target.textContent.trim();
-                console.log('Clicked-Text:', paragraphText);
-
-                if (paragraphText) {
-                    event.preventDefault();
-                    displayWords(paragraphText, currentSpeed);
-                    exitSelectionMode(); // End selection mode
-                }
+// Functions to start selection mode with the given speed
+    function injectSelectionMode(speed) {
+        console.log("Starting selection mode with speed:", speed); // Debug output
+        chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
+            chrome.scripting.executeScript({
+                target: { tabId: tabs[0].id },
+                func: startSelectionMode,
+                args: [parseFloat(speed)]
             });
-        }
-    };
+        });
+        document.getElementById('cancelSelection').style.display = 'block'; // Show the "Cancel Selection Mode" button
+    }
 
-    document.addEventListener('click', handleClick, { once: true });
-}
+    function startSelectionMode(speed) {
+        console.log('Selection mode started with speed:', speed);
+        document.body.classList.add('selection-mode');
+
+        const handleClick = function(event) {
+            if (document.body.classList.contains('selection-mode')) {
+                // Re-check the speed from storage when a click is registered
+                chrome.storage.sync.get(['readingSpeed'], (result) => {
+                    const currentSpeed = result.readingSpeed || speed;
+
+                    // Proceed with paragraph click behavior
+                    let target = event.target;
+
+                    // Check if the clicked element is a paragraph
+                    const paragraphText = target.textContent.trim();
+                    console.log('Clicked-Text:', paragraphText);
+
+                    if (paragraphText) {
+                        event.preventDefault();
+                        displayWords(paragraphText, currentSpeed);
+                        exitSelectionMode(); // End selection mode
+                    }
+                });
+            }
+        };
+        document.addEventListener('click', handleClick, { once: true });
+    }
 
 // Update the speed in both the slider and the number input
-function updateSpeed(event) {
-    const speed = event.target.value;
-    document.getElementById('speedRange').value = speed;
-    document.getElementById('speedNumber').value = speed;
+    function updateSpeed(event) {
+        const speed = event.target.value;
+        document.getElementById('speedRange').value = speed;
+        document.getElementById('speedNumber').value = speed;
 
-    console.log("Speed updated to:", speed); // Debug output
+        console.log("Speed updated to:", speed); // Debug output
 
-    // Save the new speed value in Chrome storage
-    chrome.storage.sync.set({ readingSpeed: parseFloat(speed) });
+        // Save the new speed value in Chrome storage
+        chrome.storage.sync.set({ readingSpeed: parseFloat(speed) });
 
-    // Optionally restart selection mode with the new speed
-    injectSelectionMode(speed);
-}
+        // Optionally restart selection mode with the new speed
+        injectSelectionMode(speed);
+    }
 
-// Cancel selection mode when the cancel button is clicked
-document.getElementById('cancelSelection').addEventListener('click', () => {
-    cancelSelection();
-});
-
-// Start selection mode when the cancel button is clicked
-document.getElementById('startSelection').addEventListener('click', () => {
-  startSelectionAgain();
-});
-
-
-
-// Function to cancel selection mode
-function cancelSelection() {
-    console.log("Cancelling selection mode"); // Debug output
-    chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
-        chrome.scripting.executeScript({
-            target: { tabId: tabs[0].id },
-            func: cancelSelectionMode
-        });
+//BUTTON STUFF
+    // Cancel selection mode when the cancel button is clicked
+    document.getElementById('cancelSelection').addEventListener('click', () => {
+        cancelSelection();
     });
 
-    // Hide the "Cancel Selection Mode" button
-    document.getElementById('cancelSelection').style.display = 'none';
-    document.getElementById('startSelection').style.display = 'block';
+    // Start selection mode when the cancel button is clicked
+    document.getElementById('startSelection').addEventListener('click', () => {
+      startSelectionAgain();
+    });
+//BUTTON STUFF
 
-}
 
-// Function to start selection mode again
-function startSelectionAgain() {
-  console.log("Starting selection mode"); // Debug output
-  chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
-      chrome.scripting.executeScript({
-          target: { tabId: tabs[0].id },
-          func: startSelectionAgainMode
+// Functions to cancel selection mode
+    function cancelSelection() {
+        console.log("Cancelling selection mode"); // Debug output
+        chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
+            chrome.scripting.executeScript({
+                target: { tabId: tabs[0].id },
+                func: cancelSelectionMode
+            });
+        });
+
+        // Hide the "Cancel Selection Mode" button
+        document.getElementById('cancelSelection').style.display = 'none';
+        document.getElementById('startSelection').style.display = 'block';
+
+    }
+
+    function cancelSelectionMode() {
+      console.log('Selection mode canceled');
+      document.body.classList.remove('selection-mode');
+      document.body.style.cursor = ''; // Reset the cursor to the default state
+    }
+
+
+// Functions to start selection mode again
+    function startSelectionAgain() {
+      console.log("Starting selection mode"); // Debug output
+      chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
+          chrome.scripting.executeScript({
+              target: { tabId: tabs[0].id },
+              func: startSelectionAgainMode
+          });
       });
-  });
 
-  // Hide the "Start Selection Mode" button
-  document.getElementById('startSelection').style.display = 'none';
-  document.getElementById('cancelSelection').style.display = 'block';
+      // Hide the "Start Selection Mode" button
+      document.getElementById('startSelection').style.display = 'none';
+      document.getElementById('cancelSelection').style.display = 'block';
 
-}
+    }
 
-
-function startSelectionAgainMode() {
-  console.log('Selection mode started');
-  document.body.classList.add('selection-mode');
-  document.body.style.cursor = ''; // Reset the cursor to the default state
-}
-
-// Function to cancel selection mode
-function cancelSelectionMode() {
-    console.log('Selection mode canceled');
-    document.body.classList.remove('selection-mode');
-    document.body.style.cursor = ''; // Reset the cursor to the default state
-}
-
-// Function to exit selection mode
-function exitSelectionMode() {
-    cancelSelectionMode(); // Cancel selection mode
-    closePopup(); // Close the popup window
-}
+    function startSelectionAgainMode() {
+      console.log('Selection mode started');
+      document.body.classList.add('selection-mode');
+      document.body.style.cursor = ''; // Reset the cursor to the default state
+    }
 
 // Function to close the popup
-function closePopup() {
-  console.log("Closing popup"); // Debug output
-  if (!isPopupClosed) {
-      isPopupClosed = true;
-      window.close();
-  }
-}
+    function closePopup() {
+      console.log("Closing popup"); // Debug output
+      if (!isPopupClosed) {
+          isPopupClosed = true;
+          window.close();
+      }
+    }
