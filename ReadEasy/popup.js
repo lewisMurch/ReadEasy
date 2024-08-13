@@ -61,7 +61,6 @@ document.addEventListener('DOMContentLoaded', () => {
       console.log("Processing passed-in text:", text, "at speed:", speed); // Debug output
       if (text) {
           displayWords(text, speed);
-
       }
     }
 
