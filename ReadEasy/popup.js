@@ -1,48 +1,58 @@
 let isPopupClosed = false; // Flag to track if the popup has been closed
 
-// Load the saved speed value from Chrome storage when the popup is opened
+// Load the saved speed value and fixedSizeBackground preference from Chrome storage when the popup is opened
 document.addEventListener('DOMContentLoaded', () => {
-    console.log("Popup loaded");
-    chrome.storage.sync.get(['readingSpeed'], (result) => {
-        const savedSpeed = result.readingSpeed || 2;
-        document.getElementById('speedRange').value = savedSpeed;
-        document.getElementById('speedNumber').value = savedSpeed;
+  console.log("Popup loaded");
 
-        chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
-            chrome.scripting.executeScript({
-                target: { tabId: tabs[0].id },
-                func: () => {
-                    const selectedText = window.getSelection().toString().trim();
-                    console.log("Selected text in tab: ", selectedText); // Debug output
-                    return selectedText;
-                }
-            }, (results) => {
-                const highlightedText = results[0].result;
+  // Retrieve both the reading speed and fixed size background preference from storage
+  chrome.storage.sync.get(['readingSpeed', 'fixedSizeBackground'], (result) => {
+      const savedSpeed = result.readingSpeed || 2;
+      const fixedSizeBackground = result.fixedSizeBackground || false;
 
-                if (highlightedText) {
-                        console.log('Popup opened, highlighted text found: ', highlightedText);
-                        injectProcessHighlightedText(highlightedText, savedSpeed)
-                }
+      document.getElementById('speedRange').value = savedSpeed;
+      document.getElementById('speedNumber').value = savedSpeed;
+      document.getElementById('fixedSizeBackgroundToggle').checked = fixedSizeBackground;
 
-                else {
-                    console.error('No highlighted text found.');
-                    injectSelectionMode(savedSpeed);
-                }
+      chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
+          chrome.scripting.executeScript({
+              target: { tabId: tabs[0].id },
+              func: () => {
+                  const selectedText = window.getSelection().toString().trim();
+                  console.log("Selected text in tab: ", selectedText); // Debug output
+                  return selectedText;
+              }
+          }, (results) => {
+              const highlightedText = results[0].result;
 
-            });
-        });
-    });
+              if (highlightedText) {
+                  console.log('Popup opened, highlighted text found: ', highlightedText);
+                  injectProcessHighlightedText(highlightedText, savedSpeed, fixedSizeBackground);
+              } else {
+                  console.error('No highlighted text found.');
+                  injectSelectionMode(savedSpeed, fixedSizeBackground);
+              }
 
-    // Add event listeners for the slider and number input
-    document.getElementById('speedRange').addEventListener('input', updateSpeed);
-    document.getElementById('speedNumber').addEventListener('input', updateSpeed);
+          });
+      });
+  });
 
-    // Add event listener to close the popup manually
-    document.getElementById('closePopup').addEventListener('click', () => {
-        closePopup();
-    });
+  // Add event listeners for the speed slider and number input
+  document.getElementById('speedRange').addEventListener('input', updateSpeed);
+  document.getElementById('speedNumber').addEventListener('input', updateSpeed);
+
+  // Add event listener to update the fixedSizeBackground preference
+  document.getElementById('fixedSizeBackgroundToggle').addEventListener('change', () => {
+      const isChecked = document.getElementById('fixedSizeBackgroundToggle').checked;
+      chrome.storage.sync.set({ fixedSizeBackground: isChecked }, () => {
+          console.log('Fixed Size Background preference saved:', isChecked);
+      });
+  });
+
+  // Add event listener to close the popup manually
+  document.getElementById('closePopup').addEventListener('click', () => {
+      closePopup();
+  });
 });
-
 // Functions to automatically process any highlighted text
     function injectProcessHighlightedText(text, speed) {
       console.log("Injecting processHighlightedText with text:", text, "and speed:", speed); // Debug output
