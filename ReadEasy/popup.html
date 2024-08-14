@@ -32,6 +32,17 @@
       box-shadow: 0 4px 6px rgba(0,0,0,0.1);
     }
 
+    .textSize-control, .settings {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 20px;
+      background-color: #ffffff;
+      padding: 15px;
+      border-radius: 8px;
+      box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+    }
+
     label {
       font-size: 1.3em;
       color: #303030;
@@ -126,6 +137,12 @@
     <label for="speedRange">Speed:</label>
     <input type="range" id="speedRange" min="1" max="10" value="2">
     <input type="number" id="speedNumber" min="1" max="10" value="2">
+  </div>
+
+  <div class="textSize-control">
+    <label for="textSizeRange">Speed:</label>
+    <input type="range" id="textSizeRange" min="12" max="64" value="34">
+    <input type="number" id="textSizeNumber" min="12" max="64" value="34">
   </div>
 
   <div class="settings">

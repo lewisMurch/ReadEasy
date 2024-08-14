@@ -8,9 +8,10 @@ function displayWords(text, speed) {
   overlay.className = 'word-overlay';
   document.body.appendChild(overlay);
 
-  // Get the user's preference from Chrome storage
-  chrome.storage.sync.get(['fixedSizeBackground'], function(result) {
+  // Get the user's preferences from Chrome storage
+  chrome.storage.sync.get(['fixedSizeBackground', 'displayTextSize'], function(result) {
     const fixedSizeBackground = result.fixedSizeBackground || false;
+    const displayTextSize = result.displayTextSize || '44px';  // Default of 44px if not found
 
     // Style the overlay for proper centering
     overlay.style.position = 'fixed';
@@ -22,10 +23,21 @@ function displayWords(text, speed) {
     overlay.style.padding = '10px';
     overlay.style.borderRadius = '5px';
     overlay.style.textAlign = 'center';
+    overlay.style.fontFamily = 'Arial, sans-serif';  // Explicitly set the font to Arial
+    overlay.style.fontSize = displayTextSize;  // Use the retrieved text size
+    overlay.style.whiteSpace = 'nowrap';  // Prevent text from wrapping
 
     if (fixedSizeBackground) {
       const longestWord = words.reduce((longest, word) => word.length > longest.length ? word : longest, '');
-      overlay.style.width = `${longestWord.length}ch`;
+      overlay.style.width = `${longestWord.length + 2}ch`;  // Add 2ch to make the box bigger
+    } else {
+      // Ensure the width is set to auto first
+      overlay.style.width = 'auto';
+
+      // Add some extra pixels to the width
+      let extraPixels = 0;  // Adjust this value as needed
+      let currentWidth = overlay.offsetWidth;  // Get the computed width after setting to auto
+      overlay.style.width = (currentWidth + extraPixels) + 'px';
     }
 
     function showWord() {
@@ -37,7 +49,7 @@ function displayWords(text, speed) {
       if (currentIndex < words.length) {
         overlay.textContent = words[currentIndex];
         if (!fixedSizeBackground) {
-          overlay.style.width = `${words[currentIndex].length}ch`; // Adjust background width
+          overlay.style.width = 'auto';  // Set width to auto for each word
         }
         currentIndex++;
         timeoutId = setTimeout(showWord, 1000 / (speed * 2));
