@@ -9,9 +9,9 @@ function displayWords(text, speed) {
   document.body.appendChild(overlay);
 
   // Get the user's preferences from Chrome storage
-  chrome.storage.sync.get(['fixedSizeBackground', 'displayTextSize'], function(result) {
+  chrome.storage.sync.get(['fixedSizeBackground', 'textSize'], function(result) {
     const fixedSizeBackground = result.fixedSizeBackground || false;
-    const displayTextSize = result.displayTextSize || '44px';  // Default of 44px if not found
+    const textSize = result.textSize || '5px';  // Default of 34px if not found
 
     // Style the overlay for proper centering
     overlay.style.position = 'fixed';
@@ -24,7 +24,7 @@ function displayWords(text, speed) {
     overlay.style.borderRadius = '5px';
     overlay.style.textAlign = 'center';
     overlay.style.fontFamily = 'Arial, sans-serif';  // Explicitly set the font to Arial
-    overlay.style.fontSize = displayTextSize;  // Use the retrieved text size
+    overlay.style.fontSize = textSize + 'px';  // Use the retrieved text size
     overlay.style.whiteSpace = 'nowrap';  // Prevent text from wrapping
 
     if (fixedSizeBackground) {
@@ -48,6 +48,7 @@ function displayWords(text, speed) {
 
       if (currentIndex < words.length) {
         overlay.textContent = words[currentIndex];
+        console.log(textSize); //Debug, remove me
         if (!fixedSizeBackground) {
           overlay.style.width = 'auto';  // Set width to auto for each word
         }

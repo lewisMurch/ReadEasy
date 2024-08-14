@@ -1,13 +1,15 @@
 let isPopupClosed = false; // Flag to track if the popup has been closed
 
 document.addEventListener('DOMContentLoaded', () => {
-  chrome.storage.sync.get(['readingSpeed', 'fixedSizeBackground'], (result) => {
+  chrome.storage.sync.get(['readingSpeed', 'fixedSizeBackground', 'textSize'], (result) => {
       const savedSpeed = result.readingSpeed || 2;
       const fixedSizeBackground = result.fixedSizeBackground !== undefined ? result.fixedSizeBackground : false;
+      const textSize = result.textSize || 34
 
       document.getElementById('speedRange').value = savedSpeed;
       document.getElementById('speedNumber').value = savedSpeed;
       document.getElementById('fixedSizeBackgroundToggle').checked = fixedSizeBackground;
+      document.getElementById('textSizeNumber').value = textSize;
 
 
       chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
@@ -37,6 +39,9 @@ document.addEventListener('DOMContentLoaded', () => {
     document.getElementById('speedRange').addEventListener('input', updateSpeed);
     document.getElementById('speedNumber').addEventListener('input', updateSpeed);
     document.getElementById('fixedSizeBackgroundToggle').addEventListener('change', updateBackgroundSize);
+    document.getElementById('textSizeRange').addEventListener('input', updatetextSize);
+    document.getElementById('textSizeNumber').addEventListener('input', updatetextSize);
+
     document.getElementById('closePopup').addEventListener('click', () => {
         closePopup();
   });
@@ -66,7 +71,6 @@ document.addEventListener('DOMContentLoaded', () => {
 
 // Functions to start selection mode with the given speed
     function injectSelectionMode(speed) {
-        console.log("Starting selection mode with speed:", speed); // Debug output
         chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
             chrome.scripting.executeScript({
                 target: { tabId: tabs[0].id },
@@ -116,6 +120,16 @@ document.addEventListener('DOMContentLoaded', () => {
 
         // restart selection mode with the new speed
         injectSelectionMode(speed);
+    }
+
+// Update the speed in both the slider and the number input
+    function updatetextSize(event) {
+        const textSize = event.target.value;
+        document.getElementById('textSizeRange').value = textSize;
+        document.getElementById('textSizeNumber').value = textSize;
+
+        // Save the new speed value in Chrome storage
+        chrome.storage.sync.set({ textSize: parseFloat(textSize) });
     }
 
 // Upadte the background checkbox
