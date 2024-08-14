@@ -21,18 +21,7 @@
       font-weight: 600;
     }
 
-    .speed-control, .settings {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      margin-bottom: 20px;
-      background-color: #ffffff;
-      padding: 15px;
-      border-radius: 8px;
-      box-shadow: 0 4px 6px rgba(0,0,0,0.1);
-    }
-
-    .textSize-control, .settings {
+    .speed-control, .textSize-control, .settings {
       display: flex;
       align-items: center;
       justify-content: space-between;
@@ -48,7 +37,6 @@
       color: #303030;
       display: flex;
       align-items: center;
-      margin-right: 3;
       font-weight: bold;
     }
 
@@ -91,11 +79,10 @@
       cursor: not-allowed;
     }
 
-    /* Custom checkbox styling */
     .settings {
       display: flex;
       align-items: center;
-      justify-content: center; /* Center items horizontally */
+      justify-content: center;
       background-color: #f9f9f9;
       padding: 0.0001px;
       border-radius: 8px;
@@ -107,49 +94,73 @@
     }
 
     .settings label {
-      display: flex; /* Use flexbox to center content inside label */
-      align-items: center; /* Center vertically inside label */
-      justify-content: center; /* Center horizontally inside label */
-      padding: 10px; /* Adjust padding as needed */
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 10px;
       border-radius: 8px;
-      background-color: #ddd; /* Default background color (unchecked) */
+      background-color: #ddd;
       transition: background-color 0.2s;
       cursor: pointer;
-      width: 300px; /* Remove fixed width */
-      text-align: center; /* Ensure text is centered */
+      text-align: center;
       color: #f9f9f9;
       font-weight: bold;
     }
 
     .settings input[type="checkbox"]:checked + label {
-      background-color: #4CAF50; /* Green background (checked) */
+      background-color: #4CAF50;
     }
 
     .settings input[type="checkbox"]:not(:checked) + label {
-      background-color: #F44336; /* Red background (unchecked) */
+      background-color: #F44336;
     }
 
+    details {
+      margin-bottom: 20px;
+    }
+
+    summary {
+      font-size: 1.5em;
+      font-weight: bold;
+      cursor: pointer;
+      padding: 10px 15px;  /* Adjusted padding to add space on the right */
+      background-color: #0056b3;
+      color: #fff;
+      border-radius: 8px;
+      box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+      width: calc(100% - 30px); /* Adjust width to account for padding */
+      text-align: center;
+      white-space: nowrap; /* Prevent text wrapping */
+      margin: 0 auto; /* Center the element */
+    }
+
+    details[open] summary {
+      background-color: #004494;
+    }
   </style>
 </head>
 <body>
   <h3>Dyslexia Reader</h3>
-  
-  <div class="speed-control">
-    <label for="speedRange">Speed:</label>
-    <input type="range" id="speedRange" min="1" max="10" value="2">
-    <input type="number" id="speedNumber" min="1" max="10" value="2">
-  </div>
 
-  <div class="textSize-control">
-    <label for="textSizeRange">Text Size:</label>
-    <input type="range" id="textSizeRange" min="12" max="64" value="34">
-    <input type="number" id="textSizeNumber" min="12" max="64" value="34">
-  </div>
+  <details>
+    <summary>Settings</summary>
+    <div class="speed-control">
+      <label for="speedRange">Speed:</label>
+      <input type="range" id="speedRange" min="1" max="10" value="2">
+      <input type="number" id="speedNumber" min="1" max="10" value="2">
+    </div>
 
-  <div class="settings">
-    <input type="checkbox" id="fixedSizeBackgroundToggle">
-    <label for="fixedSizeBackgroundToggle">Constant background size</label>
-  </div>
+    <div class="textSize-control">
+      <label for="textSizeRange">Text Size:</label>
+      <input type="range" id="textSizeRange" min="12" max="64" value="34">
+      <input type="number" id="textSizeNumber" min="12" max="64" value="34">
+    </div>
+
+    <div class="settings">
+      <input type="checkbox" id="fixedSizeBackgroundToggle">
+      <label for="fixedSizeBackgroundToggle">Constant background size</label>
+    </div>
+  </details>
 
   <button id="cancelSelection" style="display: none;">Cancel Selection Mode</button>
   <button id="startSelection" style="display: none;">Start Selection Mode</button>
