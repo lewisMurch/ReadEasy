@@ -48,7 +48,6 @@ function displayWords(text, speed) {
 
       if (currentIndex < words.length) {
         overlay.textContent = words[currentIndex];
-        console.log(textSize); //Debug, remove me
         if (!fixedSizeBackground) {
           overlay.style.width = 'auto';  // Set width to auto for each word
         }

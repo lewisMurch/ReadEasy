@@ -6,10 +6,12 @@ document.addEventListener('DOMContentLoaded', () => {
       const fixedSizeBackground = result.fixedSizeBackground !== undefined ? result.fixedSizeBackground : false;
       const textSize = result.textSize || 34
 
-      document.getElementById('speedRange').value = savedSpeed;
-      document.getElementById('speedNumber').value = savedSpeed;
-      document.getElementById('fixedSizeBackgroundToggle').checked = fixedSizeBackground;
-      document.getElementById('textSizeNumber').value = textSize;
+    // Set the values for speed and text size elements
+    document.getElementById('speedRange').value = savedSpeed;
+    document.getElementById('speedNumber').value = savedSpeed;
+    document.getElementById('fixedSizeBackgroundToggle').checked = fixedSizeBackground;
+    document.getElementById('textSizeNumber').value = textSize;
+    document.getElementById('textSizeRange').value = textSize;
 
 
       chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
@@ -39,12 +41,12 @@ document.addEventListener('DOMContentLoaded', () => {
     document.getElementById('speedRange').addEventListener('input', updateSpeed);
     document.getElementById('speedNumber').addEventListener('input', updateSpeed);
     document.getElementById('fixedSizeBackgroundToggle').addEventListener('change', updateBackgroundSize);
-    document.getElementById('textSizeRange').addEventListener('input', updatetextSize);
-    document.getElementById('textSizeNumber').addEventListener('input', updatetextSize);
+    document.getElementById('textSizeRange').addEventListener('input', updateTextSize);
+    document.getElementById('textSizeNumber').addEventListener('input', updateTextSize);
+    document.getElementById('closePopup').addEventListener('click', () => closePopup());
 
-    document.getElementById('closePopup').addEventListener('click', () => {
-        closePopup();
-  });
+    document.getElementById('cancelSelection').addEventListener('click', cancelSelection);
+    document.getElementById('startSelection').addEventListener('click', startSelectionAgain);
 });
 
 
@@ -122,13 +124,13 @@ document.addEventListener('DOMContentLoaded', () => {
         injectSelectionMode(speed);
     }
 
-// Update the speed in both the slider and the number input
-    function updatetextSize(event) {
+// Update the text size in both the slider and the number input
+    function updateTextSize(event) {
         const textSize = event.target.value;
         document.getElementById('textSizeRange').value = textSize;
         document.getElementById('textSizeNumber').value = textSize;
 
-        // Save the new speed value in Chrome storage
+        // Save the new text size value in Chrome storage
         chrome.storage.sync.set({ textSize: parseFloat(textSize) });
     }
 
@@ -148,6 +150,7 @@ document.addEventListener('DOMContentLoaded', () => {
     document.getElementById('startSelection').addEventListener('click', () => {
       startSelectionAgain();
     });
+
 //BUTTON STUFF
 
 // Functions to cancel selection mode
