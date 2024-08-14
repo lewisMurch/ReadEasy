@@ -137,6 +137,11 @@
     details[open] summary {
       background-color: #004494;
     }
+
+    details[open] > *:not(summary) {
+      margin-top: 15px; /* Add space between summary and first setting option */
+    }
+
   </style>
 </head>
 <body>
