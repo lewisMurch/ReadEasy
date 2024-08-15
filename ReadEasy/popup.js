@@ -120,6 +120,9 @@ document.addEventListener('DOMContentLoaded', () => {
         // Save the new speed value in Chrome storage
         chrome.storage.sync.set({ readingSpeed: parseFloat(speed) });
 
+        // Cancel selection mode before making a new one
+        cancelSelection();
+
         // restart selection mode with the new speed
         injectSelectionMode(speed);
     }
@@ -142,60 +145,10 @@ document.addEventListener('DOMContentLoaded', () => {
 
 //BUTTON STUFF
     // Cancel selection mode when the cancel button is clicked
-    document.getElementById('cancelSelection').addEventListener('click', () => {
-        cancelSelection();
+    document.getElementById('exit').addEventListener('click', () => {
+        closePopup();
     });
-
-    // Start selection mode when the cancel button is clicked
-    document.getElementById('startSelection').addEventListener('click', () => {
-      startSelectionAgain();
-    });
-
 //BUTTON STUFF
-
-// Functions to cancel selection mode
-    function cancelSelection() {
-        console.log("Cancelling selection mode"); // Debug output
-        chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
-            chrome.scripting.executeScript({
-                target: { tabId: tabs[0].id },
-                func: cancelSelectionMode
-            });
-        });
-
-        // Hide the "Cancel Selection Mode" button
-        document.getElementById('cancelSelection').style.display = 'none';
-        document.getElementById('startSelection').style.display = 'block';
-
-    }
-
-    function cancelSelectionMode() {
-      console.log('Selection mode canceled');
-      document.body.classList.remove('selection-mode');
-      document.body.style.cursor = ''; // Reset the cursor to the default state
-    }
-
-// Functions to start selection mode again
-    function startSelectionAgain() {
-      console.log("Starting selection mode"); // Debug output
-      chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
-          chrome.scripting.executeScript({
-              target: { tabId: tabs[0].id },
-              func: startSelectionAgainMode
-          });
-      });
-
-      // Hide the "Start Selection Mode" button
-      document.getElementById('startSelection').style.display = 'none';
-      document.getElementById('cancelSelection').style.display = 'block';
-
-    }
-
-    function startSelectionAgainMode() {
-      console.log('Selection mode started');
-      document.body.classList.add('selection-mode');
-      document.body.style.cursor = ''; // Reset the cursor to the default state
-    }
 
 // Function to close the popup
     function closePopup() {
