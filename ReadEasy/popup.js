@@ -47,7 +47,6 @@ document.addEventListener('DOMContentLoaded', () => {
                   console.error('No highlighted text found.');
                   injectSelectionMode(savedSpeed, fixedSizeBackground);
               }
-
           });
       });
   });
@@ -61,8 +60,6 @@ document.addEventListener('DOMContentLoaded', () => {
     document.getElementById('textColour').addEventListener('input', debounce(updateTextColour, 300));
     document.getElementById('backgroundColour').addEventListener('input', debounce(updateBackgroundColour, 300));
 
-
-    document.getElementById('closePopup').addEventListener('click', () => closePopup());
 });
 
 //5th storage change below (make an update function)
@@ -146,7 +143,6 @@ document.addEventListener('DOMContentLoaded', () => {
 // Update the text size in both the slider and the number input
     function updateTextSize(event) {
         const textSize = event.target.value;
-        document.getElementById('textSizeRange').value = textSize;
         document.getElementById('textSizeNumber').value = textSize;
 
         // Save the new text size value in Chrome storage
@@ -177,11 +173,43 @@ document.addEventListener('DOMContentLoaded', () => {
         closePopup();
     });
 
-// Function to close the popup
     function closePopup() {
-      console.log("Closing popup"); // Debug output
-      if (!isPopupClosed) {
-          isPopupClosed = true;
-          window.close();
+        if (!isPopupClosed) {
+            isPopupClosed = true;
+            window.close();
+        }
       }
-    }
+
+// Reset settings button
+    document.getElementById('reset').addEventListener('click', () => {
+        resetAllSettings();
+    });
+
+    function resetAllSettings() {
+        console.log("Resetting settings"); // Debug output
+        //default values
+        defaultSpeed = 4
+        defaultBackgroundColour = '#000000'
+        defaultTextColour = '#FFFFFF'
+        defaultTextSize = 34
+        defaultBackgroundSizeFlag = false
+        defaultOverlayPosition = 'auto';
+
+        chrome.storage.sync.set({ readingSpeed: parseFloat(defaultSpeed) });
+        chrome.storage.sync.set({ backgroundColour: defaultBackgroundColour });
+        chrome.storage.sync.set({ textColour: defaultTextColour });
+        chrome.storage.sync.set({ textSize: defaultTextSize });
+        chrome.storage.sync.set({ fixedSizeBackground: defaultBackgroundSizeFlag });
+        chrome.storage.sync.set({ overlayPosition: defaultOverlayPosition });
+
+        document.getElementById('speedRange').value = defaultSpeed;
+        document.getElementById('speedNumber').value = defaultSpeed;
+        document.getElementById('backgroundColour').value = defaultBackgroundColour;
+        document.getElementById('textColour').value = defaultTextColour;
+        document.getElementById('textSizeNumber').value = defaultTextSize;
+        document.getElementById('textSizeRange').value = defaultTextSize;
+        document.getElementById('fixedSizeBackgroundToggle').checked = false;
+
+      }
+
+
