@@ -41,17 +41,19 @@ function displayWords(text, speed) {
   }
 
   // Get the user's preferences from Chrome storage
-  chrome.storage.sync.get(['fixedSizeBackground', 'textSize'], function(result) {
+  chrome.storage.sync.get(['fixedSizeBackground', 'textSize', 'textColour', 'backgroundColour'], function(result) {
     const fixedSizeBackground = result.fixedSizeBackground || false;
     const textSize = result.textSize || '5px';  // Default of 34px if not found
+    const textColour = result.textColour || 'black';
+    const backgroundColour = result.backgroundColour || 'white';
 
     // Style the overlay for proper centering
     overlay.style.position = 'fixed';
     overlay.style.top = '50%';
     overlay.style.left = '50%';
     overlay.style.transform = 'translate(-50%, -50%)';
-    overlay.style.backgroundColor = 'black';
-    overlay.style.color = 'white';
+    overlay.style.backgroundColor = backgroundColour;
+    overlay.style.color = textColour;
     overlay.style.padding = '10px';
     overlay.style.borderRadius = '5px';
     overlay.style.textAlign = 'center';

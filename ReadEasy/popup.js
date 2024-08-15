@@ -1,18 +1,33 @@
 let isPopupClosed = false; // Flag to track if the popup has been closed
 
+// Debounce function to limit how often a function is executed (fixes the colour picking spamming storage with api requests)
+function debounce(func, delay) {
+    let timeoutId;
+    return function (...args) {
+        clearTimeout(timeoutId);
+        timeoutId = setTimeout(() => func.apply(this, args), delay);
+    };
+}
+
 document.addEventListener('DOMContentLoaded', () => {
-  chrome.storage.sync.get(['readingSpeed', 'fixedSizeBackground', 'textSize'], (result) => {
+  chrome.storage.sync.get(['readingSpeed', 'fixedSizeBackground', 'textSize', 'textColour', 'backgroundColour'], (result) => { //1st storage change
+
+      //2nd storage change
       const savedSpeed = result.readingSpeed || 2;
       const fixedSizeBackground = result.fixedSizeBackground !== undefined ? result.fixedSizeBackground : false;
       const textSize = result.textSize || 34
+      const textColour = result.textColour || '#000000'
+      const backgroundColour = result.backgroundColour || 'f9f9f9'
 
-    // Set the values for speed and text size elements
+
+    // Set the values for speed and text size elements //3rd storage change
     document.getElementById('speedRange').value = savedSpeed;
     document.getElementById('speedNumber').value = savedSpeed;
     document.getElementById('fixedSizeBackgroundToggle').checked = fixedSizeBackground;
     document.getElementById('textSizeNumber').value = textSize;
     document.getElementById('textSizeRange').value = textSize;
-
+    document.getElementById('textColour').value = textColour;
+    document.getElementById('backgroundColour').value = backgroundColour;
 
       chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
           chrome.scripting.executeScript({
@@ -37,18 +52,20 @@ document.addEventListener('DOMContentLoaded', () => {
       });
   });
 
-    // Add event listeners
+    // Add event listeners //4th storage change
     document.getElementById('speedRange').addEventListener('input', updateSpeed);
     document.getElementById('speedNumber').addEventListener('input', updateSpeed);
     document.getElementById('fixedSizeBackgroundToggle').addEventListener('change', updateBackgroundSize);
     document.getElementById('textSizeRange').addEventListener('input', updateTextSize);
     document.getElementById('textSizeNumber').addEventListener('input', updateTextSize);
-    document.getElementById('closePopup').addEventListener('click', () => closePopup());
+    document.getElementById('textColour').addEventListener('input', debounce(updateTextColour, 300));
+    document.getElementById('backgroundColour').addEventListener('input', debounce(updateBackgroundColour, 300));
 
-    document.getElementById('cancelSelection').addEventListener('click', cancelSelection);
-    document.getElementById('startSelection').addEventListener('click', startSelectionAgain);
+
+    document.getElementById('closePopup').addEventListener('click', () => closePopup());
 });
 
+//5th storage change below (make an update function)
 
 // Functions to automatically process any highlighted text
     function injectProcessHighlightedText(text, speed) {
@@ -103,7 +120,6 @@ document.addEventListener('DOMContentLoaded', () => {
                     if (paragraphText) {
                         event.preventDefault();
                         displayWords(paragraphText, currentSpeed);
-                        exitSelectionMode(); // End selection mode
                     }
                 });
             }
@@ -137,18 +153,29 @@ document.addEventListener('DOMContentLoaded', () => {
         chrome.storage.sync.set({ textSize: parseFloat(textSize) });
     }
 
-// Upadte the background checkbox
+// Update the background checkbox
     function updateBackgroundSize(event) {
       const isChecked = event.target.checked; // Get the current state of the checkbox
       chrome.storage.sync.set({ fixedSizeBackground: isChecked }); // Save the current state to storage
     }
 
-//BUTTON STUFF
-    // Cancel selection mode when the cancel button is clicked
+// Update the text colour
+    function updateTextColour(event) {
+        const textColour = event.target.value; // Get the current state of the colour input
+        document.getElementById('textColour').value = textColour;
+        chrome.storage.sync.set({ textColour: textColour }); // Save the current state to storage
+    }
+
+    function updateBackgroundColour(event) {
+        const backgroundColour = event.target.value; // Get the current state of the colour input
+        document.getElementById('backgroundColour').value = backgroundColour;
+        chrome.storage.sync.set({ backgroundColour: backgroundColour }); // Save the current state to storage
+    }
+
+// Exit button
     document.getElementById('exit').addEventListener('click', () => {
         closePopup();
     });
-//BUTTON STUFF
 
 // Function to close the popup
     function closePopup() {

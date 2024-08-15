@@ -21,7 +21,7 @@
       font-weight: 600;
     }
 
-    .speed-control, .textSize-control, .settings {
+    .speed-control, .textSize-control, .settings, .color-control {
       display: flex;
       align-items: center;
       justify-content: space-between;
@@ -53,6 +53,13 @@
       font-size: 1.4em;
       border: 1px solid #ddd;
       border-radius: 4px;
+    }
+
+    input[type="color"] {
+      margin-left: 10px;
+      cursor: pointer;
+      border: none;
+      background-color: transparent;
     }
 
     button {
@@ -161,11 +168,24 @@
       <input type="number" id="textSizeNumber" min="12" max="64" value="34">
     </div>
 
+    <div class="color-control">
+      <label for="backgroundColour">Background Colour:</label>
+      <input type="color" id="backgroundColour" value="#000000">
+    </div>
+
+    <div class="color-control">
+      <label for="textColour">Text Colour:</label>
+      <input type="color" id="textColour" value="#f9f9f9">
+    </div>
+
     <div class="settings">
       <input type="checkbox" id="fixedSizeBackgroundToggle">
       <label for="fixedSizeBackgroundToggle">Constant background size</label>
     </div>
+
   </details>
+
+
 
   <button id="exit" style="display: block;">Exit</button>
 
