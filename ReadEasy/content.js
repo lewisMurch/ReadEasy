@@ -8,6 +8,38 @@ function displayWords(text, speed) {
   overlay.className = 'word-overlay';
   document.body.appendChild(overlay);
 
+  // Function to make the overlay draggable
+  function makeDraggable(element) {
+    let offsetX = 0, offsetY = 0, mouseX = 0, mouseY = 0;
+
+    element.onmousedown = function(e) {
+      e.preventDefault();
+
+      mouseX = e.clientX;
+      mouseY = e.clientY;
+
+      document.onmousemove = dragElement;
+      document.onmouseup = stopDragging;
+    };
+
+    function dragElement(e) {
+      e.preventDefault();
+
+      offsetX = mouseX - e.clientX;
+      offsetY = mouseY - e.clientY;
+      mouseX = e.clientX;
+      mouseY = e.clientY;
+
+      element.style.top = (element.offsetTop - offsetY) + "px";
+      element.style.left = (element.offsetLeft - offsetX) + "px";
+    }
+
+    function stopDragging() {
+      document.onmousemove = null;
+      document.onmouseup = null;
+    }
+  }
+
   // Get the user's preferences from Chrome storage
   chrome.storage.sync.get(['fixedSizeBackground', 'textSize'], function(result) {
     const fixedSizeBackground = result.fixedSizeBackground || false;
@@ -26,19 +58,19 @@ function displayWords(text, speed) {
     overlay.style.fontFamily = 'Arial, sans-serif';  // Explicitly set the font to Arial
     overlay.style.fontSize = textSize + 'px';  // Use the retrieved text size
     overlay.style.whiteSpace = 'nowrap';  // Prevent text from wrapping
+    overlay.style.cursor = 'move';  // Change cursor to move icon
 
     if (fixedSizeBackground) {
       const longestWord = words.reduce((longest, word) => word.length > longest.length ? word : longest, '');
       overlay.style.width = `${longestWord.length + 2}ch`;  // Add 2ch to make the box bigger
     } else {
-      // Ensure the width is set to auto first
       overlay.style.width = 'auto';
-
-      // Add some extra pixels to the width
-      let extraPixels = 0;  // Adjust this value as needed
-      let currentWidth = overlay.offsetWidth;  // Get the computed width after setting to auto
+      let extraPixels = 0;
+      let currentWidth = overlay.offsetWidth;
       overlay.style.width = (currentWidth + extraPixels) + 'px';
     }
+
+    makeDraggable(overlay);  // Make the overlay draggable
 
     function showWord() {
       if (stopDisplay) {
@@ -49,7 +81,7 @@ function displayWords(text, speed) {
       if (currentIndex < words.length) {
         overlay.textContent = words[currentIndex];
         if (!fixedSizeBackground) {
-          overlay.style.width = 'auto';  // Set width to auto for each word
+          overlay.style.width = 'auto';
         }
         currentIndex++;
         timeoutId = setTimeout(showWord, 1000 / (speed * 2));
@@ -58,7 +90,6 @@ function displayWords(text, speed) {
       }
     }
 
-    // Event listener to stop the display when the Escape key is pressed
     document.addEventListener('keydown', (event) => {
       if (event.key === 'Escape') {
         stopDisplay = true;  // Set the flag to true
