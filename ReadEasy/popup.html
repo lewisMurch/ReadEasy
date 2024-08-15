@@ -21,7 +21,7 @@
       font-weight: 600;
     }
 
-    .speed-control, .textSize-control, .settings, .color-control {
+    .speed-control, .textSize-control, .color-control {
       display: flex;
       align-items: center;
       justify-content: space-between;
@@ -90,10 +90,11 @@
       display: flex;
       align-items: center;
       justify-content: center;
-      background-color: #f9f9f9;
+      background-color: hsl(0, 0%, 100%);
       padding: 0.0001px;
       border-radius: 8px;
       box-shadow: 0 4px 6px rgba(0,0,0,0);
+      width: 'auto';
     }
 
     .settings input[type="checkbox"] {
@@ -114,12 +115,15 @@
       font-weight: bold;
     }
 
-    .settings input[type="checkbox"]:checked + label {
-      background-color: #4CAF50;
-    }
-
-    .settings input[type="checkbox"]:not(:checked) + label {
-      background-color: #F44336;
+    .constant-background-size {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-bottom: 20px;
+      background-color: #ffffff;
+      padding: 15px;
+      border-radius: 8px;
+      box-shadow: 0 4px 6px rgba(0,0,0,0.1);
     }
 
     details {
@@ -149,12 +153,63 @@
       margin-top: 15px; /* Add space between summary and first setting option */
     }
 
+    .constant-background-size .toggle-switch {
+      display: none;
+    }
+
+    /* The container for the toggle switch */
+    .constant-background-size .toggle-label {
+      display: inline-block;
+      position: relative;
+      cursor: pointer;
+      padding-left: 50px;
+      line-height: 24px;
+      font-size: 16px;
+    }
+
+    /* Create the custom toggle switch */
+    .constant-background-size .toggle-label::before {
+      content: '';
+      position: absolute;
+      left: 0;
+      top: 0;
+      width: 40px;
+      height: 24px;
+      background-color: #ccc;
+      border-radius: 12px;
+      transition: background-color 0.3s;
+    }
+
+    /* The round slider inside the switch */
+    .constant-background-size .toggle-label::after {
+      content: '';
+      position: absolute;
+      left: 4px;
+      top: 4px;
+      width: 16px;
+      height: 16px;
+      background-color: white;
+      border-radius: 50%;
+      transition: transform 0.3s;
+    }
+
+    /* When the checkbox is checked, change the background and move the slider */
+    .constant-background-size .toggle-switch:checked + .toggle-label::before {
+      background-color: #4CAF50;
+    }
+
+    .constant-background-size .toggle-switch:checked + .toggle-label::after {
+      transform: translateX(16px);
+    }
+
+
   </style>
 </head>
 <body>
   <h3>Dyslexia Reader</h3>
 
   <details>
+
     <summary>Settings</summary>
     <div class="speed-control">
       <label for="speedRange">Speed:</label>
@@ -178,14 +233,16 @@
       <input type="color" id="textColour" value="#f9f9f9">
     </div>
 
+    <div class="constant-background-size">
+      <input type="checkbox" id="fixedSizeBackgroundToggle" class="toggle-switch">
+      <label for="fixedSizeBackgroundToggle" class="toggle-label">Constant background size</label>
+    </div>
+    
     <div class="settings">
-      <input type="checkbox" id="fixedSizeBackgroundToggle">
-      <label for="fixedSizeBackgroundToggle">Constant background size</label>
+      <button id="reset" style="display: block;">Reset Settings</button>
     </div>
 
   </details>
-
-
 
   <button id="exit" style="display: block;">Exit</button>
 
