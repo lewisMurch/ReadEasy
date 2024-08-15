@@ -115,7 +115,7 @@
       font-weight: bold;
     }
 
-    .constant-background-size {
+    .toggle-switch {
       display: flex;
       align-items: center;
       justify-content: center;
@@ -153,12 +153,12 @@
       margin-top: 15px; /* Add space between summary and first setting option */
     }
 
-    .constant-background-size .toggle-switch {
+    .toggle-switch .toggle-switch {
       display: none;
     }
 
     /* The container for the toggle switch */
-    .constant-background-size .toggle-label {
+    .toggle-switch .toggle-label {
       display: inline-block;
       position: relative;
       cursor: pointer;
@@ -167,8 +167,7 @@
       font-size: 16px;
     }
 
-    /* Create the custom toggle switch */
-    .constant-background-size .toggle-label::before {
+    .toggle-switch .toggle-label::before {
       content: '';
       position: absolute;
       left: 0;
@@ -181,7 +180,7 @@
     }
 
     /* The round slider inside the switch */
-    .constant-background-size .toggle-label::after {
+    .toggle-switch .toggle-label::after {
       content: '';
       position: absolute;
       left: 4px;
@@ -194,15 +193,13 @@
     }
 
     /* When the checkbox is checked, change the background and move the slider */
-    .constant-background-size .toggle-switch:checked + .toggle-label::before {
+    .toggle-switch .toggle-switch:checked + .toggle-label::before {
       background-color: #4CAF50;
     }
 
-    .constant-background-size .toggle-switch:checked + .toggle-label::after {
+    .toggle-switch .toggle-switch:checked + .toggle-label::after {
       transform: translateX(16px);
     }
-
-
   </style>
 </head>
 <body>
@@ -233,9 +230,14 @@
       <input type="color" id="textColour" value="#f9f9f9">
     </div>
 
-    <div class="constant-background-size">
+    <div class="toggle-switch">
       <input type="checkbox" id="fixedSizeBackgroundToggle" class="toggle-switch">
-      <label for="fixedSizeBackgroundToggle" class="toggle-label">Constant background size</label>
+      <label for="fixedSizeBackgroundToggle" class="toggle-label">Constant Background Size</label>
+    </div>
+
+    <div class="toggle-switch">
+      <input type="checkbox" id="pausePunctuation" class="toggle-switch">
+      <label for="pausePunctuation" class="toggle-label">Pause on Punctuation</label>
     </div>
     
     <div class="settings">

@@ -10,14 +10,15 @@ function debounce(func, delay) {
 }
 
 document.addEventListener('DOMContentLoaded', () => {
-    chrome.storage.sync.get(['readingSpeed', 'fixedSizeBackground', 'textSize', 'textColour', 'backgroundColour'], (result) => { //1st storage change
+    chrome.storage.sync.get(['readingSpeed', 'fixedSizeBackground', 'textSize', 'textColour', 'backgroundColour', 'pausePunctuation'], (result) => { //1st storage change
 
         //2nd storage change
         const savedSpeed = result.readingSpeed || 2;
         const fixedSizeBackground = result.fixedSizeBackground !== undefined ? result.fixedSizeBackground : false;
         const textSize = result.textSize || 34;
         const textColour = result.textColour || '#000000';
-        const backgroundColour = result.backgroundColour || 'f9f9f9';
+        const backgroundColour = result.backgroundColour || '#f9f9f9';
+        const pausePunctuation = result.pausePunctuation || false;
 
         // Set the values for speed and text size elements //3rd storage change
         document.getElementById('speedRange').value = savedSpeed;
@@ -27,6 +28,8 @@ document.addEventListener('DOMContentLoaded', () => {
         document.getElementById('textSizeRange').value = textSize;
         document.getElementById('textColour').value = textColour;
         document.getElementById('backgroundColour').value = backgroundColour;
+        document.getElementById('pausePunctuation').checked = pausePunctuation;
+        
 
         chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
             chrome.scripting.executeScript({
@@ -57,6 +60,7 @@ document.addEventListener('DOMContentLoaded', () => {
     document.getElementById('textSizeNumber').addEventListener('input', updateTextSize);
     document.getElementById('textColour').addEventListener('input', debounce(updateTextColour, 300));
     document.getElementById('backgroundColour').addEventListener('input', debounce(updateBackgroundColour, 300));
+    document.getElementById('pausePunctuation').addEventListener('change', updatePausePunctuation);
 });
 
 //5th storage change below (make an update function)
@@ -138,12 +142,6 @@ function updateSpeed(event) {
 
     // Save the new speed value in Chrome storage
     chrome.storage.sync.set({ readingSpeed: parseFloat(speed) });
-
-    // Cancel selection mode before making a new one
-    cancelSelection();
-
-    // restart selection mode with the new speed
-    injectSelectionMode(speed);
 }
 
 // Update the text size in both the slider and the number input
@@ -174,6 +172,12 @@ function updateBackgroundColour(event) {
     chrome.storage.sync.set({ backgroundColour: backgroundColour }); // Save the current state to storage
 }
 
+function updatePausePunctuation(event) {
+    const pausePunctuation = event.target.checked; // Get the current state of the checkbox
+    document.getElementById('pausePunctuation').value = pausePunctuation;
+    chrome.storage.sync.set({ pausePunctuation: pausePunctuation }); // Save the current state to storage
+}
+
 // Exit button
 document.getElementById('exit').addEventListener('click', () => {
     closePopup();
@@ -200,6 +204,7 @@ function resetAllSettings() {
     const defaultTextSize = 34;
     const defaultBackgroundSizeFlag = false;
     const defaultOverlayPosition = 'auto';
+    const defaultPausePunctuation = false;
 
     chrome.storage.sync.set({ readingSpeed: parseFloat(defaultSpeed) });
     chrome.storage.sync.set({ backgroundColour: defaultBackgroundColour });
@@ -207,6 +212,7 @@ function resetAllSettings() {
     chrome.storage.sync.set({ textSize: defaultTextSize });
     chrome.storage.sync.set({ fixedSizeBackground: defaultBackgroundSizeFlag });
     chrome.storage.sync.set({ overlayPosition: defaultOverlayPosition });
+    chrome.storage.sync.set({ pausePunctuation: defaultPausePunctuation });
 
     document.getElementById('speedRange').value = defaultSpeed;
     document.getElementById('speedNumber').value = defaultSpeed;
@@ -215,4 +221,6 @@ function resetAllSettings() {
     document.getElementById('textSizeNumber').value = defaultTextSize;
     document.getElementById('textSizeRange').value = defaultTextSize;
     document.getElementById('fixedSizeBackgroundToggle').checked = false;
+    document.getElementById('pausePunctuation').checked = false;
+
 }
