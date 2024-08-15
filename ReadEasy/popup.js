@@ -10,46 +10,44 @@ function debounce(func, delay) {
 }
 
 document.addEventListener('DOMContentLoaded', () => {
-  chrome.storage.sync.get(['readingSpeed', 'fixedSizeBackground', 'textSize', 'textColour', 'backgroundColour'], (result) => { //1st storage change
+    chrome.storage.sync.get(['readingSpeed', 'fixedSizeBackground', 'textSize', 'textColour', 'backgroundColour'], (result) => { //1st storage change
 
-      //2nd storage change
-      const savedSpeed = result.readingSpeed || 2;
-      const fixedSizeBackground = result.fixedSizeBackground !== undefined ? result.fixedSizeBackground : false;
-      const textSize = result.textSize || 34
-      const textColour = result.textColour || '#000000'
-      const backgroundColour = result.backgroundColour || 'f9f9f9'
+        //2nd storage change
+        const savedSpeed = result.readingSpeed || 2;
+        const fixedSizeBackground = result.fixedSizeBackground !== undefined ? result.fixedSizeBackground : false;
+        const textSize = result.textSize || 34;
+        const textColour = result.textColour || '#000000';
+        const backgroundColour = result.backgroundColour || 'f9f9f9';
 
+        // Set the values for speed and text size elements //3rd storage change
+        document.getElementById('speedRange').value = savedSpeed;
+        document.getElementById('speedNumber').value = savedSpeed;
+        document.getElementById('fixedSizeBackgroundToggle').checked = fixedSizeBackground;
+        document.getElementById('textSizeNumber').value = textSize;
+        document.getElementById('textSizeRange').value = textSize;
+        document.getElementById('textColour').value = textColour;
+        document.getElementById('backgroundColour').value = backgroundColour;
 
-    // Set the values for speed and text size elements //3rd storage change
-    document.getElementById('speedRange').value = savedSpeed;
-    document.getElementById('speedNumber').value = savedSpeed;
-    document.getElementById('fixedSizeBackgroundToggle').checked = fixedSizeBackground;
-    document.getElementById('textSizeNumber').value = textSize;
-    document.getElementById('textSizeRange').value = textSize;
-    document.getElementById('textColour').value = textColour;
-    document.getElementById('backgroundColour').value = backgroundColour;
+        chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
+            chrome.scripting.executeScript({
+                target: { tabId: tabs[0].id },
+                func: () => {
+                    const selectedText = window.getSelection().toString().trim();
+                    console.log("Selected text in tab: ", selectedText); // Debug output
+                    return selectedText;
+                }
+            }, (results) => {
+                const highlightedText = results[0].result;
 
-      chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
-          chrome.scripting.executeScript({
-              target: { tabId: tabs[0].id },
-              func: () => {
-                  const selectedText = window.getSelection().toString().trim();
-                  console.log("Selected text in tab: ", selectedText); // Debug output
-                  return selectedText;
-              }
-          }, (results) => {
-              const highlightedText = results[0].result;
-
-              if (highlightedText) {
-                  console.log('Popup opened, highlighted text found: ', highlightedText);
-                  injectProcessHighlightedText(highlightedText, savedSpeed, fixedSizeBackground);
-              } else {
-                  console.error('No highlighted text found.');
-                  injectSelectionMode(savedSpeed, fixedSizeBackground);
-              }
-          });
-      });
-  });
+                if (highlightedText) {
+                    console.log('Popup opened, highlighted text found: ', highlightedText);
+                    injectProcessHighlightedText(highlightedText, savedSpeed, fixedSizeBackground);
+                } else {
+                    injectSelectionMode(savedSpeed, fixedSizeBackground);
+                }
+            });
+        });
+    });
 
     // Add event listeners //4th storage change
     document.getElementById('speedRange').addEventListener('input', updateSpeed);
@@ -59,157 +57,162 @@ document.addEventListener('DOMContentLoaded', () => {
     document.getElementById('textSizeNumber').addEventListener('input', updateTextSize);
     document.getElementById('textColour').addEventListener('input', debounce(updateTextColour, 300));
     document.getElementById('backgroundColour').addEventListener('input', debounce(updateBackgroundColour, 300));
-
 });
 
 //5th storage change below (make an update function)
 
 // Functions to automatically process any highlighted text
-    function injectProcessHighlightedText(text, speed) {
-      console.log("Injecting processHighlightedText with text:", text, "and speed:", speed); // Debug output
-      
-      chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
-          chrome.scripting.executeScript({
-              target: { tabId: tabs[0].id },
-              func: processHighlightedText,
-              args: [text, parseFloat(speed)]
-          });
-      });
-      closePopup(); // Close the popup after processing the text
-    }
+function injectProcessHighlightedText(text, speed) {
+    console.log("Injecting processHighlightedText with text:", text, "and speed:", speed); // Debug output
 
-    function processHighlightedText(text, speed) {
-      console.log("Processing passed-in text:", text, "at speed:", speed); // Debug output
-      if (text) {
-          displayWords(text, speed);
-      }
+    chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
+        chrome.scripting.executeScript({
+            target: { tabId: tabs[0].id },
+            func: processHighlightedText,
+            args: [text, parseFloat(speed)]
+        });
+    });
+    closePopup(); // Close the popup after processing the text
+}
+
+function processHighlightedText(text, speed) {
+    console.log("Processing passed-in text:", text, "at speed:", speed); // Debug output
+    if (text) {
+        displayWords(text, speed);
     }
+}
 
 // Functions to start selection mode with the given speed
-    function injectSelectionMode(speed) {
-        chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
-            chrome.scripting.executeScript({
-                target: { tabId: tabs[0].id },
-                func: startSelectionMode,
-                args: [parseFloat(speed)]
-            });
+function injectSelectionMode(speed) {
+    chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
+        chrome.scripting.executeScript({
+            target: { tabId: tabs[0].id },
+            func: startSelectionMode,
+            args: [parseFloat(speed)]
         });
-        document.getElementById('cancelSelection').style.display = 'block'; // Show the "Cancel Selection Mode" button
-    }
+    });
+}
 
-    function startSelectionMode(speed) {
-        console.log('Selection mode started with speed:', speed);
-        document.body.classList.add('selection-mode');
+function startSelectionMode(speed) {
+    console.log('Selection mode started with speed:', speed);
+    document.body.classList.add('selection-mode');
 
-        const handleClick = function(event) {
-            if (document.body.classList.contains('selection-mode')) {
-                // Re-check the speed from storage when a click is registered
-                chrome.storage.sync.get(['readingSpeed'], (result) => {
-                    const currentSpeed = result.readingSpeed || speed;
-
-                    // Proceed with paragraph click behavior
-                    let target = event.target;
-
-                    // Check if the clicked element is a paragraph
-                    const paragraphText = target.textContent.trim();
-                    console.log('Clicked-Text:', paragraphText);
-
-                    if (paragraphText) {
-                        event.preventDefault();
-                        displayWords(paragraphText, currentSpeed);
-                    }
-                });
+    const handleMouseOver = function(event) {
+        if (document.body.classList.contains('selection-mode')) {
+            let target = event.target;
+            if (target.textContent.trim()) {
+                document.body.style.cursor = 'crosshair';
             }
-        };
-        document.addEventListener('click', handleClick, { once: true });
-    }
+        }
+    };
+
+    const handleClick = function(event) {
+        if (document.body.classList.contains('selection-mode')) {
+            // Re-check the speed from storage when a click is registered
+            chrome.storage.sync.get(['readingSpeed'], (result) => {
+                const currentSpeed = result.readingSpeed || speed;
+
+                // Proceed with paragraph click behavior
+                let target = event.target;
+                const paragraphText = target.textContent.trim();
+                document.body.style.cursor = '';
+                document.body.classList.remove('selection-mode');
+
+                if (paragraphText) {
+                    event.preventDefault();
+                    displayWords(paragraphText, currentSpeed);
+                }
+            });
+        }
+    };
+
+    document.addEventListener('mouseover', handleMouseOver);
+    document.addEventListener('click', handleClick, { once: true });
+}
 
 // Update the speed in both the slider and the number input
-    function updateSpeed(event) {
-        const speed = event.target.value;
-        document.getElementById('speedRange').value = speed;
-        document.getElementById('speedNumber').value = speed;
+function updateSpeed(event) {
+    const speed = event.target.value;
+    document.getElementById('speedRange').value = speed;
+    document.getElementById('speedNumber').value = speed;
 
-        // Save the new speed value in Chrome storage
-        chrome.storage.sync.set({ readingSpeed: parseFloat(speed) });
+    // Save the new speed value in Chrome storage
+    chrome.storage.sync.set({ readingSpeed: parseFloat(speed) });
 
-        // Cancel selection mode before making a new one
-        cancelSelection();
+    // Cancel selection mode before making a new one
+    cancelSelection();
 
-        // restart selection mode with the new speed
-        injectSelectionMode(speed);
-    }
+    // restart selection mode with the new speed
+    injectSelectionMode(speed);
+}
 
 // Update the text size in both the slider and the number input
-    function updateTextSize(event) {
-        const textSize = event.target.value;
-        document.getElementById('textSizeNumber').value = textSize;
+function updateTextSize(event) {
+    const textSize = event.target.value;
+    document.getElementById('textSizeNumber').value = textSize;
 
-        // Save the new text size value in Chrome storage
-        chrome.storage.sync.set({ textSize: parseFloat(textSize) });
-    }
+    // Save the new text size value in Chrome storage
+    chrome.storage.sync.set({ textSize: parseFloat(textSize) });
+}
 
 // Update the background checkbox
-    function updateBackgroundSize(event) {
-      const isChecked = event.target.checked; // Get the current state of the checkbox
-      chrome.storage.sync.set({ fixedSizeBackground: isChecked }); // Save the current state to storage
-    }
+function updateBackgroundSize(event) {
+    const isChecked = event.target.checked; // Get the current state of the checkbox
+    chrome.storage.sync.set({ fixedSizeBackground: isChecked }); // Save the current state to storage
+}
 
 // Update the text colour
-    function updateTextColour(event) {
-        const textColour = event.target.value; // Get the current state of the colour input
-        document.getElementById('textColour').value = textColour;
-        chrome.storage.sync.set({ textColour: textColour }); // Save the current state to storage
-    }
+function updateTextColour(event) {
+    const textColour = event.target.value; // Get the current state of the colour input
+    document.getElementById('textColour').value = textColour;
+    chrome.storage.sync.set({ textColour: textColour }); // Save the current state to storage
+}
 
-    function updateBackgroundColour(event) {
-        const backgroundColour = event.target.value; // Get the current state of the colour input
-        document.getElementById('backgroundColour').value = backgroundColour;
-        chrome.storage.sync.set({ backgroundColour: backgroundColour }); // Save the current state to storage
-    }
+function updateBackgroundColour(event) {
+    const backgroundColour = event.target.value; // Get the current state of the colour input
+    document.getElementById('backgroundColour').value = backgroundColour;
+    chrome.storage.sync.set({ backgroundColour: backgroundColour }); // Save the current state to storage
+}
 
 // Exit button
-    document.getElementById('exit').addEventListener('click', () => {
-        closePopup();
-    });
+document.getElementById('exit').addEventListener('click', () => {
+    closePopup();
+});
 
-    function closePopup() {
-        if (!isPopupClosed) {
-            isPopupClosed = true;
-            window.close();
-        }
-      }
+function closePopup() {
+    if (!isPopupClosed) {
+        isPopupClosed = true;
+        window.close();
+    }
+}
 
 // Reset settings button
-    document.getElementById('reset').addEventListener('click', () => {
-        resetAllSettings();
-    });
+document.getElementById('reset').addEventListener('click', () => {
+    resetAllSettings();
+});
 
-    function resetAllSettings() {
-        console.log("Resetting settings"); // Debug output
-        //default values
-        defaultSpeed = 4
-        defaultBackgroundColour = '#000000'
-        defaultTextColour = '#FFFFFF'
-        defaultTextSize = 34
-        defaultBackgroundSizeFlag = false
-        defaultOverlayPosition = 'auto';
+function resetAllSettings() {
+    console.log("Resetting settings"); // Debug output
+    //default values
+    const defaultSpeed = 4;
+    const defaultBackgroundColour = '#000000';
+    const defaultTextColour = '#FFFFFF';
+    const defaultTextSize = 34;
+    const defaultBackgroundSizeFlag = false;
+    const defaultOverlayPosition = 'auto';
 
-        chrome.storage.sync.set({ readingSpeed: parseFloat(defaultSpeed) });
-        chrome.storage.sync.set({ backgroundColour: defaultBackgroundColour });
-        chrome.storage.sync.set({ textColour: defaultTextColour });
-        chrome.storage.sync.set({ textSize: defaultTextSize });
-        chrome.storage.sync.set({ fixedSizeBackground: defaultBackgroundSizeFlag });
-        chrome.storage.sync.set({ overlayPosition: defaultOverlayPosition });
+    chrome.storage.sync.set({ readingSpeed: parseFloat(defaultSpeed) });
+    chrome.storage.sync.set({ backgroundColour: defaultBackgroundColour });
+    chrome.storage.sync.set({ textColour: defaultTextColour });
+    chrome.storage.sync.set({ textSize: defaultTextSize });
+    chrome.storage.sync.set({ fixedSizeBackground: defaultBackgroundSizeFlag });
+    chrome.storage.sync.set({ overlayPosition: defaultOverlayPosition });
 
-        document.getElementById('speedRange').value = defaultSpeed;
-        document.getElementById('speedNumber').value = defaultSpeed;
-        document.getElementById('backgroundColour').value = defaultBackgroundColour;
-        document.getElementById('textColour').value = defaultTextColour;
-        document.getElementById('textSizeNumber').value = defaultTextSize;
-        document.getElementById('textSizeRange').value = defaultTextSize;
-        document.getElementById('fixedSizeBackgroundToggle').checked = false;
-
-      }
-
-
+    document.getElementById('speedRange').value = defaultSpeed;
+    document.getElementById('speedNumber').value = defaultSpeed;
+    document.getElementById('backgroundColour').value = defaultBackgroundColour;
+    document.getElementById('textColour').value = defaultTextColour;
+    document.getElementById('textSizeNumber').value = defaultTextSize;
+    document.getElementById('textSizeRange').value = defaultTextSize;
+    document.getElementById('fixedSizeBackgroundToggle').checked = false;
+}
