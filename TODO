@@ -2,8 +2,8 @@
  - Make it so the cursor goes back to normal (exciting selection mode) as soon as text starts to be 'read' out
  - Make the overlay retain its position in memory
  - Make a settings menu that has:
-    - Changing text colour
-    - Changing background colour
+    - C̶h̶a̶n̶g̶i̶n̶g̶ ̶t̶e̶x̶t̶ ̶c̶o̶l̶o̶u̶r̶
+    - C̶h̶a̶n̶g̶i̶n̶g̶ ̶b̶a̶c̶k̶g̶r̶o̶u̶n̶d̶ ̶c̶o̶l̶o̶u̶r̶
     - C̶h̶a̶n̶g̶i̶n̶g̶ ̶t̶e̶x̶t̶ ̶s̶i̶z̶e̶
     - Change shortcuts for things
     - Multiple select mode until turn off
