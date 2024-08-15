@@ -29,8 +29,8 @@ function showWord(speed) {
         overlay.style.width = 'auto';
       }
 
-      // Check if current word ends with punctuation before advancing the index
-      if (currentWord.trim().endsWith('.') || currentWord.trim().endsWith('!')) {
+      // Check if current word ends with punctuation before advancing the index, only if pausePunctuation is true
+      if (pausePunctuation && (currentWord.trim().endsWith('.') || currentWord.trim().endsWith('!'))) {
         tempPause = true;
       }
 
@@ -110,7 +110,7 @@ function displayWords(text, speed) {
     const textColour = result.textColour || 'black';
     const backgroundColour = result.backgroundColour || 'white';
     const overlayPosition = result.overlayPosition || { top: '50%', left: '50%' };
-    const pausePunctuation = result.pausePunctuation || false;
+    pausePunctuation = result.pausePunctuation || false;
 
     overlay.style.position = 'fixed';
     overlay.style.top = overlayPosition.top;
