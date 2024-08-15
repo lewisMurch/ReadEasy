@@ -16,8 +16,8 @@ document.addEventListener('DOMContentLoaded', () => {
         const savedSpeed = result.readingSpeed || 2;
         const fixedSizeBackground = result.fixedSizeBackground !== undefined ? result.fixedSizeBackground : false;
         const textSize = result.textSize || 34;
-        const textColour = result.textColour || '#000000';
-        const backgroundColour = result.backgroundColour || '#f9f9f9';
+        const textColour = result.textColour || '#f9f9f9';
+        const backgroundColour = result.backgroundColour || '#000000';
         const pausePunctuation = result.pausePunctuation || false;
 
         // Set the values for speed and text size elements //3rd storage change
