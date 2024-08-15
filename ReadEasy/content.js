@@ -37,20 +37,29 @@ function displayWords(text, speed) {
     function stopDragging() {
       document.onmousemove = null;
       document.onmouseup = null;
+
+      // Save the current position to Chrome sync storage
+      chrome.storage.sync.set({
+        overlayPosition: {
+          top: element.style.top,
+          left: element.style.left
+        }
+      });
     }
   }
 
   // Get the user's preferences from Chrome storage
-  chrome.storage.sync.get(['fixedSizeBackground', 'textSize', 'textColour', 'backgroundColour'], function(result) {
+  chrome.storage.sync.get(['fixedSizeBackground', 'textSize', 'textColour', 'backgroundColour', 'overlayPosition'], function(result) {
     const fixedSizeBackground = result.fixedSizeBackground || false;
-    const textSize = result.textSize || '5px';  // Default of 34px if not found
+    const textSize = result.textSize || '5px';  // Default of 5px if not found
     const textColour = result.textColour || 'black';
     const backgroundColour = result.backgroundColour || 'white';
+    const overlayPosition = result.overlayPosition || { top: '50%', left: '50%' };
 
     // Style the overlay for proper centering
     overlay.style.position = 'fixed';
-    overlay.style.top = '50%';
-    overlay.style.left = '50%';
+    overlay.style.top = overlayPosition.top;
+    overlay.style.left = overlayPosition.left;
     overlay.style.transform = 'translate(-50%, -50%)';
     overlay.style.backgroundColor = backgroundColour;
     overlay.style.color = textColour;
