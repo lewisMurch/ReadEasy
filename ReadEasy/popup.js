@@ -1,3 +1,7 @@
+// chrome.storage.sync.get(null, function(items) {
+//     console.log(items);
+// });
+
 let isPopupClosed = false; // Flag to track if the popup has been closed
 
 // Debounce function to limit how often a function is executed (fixes the colour picking spamming storage with api requests)
@@ -10,7 +14,7 @@ function debounce(func, delay) {
 }
 
 document.addEventListener('DOMContentLoaded', () => {
-    chrome.storage.sync.get(['readingSpeed', 'fixedSizeBackground', 'textSize', 'textColour', 'backgroundColour', 'pausePunctuation'], (result) => { //1st storage change
+    chrome.storage.sync.get(['readingSpeed', 'fixedSizeBackground', 'textSize', 'textColour', 'backgroundColour', 'pausePunctuation', 'pausePunctuationLength'], (result) => { //1st storage change
 
         //2nd storage change
         const savedSpeed = result.readingSpeed || 2;
@@ -19,6 +23,8 @@ document.addEventListener('DOMContentLoaded', () => {
         const textColour = result.textColour || '#f9f9f9';
         const backgroundColour = result.backgroundColour || '#000000';
         const pausePunctuation = result.pausePunctuation || false;
+        const pausePunctuationLength = result.pausePunctuationLength || 4;
+
 
         // Set the values for speed and text size elements //3rd storage change
         document.getElementById('speedRange').value = savedSpeed;
@@ -29,6 +35,9 @@ document.addEventListener('DOMContentLoaded', () => {
         document.getElementById('textColour').value = textColour;
         document.getElementById('backgroundColour').value = backgroundColour;
         document.getElementById('pausePunctuation').checked = pausePunctuation;
+        document.getElementById('pausePunctuationRange').value = pausePunctuationLength;
+        document.getElementById('pausePunctuationNumber').value = pausePunctuationLength;
+        
         
 
         chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
@@ -61,6 +70,9 @@ document.addEventListener('DOMContentLoaded', () => {
     document.getElementById('textColour').addEventListener('input', debounce(updateTextColour, 300));
     document.getElementById('backgroundColour').addEventListener('input', debounce(updateBackgroundColour, 300));
     document.getElementById('pausePunctuation').addEventListener('change', updatePausePunctuation);
+    document.getElementById('pausePunctuationRange').addEventListener('input', updatePausePunctuationLength);
+    document.getElementById('pausePunctuationNumber').addEventListener('input', updatePausePunctuationLength);
+
 });
 
 //5th storage change below (make an update function)
@@ -176,6 +188,15 @@ function updatePausePunctuation(event) {
     const pausePunctuation = event.target.checked; // Get the current state of the checkbox
     document.getElementById('pausePunctuation').value = pausePunctuation;
     chrome.storage.sync.set({ pausePunctuation: pausePunctuation }); // Save the current state to storage
+}
+
+function updatePausePunctuationLength(event) {
+    const pausePunctuation = event.target.value;
+    document.getElementById('pausePunctuationRange').value = pausePunctuation;
+    document.getElementById('pausePunctuationNumber').value = pausePunctuation;
+
+    // Save the new text size value in Chrome storage
+    chrome.storage.sync.set({ pausePunctuationLength: parseFloat(pausePunctuation) });
 }
 
 // Exit button
