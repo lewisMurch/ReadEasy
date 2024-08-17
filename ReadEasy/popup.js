@@ -160,6 +160,7 @@ function updateSpeed(event) {
 function updateTextSize(event) {
     const textSize = event.target.value;
     document.getElementById('textSizeNumber').value = textSize;
+    document.getElementById('textSizeRange').value = textSize;
 
     // Save the new text size value in Chrome storage
     chrome.storage.sync.set({ textSize: parseFloat(textSize) });
@@ -226,6 +227,7 @@ function resetAllSettings() {
     const defaultBackgroundSizeFlag = false;
     const defaultOverlayPosition = 'auto';
     const defaultPausePunctuation = false;
+    const defaultpausePunctuationLength = 4;
 
     chrome.storage.sync.set({ readingSpeed: parseFloat(defaultSpeed) });
     chrome.storage.sync.set({ backgroundColour: defaultBackgroundColour });
@@ -234,6 +236,8 @@ function resetAllSettings() {
     chrome.storage.sync.set({ fixedSizeBackground: defaultBackgroundSizeFlag });
     chrome.storage.sync.set({ overlayPosition: defaultOverlayPosition });
     chrome.storage.sync.set({ pausePunctuation: defaultPausePunctuation });
+    chrome.storage.sync.set({ defaultpausePunctuationLength: defaultpausePunctuationLength });
+
 
     document.getElementById('speedRange').value = defaultSpeed;
     document.getElementById('speedNumber').value = defaultSpeed;
@@ -243,5 +247,6 @@ function resetAllSettings() {
     document.getElementById('textSizeRange').value = defaultTextSize;
     document.getElementById('fixedSizeBackgroundToggle').checked = false;
     document.getElementById('pausePunctuation').checked = false;
-
+    document.getElementById('pausePunctuationRange').value = defaultpausePunctuationLength;
+    document.getElementById('pausePunctuationNumber').value = defaultpausePunctuationLength;
 }
