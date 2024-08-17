@@ -1,7 +1,7 @@
  - F̶i̶x̶ s̶e̶l̶e̶c̶t̶i̶o̶n̶ m̶o̶d̶e̶ s̶o̶ a̶s̶ s̶o̶o̶n̶ a̶s̶ t̶h̶e̶ p̶l̶u̶g̶i̶n̶ i̶s̶ o̶p̶e̶n̶e̶d̶, a̶n̶y̶ s̶e̶l̶e̶c̶t̶e̶d̶ t̶e̶x̶t̶ i̶s̶ i̶n̶s̶t̶a̶n̶t̶l̶y̶ r̶e̶a̶d̶ o̶u̶t̶
  - M̶a̶k̶e̶ ̶i̶t̶ ̶s̶o̶ ̶t̶h̶e̶ ̶c̶u̶r̶s̶o̶r̶ ̶g̶o̶e̶s̶ ̶b̶a̶c̶k̶ ̶t̶o̶ ̶n̶o̶r̶m̶a̶l̶ ̶(̶e̶x̶c̶i̶t̶i̶n̶g̶ ̶s̶e̶l̶e̶c̶t̶i̶o̶n̶ ̶m̶o̶d̶e̶)̶ ̶a̶s̶ ̶s̶o̶o̶n̶ ̶a̶s̶ ̶t̶e̶x̶t̶ ̶s̶t̶a̶r̶t̶s̶ ̶t̶o̶ ̶b̶e̶ ̶'̶r̶e̶a̶d̶'̶ ̶o̶u̶t̶
  - M̶a̶k̶e̶ ̶t̶h̶e̶ ̶o̶v̶e̶r̶l̶a̶y̶ ̶r̶e̶t̶a̶i̶n̶ ̶i̶t̶s̶ ̶p̶o̶s̶i̶t̶i̶o̶n̶ ̶i̶n̶ ̶m̶e̶m̶o̶r̶y̶
- - Stop debug print every word
+ - S̶t̶o̶p̶ d̶e̶b̶u̶g̶ p̶r̶i̶n̶t̶ e̶v̶e̶r̶y̶ w̶o̶r̶d̶
  - Make so escape turns off select mode 
 
  - Make a settings menu that has:
@@ -12,7 +12,7 @@
     - Multiple select mode until turn off
     - R̶e̶s̶e̶t̶ ̶a̶l̶l̶ ̶s̶e̶t̶t̶i̶n̶g̶s̶ ̶b̶u̶t̶t̶o̶n̶
     - A̶ ̶m̶o̶d̶e̶ ̶w̶h̶e̶r̶e̶ ̶f̶u̶l̶l̶ ̶s̶t̶o̶p̶s̶/̶ ̶p̶u̶n̶c̶t̶u̶a̶t̶i̶o̶n̶ ̶t̶a̶k̶e̶ ̶a̶ ̶s̶m̶a̶l̶l̶ ̶b̶r̶e̶a̶k̶ ̶i̶n̶ ̶d̶i̶s̶p̶l̶a̶y̶ ̶t̶e̶x̶t̶ ̶s̶o̶ ̶e̶a̶s̶i̶e̶r̶ ̶t̶o̶ ̶r̶e̶a̶d̶ ̶a̶n̶d̶ ̶u̶n̶d̶e̶r̶s̶t̶a̶n̶d̶
-    - Variable for pause time ^
+    - V̶a̶r̶i̶a̶b̶l̶e̶ f̶o̶r̶ p̶a̶u̶s̶e̶ t̶i̶m̶e̶ ^̶
 
  - A̶d̶d̶ ̶a̶ ̶c̶a̶n̶c̶e̶l̶ ̶b̶u̶t̶t̶o̶n̶ ̶w̶h̶i̶l̶e̶ ̶i̶t̶ ̶i̶s̶ ̶s̶t̶i̶l̶l̶ ̶r̶e̶a̶d̶i̶n̶g̶ ̶o̶u̶t̶
  - Add TTS mode
