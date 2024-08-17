@@ -8,8 +8,10 @@ let words = [];  // This will store the words
 // Variables to be set by chrome.storage.sync.get
 let fixedSizeBackground;
 let overlay;
+let pausePunctuation;
+let pausePunctuationLength;
 
-function showWord(speed) {
+function showWord(speed, pausePunctuationLength) {
   if (stopDisplay) {
     overlay.remove();  // Remove the overlay if the display is stopped
     return;
@@ -35,9 +37,7 @@ function showWord(speed) {
       }
 
       currentIndex++;
-
-      console.log(currentWord);
-      timeoutId = setTimeout(() => showWord(speed), 1000 / (speed * 2));
+      timeoutId = setTimeout(() => showWord(speed, pausePunctuationLength), 1000 / (speed * 2));
 
       if (tempPause) {
         pauseOverlay();
@@ -45,7 +45,7 @@ function showWord(speed) {
         setTimeout(function() {
           console.log('pause over');
           playOverlay(speed);
-        }, 400);  // Pause after displaying the punctuation word
+        }, 160 * pausePunctuationLength);  // Pause after displaying the punctuation word
       }
     }
   } else {
@@ -111,7 +111,7 @@ function displayWords(text, speed) {
     const backgroundColour = result.backgroundColour || 'white';
     const overlayPosition = result.overlayPosition || { top: '50%', left: '50%' };
     pausePunctuation = result.pausePunctuation || false;
-    pausePunctuationLength = result.pausePunctuationLength || 4
+    pausePunctuationLength = result.pausePunctuationLength || 4;
 
     overlay.style.position = 'fixed';
     overlay.style.top = overlayPosition.top;
@@ -139,7 +139,7 @@ function displayWords(text, speed) {
 
     makeDraggable(overlay);
 
-    showWord(speed);
+    showWord(speed, pausePunctuationLength);
   });
 
   document.addEventListener('keydown', (event) => {
@@ -159,6 +159,6 @@ function pauseOverlay() {
 function playOverlay(speed) {
   if (paused) {
     paused = false;
-    showWord(speed);
+    showWord(speed, pausePunctuationLength);
   }
 }
