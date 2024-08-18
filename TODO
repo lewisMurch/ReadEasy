@@ -6,6 +6,7 @@
  - Fix multiple instances of the overlay running at once
  - Fix odd small black circle occasionally occurs
  - intelligent Read whole page mode, excludes images and social media and links etc.
+ - Pause punctuation 1/3rd speed for commas
 
  - Make a settings menu that has:
     - C̶h̶a̶n̶g̶i̶n̶g̶ ̶t̶e̶x̶t̶ ̶c̶o̶l̶o̶u̶r̶
