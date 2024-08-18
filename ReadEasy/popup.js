@@ -38,6 +38,13 @@ document.addEventListener('DOMContentLoaded', () => {
         document.getElementById('pausePunctuationRange').value = pausePunctuationLength;
         document.getElementById('pausePunctuationNumber').value = pausePunctuationLength;
         
+
+        if(pausePunctuation == true){
+            document.getElementById('pausePunctuationNumber').parentElement.style.display = 'block';
+        }
+        else{
+            document.getElementById('pausePunctuationNumber').parentElement.style.display = 'none';
+        }
         
 
         chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
@@ -188,6 +195,14 @@ function updateBackgroundColour(event) {
 function updatePausePunctuation(event) {
     const pausePunctuation = event.target.checked; // Get the current state of the checkbox
     document.getElementById('pausePunctuation').value = pausePunctuation;
+
+    if(pausePunctuation == true){
+        document.getElementById('pausePunctuationNumber').parentElement.style.display = 'block';
+    }
+    else{
+        document.getElementById('pausePunctuationNumber').parentElement.style.display = 'none';
+    }
+
     chrome.storage.sync.set({ pausePunctuation: pausePunctuation }); // Save the current state to storage
 }
 
