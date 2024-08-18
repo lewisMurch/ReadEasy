@@ -22,7 +22,7 @@
       white-space: nowrap;
     }
 
-    .speed-control, .textSize-control, .color-control {
+    .speed-control, .textSize-control, .color-control, .font-control {
       display: flex;
       align-items: center;
       justify-content: space-between;
@@ -32,9 +32,6 @@
       border-radius: 8px;
       box-shadow: 0 4px 6px rgba(0,0,0,0.1);
     }
-
-
-
 
     .punctuation-range-control {
       display: flex;
@@ -56,9 +53,6 @@
     .punctuation-range-control input[type="range"] {
       width: 65%; 
     }
-
-
-
 
     label {
       font-size: 1.3em;
@@ -255,9 +249,6 @@
   text-overflow: ellipsis; /* Show ellipsis for overflow text */
 }
 
-
-
-
   </style>
 </head>
 <body>
@@ -285,6 +276,27 @@
     <div class="color-control">
       <label for="textColour">Text Colour:</label>
       <input type="color" id="textColour" value="#f9f9f9">
+    </div>
+
+    <div class="font-control">
+      <label for="fontChooser">Font:</label>
+      <select id="fontChooser">
+        <option value="'Arial', sans-serif">Arial</option>
+        <option value="'Verdana', sans-serif">Verdana</option>
+        <option value="'Helvetica Neue', sans-serif">Helvetica Neue</option>
+        <option value="'Times New Roman', serif">Times New Roman</option>
+        <option value="'Courier New', monospace">Courier New</option>
+        <option value="'Georgia', serif">Georgia</option>
+        <option value="'Comic Sans MS', cursive">Comic Sans MS</option>
+        <option value="'Trebuchet MS', sans-serif">Trebuchet MS</option>
+        <option value="'Impact', sans-serif">Impact</option>
+        <option value="'Lucida Sans Unicode', sans-serif">Lucida Sans Unicode</option>
+        <option value="'Tahoma', sans-serif">Tahoma</option>
+        <option value="'Palatino Linotype', serif">Palatino Linotype</option>
+        <option value="'Gill Sans', sans-serif">Gill Sans</option>
+        <option value="'Roboto', sans-serif">Roboto</option>
+        <option value="'Open Sans', sans-serif">Open Sans</option>
+      </select>
     </div>
 
     <div class="toggle-switch">

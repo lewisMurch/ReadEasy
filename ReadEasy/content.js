@@ -105,7 +105,7 @@ function displayWords(text, speed) {
     }
   }
 
-  chrome.storage.sync.get(['fixedSizeBackground', 'textSize', 'textColour', 'backgroundColour', 'overlayPosition', 'pausePunctuation', 'pausePunctuationLength'], function(result) {
+  chrome.storage.sync.get(['fixedSizeBackground', 'textSize', 'textColour', 'backgroundColour', 'overlayPosition', 'pausePunctuation', 'pausePunctuationLength', 'fontType'], function(result) {
     fixedSizeBackground = result.fixedSizeBackground || false;
     const textSize = result.textSize || '5px';
     const textColour = result.textColour || 'white';
@@ -113,6 +113,7 @@ function displayWords(text, speed) {
     const overlayPosition = result.overlayPosition || { top: '50%', left: '50%' };
     pausePunctuation = result.pausePunctuation || false;
     pausePunctuationLength = result.pausePunctuationLength || 4;
+    const fontType = result.fontType || "'Arial', sans-serif";
 
     overlay.style.position = 'fixed';
     overlay.style.top = overlayPosition.top;
@@ -123,7 +124,7 @@ function displayWords(text, speed) {
     overlay.style.padding = '10px';
     overlay.style.borderRadius = '5px';
     overlay.style.textAlign = 'center';
-    overlay.style.fontFamily = 'Arial, sans-serif';
+    overlay.style.fontFamily = fontType;
     overlay.style.fontSize = textSize + 'px';
     overlay.style.whiteSpace = 'nowrap';
     overlay.style.cursor = 'move';

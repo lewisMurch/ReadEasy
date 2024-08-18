@@ -14,16 +14,17 @@ function debounce(func, delay) {
 }
 
 document.addEventListener('DOMContentLoaded', () => {
-    chrome.storage.sync.get(['readingSpeed', 'fixedSizeBackground', 'textSize', 'textColour', 'backgroundColour', 'pausePunctuation', 'pausePunctuationLength'], (result) => { //1st storage change
+    chrome.storage.sync.get(['readingSpeed', 'fixedSizeBackground', 'textSize', 'textColour', 'backgroundColour', 'pausePunctuation', 'pausePunctuationLength', 'fontType'], (result) => { //1st storage change
 
         //2nd storage change
-        const savedSpeed = result.readingSpeed || 2;
+        const savedSpeed = result.readingSpeed || 4;
         const fixedSizeBackground = result.fixedSizeBackground !== undefined ? result.fixedSizeBackground : false;
         const textSize = result.textSize || 34;
         const textColour = result.textColour || '#f9f9f9';
         const backgroundColour = result.backgroundColour || '#000000';
         const pausePunctuation = result.pausePunctuation || false;
         const pausePunctuationLength = result.pausePunctuationLength || 4;
+        const fontType = result.fontType || "'Arial', sans-serif"
 
 
         // Set the values for speed and text size elements //3rd storage change
@@ -37,6 +38,7 @@ document.addEventListener('DOMContentLoaded', () => {
         document.getElementById('pausePunctuation').checked = pausePunctuation;
         document.getElementById('pausePunctuationRange').value = pausePunctuationLength;
         document.getElementById('pausePunctuationNumber').value = pausePunctuationLength;
+        document.getElementById('fontChooser').value = fontType;
         
 
         if(pausePunctuation == true){
@@ -79,6 +81,8 @@ document.addEventListener('DOMContentLoaded', () => {
     document.getElementById('pausePunctuation').addEventListener('change', updatePausePunctuation);
     document.getElementById('pausePunctuationRange').addEventListener('input', updatePausePunctuationLength);
     document.getElementById('pausePunctuationNumber').addEventListener('input', updatePausePunctuationLength);
+    document.getElementById('fontChooser').addEventListener('input', updatefontType);
+
 
 });
 
@@ -215,6 +219,14 @@ function updatePausePunctuationLength(event) {
     chrome.storage.sync.set({ pausePunctuationLength: parseFloat(pausePunctuation) });
 }
 
+function updatefontType(event) {
+    const fontType = event.target.value; // Get the current state of the colour input
+    document.getElementById('fontChooser').value = fontType;
+    chrome.storage.sync.set({ fontType: fontType }); // Save the current state to storage
+}
+
+
+
 // Exit button
 document.getElementById('exit').addEventListener('click', () => {
     endSelectionMode(); // End selection mode before closing the popup
@@ -241,13 +253,6 @@ function endSelectionMode() {
     });
 }
 
-function closePopup() {
-    if (!isPopupClosed) {
-        isPopupClosed = true;
-        window.close();
-    }
-}
-
 // Reset settings button
 document.getElementById('reset').addEventListener('click', () => {
     resetAllSettings();
@@ -264,6 +269,7 @@ function resetAllSettings() {
     const defaultOverlayPosition = 'auto';
     const defaultPausePunctuation = false;
     const defaultpausePunctuationLength = 4;
+    const defaultfontType = "'Arial', sans-serif";
 
     chrome.storage.sync.set({ readingSpeed: parseFloat(defaultSpeed) });
     chrome.storage.sync.set({ backgroundColour: defaultBackgroundColour });
@@ -272,8 +278,8 @@ function resetAllSettings() {
     chrome.storage.sync.set({ fixedSizeBackground: defaultBackgroundSizeFlag });
     chrome.storage.sync.set({ overlayPosition: defaultOverlayPosition });
     chrome.storage.sync.set({ pausePunctuation: defaultPausePunctuation });
-    chrome.storage.sync.set({ defaultpausePunctuationLength: defaultpausePunctuationLength });
-
+    chrome.storage.sync.set({ pausePunctuationLength: defaultpausePunctuationLength });
+    chrome.storage.sync.set({ fontType: defaultfontType });
 
     document.getElementById('speedRange').value = defaultSpeed;
     document.getElementById('speedNumber').value = defaultSpeed;
