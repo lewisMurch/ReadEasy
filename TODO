@@ -3,6 +3,7 @@
  - M̶a̶k̶e̶ ̶t̶h̶e̶ ̶o̶v̶e̶r̶l̶a̶y̶ ̶r̶e̶t̶a̶i̶n̶ ̶i̶t̶s̶ ̶p̶o̶s̶i̶t̶i̶o̶n̶ ̶i̶n̶ ̶m̶e̶m̶o̶r̶y̶
  - S̶t̶o̶p̶ d̶e̶b̶u̶g̶ p̶r̶i̶n̶t̶ e̶v̶e̶r̶y̶ w̶o̶r̶d̶
  - ̶M̶a̶k̶e̶ ̶s̶o̶ ̶e̶s̶c̶a̶p̶e̶ ̶t̶u̶r̶n̶s̶ ̶o̶f̶f̶ ̶s̶e̶l̶e̶c̶t̶ ̶m̶o̶d̶e̶ ̶
+ - Fix multiple instances of the overlay running at once
 
  - Make a settings menu that has:
     - C̶h̶a̶n̶g̶i̶n̶g̶ ̶t̶e̶x̶t̶ ̶c̶o̶l̶o̶u̶r̶
