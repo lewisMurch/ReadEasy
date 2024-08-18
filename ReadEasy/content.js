@@ -37,8 +37,9 @@ function showWord(speed, pausePunctuationLength) {
       }
 
       currentIndex++;
-      timeoutId = setTimeout(() => showWord(speed, pausePunctuationLength), 1000 / (speed * 2));
 
+      timeoutId = setTimeout(() => showWord(speed, pausePunctuationLength), 1500 / Math.pow(speed, 1.65));
+    
       if (tempPause) {
         pauseOverlay();
         tempPause = false;
