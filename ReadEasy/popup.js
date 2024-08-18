@@ -217,8 +217,29 @@ function updatePausePunctuationLength(event) {
 
 // Exit button
 document.getElementById('exit').addEventListener('click', () => {
+    endSelectionMode(); // End selection mode before closing the popup
     closePopup();
 });
+
+function closePopup() {
+    if (!isPopupClosed) {
+        isPopupClosed = true;
+        window.close();
+    }
+}
+
+// Function to end selection mode
+function endSelectionMode() {
+    chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
+        chrome.scripting.executeScript({
+            target: { tabId: tabs[0].id },
+            func: () => {
+                document.body.classList.remove('selection-mode');
+                document.body.style.cursor = ''; // Reset cursor style if it was changed
+            }
+        });
+    });
+}
 
 function closePopup() {
     if (!isPopupClosed) {

@@ -107,8 +107,8 @@ function displayWords(text, speed) {
   chrome.storage.sync.get(['fixedSizeBackground', 'textSize', 'textColour', 'backgroundColour', 'overlayPosition', 'pausePunctuation', 'pausePunctuationLength'], function(result) {
     fixedSizeBackground = result.fixedSizeBackground || false;
     const textSize = result.textSize || '5px';
-    const textColour = result.textColour || 'black';
-    const backgroundColour = result.backgroundColour || 'white';
+    const textColour = result.textColour || 'white';
+    const backgroundColour = result.backgroundColour || 'black';
     const overlayPosition = result.overlayPosition || { top: '50%', left: '50%' };
     pausePunctuation = result.pausePunctuation || false;
     pausePunctuationLength = result.pausePunctuationLength || 4;
