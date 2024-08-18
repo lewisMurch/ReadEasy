@@ -285,4 +285,5 @@ function resetAllSettings() {
     document.getElementById('pausePunctuation').checked = false;
     document.getElementById('pausePunctuationRange').value = defaultpausePunctuationLength;
     document.getElementById('pausePunctuationNumber').value = defaultpausePunctuationLength;
+    document.getElementById('pausePunctuationNumber').parentElement.style.display = 'none';
 }

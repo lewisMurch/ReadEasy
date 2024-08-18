@@ -33,7 +33,31 @@
       box-shadow: 0 4px 6px rgba(0,0,0,0.1);
     }
 
+    .punctuation-range-control {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 10px;
+      background-color: #ffffff;
+      padding: 15px;
+      border-radius: 8px;
+      box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+    }
+
+    .punctuation-range-control label {
+      margin-bottom: 10px; /* Adds space below the label */
+      display: block; /* Moves label to its own line above the slider */
+    }
+
     label {
+      font-size: 1.3em;
+      color: #303030;
+      display: flex;
+      align-items: center;
+      font-weight: bold;
+    }
+
+    .label-text {
       font-size: 1.3em;
       color: #303030;
       display: flex;
@@ -154,53 +178,74 @@
       margin-top: 15px; /* Add space between summary and first setting option */
     }
 
-    .toggle-switch .toggle-switch {
-      display: none;
-    }
+/* Hide the default checkbox */
+.toggle-switch input[type="checkbox"] {
+  display: none;
+}
 
-    /* The container for the toggle switch */
-    .toggle-switch .toggle-label {
-      display: inline-block;
-      position: relative;
-      cursor: pointer;
-      padding-left: 50px;
-      line-height: 24px;
-      font-size: 16px;
-    }
+/* Container for each toggle switch and label */
+.toggle-switch {
+  display: flex;
+  align-items: center;
+  justify-content: flex-start; /* Align content to the left */
+  margin-bottom: 10px; /* Space between each toggle switch group */
+}
 
-    .toggle-switch .toggle-label::before {
-      content: '';
-      position: absolute;
-      left: 0;
-      top: 0;
-      width: 40px;
-      height: 24px;
-      background-color: #ccc;
-      border-radius: 12px;
-      transition: background-color 0.3s;
-    }
+/* The toggle switch itself */
+.toggle-switch .toggle-label {
+  position: relative;
+  cursor: pointer;
+  margin-right: 10px; /* Space between the toggle and the label text */
+  width: 40px;
+  height: 24px;
+  flex-shrink: 0; /* Prevent the toggle from shrinking */
+}
 
-    /* The round slider inside the switch */
-    .toggle-switch .toggle-label::after {
-      content: '';
-      position: absolute;
-      left: 4px;
-      top: 4px;
-      width: 16px;
-      height: 16px;
-      background-color: white;
-      border-radius: 50%;
-      transition: transform 0.3s;
-    }
+/* The background of the toggle switch */
+.toggle-switch .toggle-label::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  background-color: #ccc;
+  border-radius: 12px;
+  transition: background-color 0.3s;
+}
 
-    /* When the checkbox is checked, change the background and move the slider */
-    .toggle-switch .toggle-switch:checked + .toggle-label::before {
-      background-color: #4CAF50;
-    }
+/* The round slider inside the switch */
+.toggle-switch .toggle-label::after {
+  content: '';
+  position: absolute;
+  left: 4px;
+  top: 4px;
+  width: 16px;
+  height: 16px;
+  background-color: white;
+  border-radius: 50%;
+  transition: transform 0.3s;
+}
 
-    .toggle-switch .toggle-switch:checked + .toggle-label::after {
-      transform: translateX(16px);
-    }
+/* When the checkbox is checked, change the background and move the slider */
+.toggle-switch input[type="checkbox"]:checked + .toggle-label::before {
+  background-color: #4CAF50;
+}
+
+.toggle-switch input[type="checkbox"]:checked + .toggle-label::after {
+  transform: translateX(16px);
+}
+
+/* Style for the label text */
+.toggle-switch .label-text {
+  flex-grow: 1; /* Allow the label text to take up remaining space */
+  white-space: nowrap; /* Prevent text from wrapping */
+  overflow: hidden; /* Hide overflow text */
+  text-overflow: ellipsis; /* Show ellipsis for overflow text */
+}
+
+
+
 
   </style>
 </head>
@@ -232,16 +277,18 @@
     </div>
 
     <div class="toggle-switch">
-      <input type="checkbox" id="fixedSizeBackgroundToggle" class="toggle-switch">
-      <label for="fixedSizeBackgroundToggle" class="toggle-label">Constant Background Size</label>
-    </div>
-
-    <div class="toggle-switch">
-      <input type="checkbox" id="pausePunctuation" class="toggle-switch">
-      <label for="pausePunctuation" class="toggle-label">Pause on Punctuation</label>
+      <input type="checkbox" id="fixedSizeBackgroundToggle">
+      <label for="fixedSizeBackgroundToggle" class="toggle-label"></label>
+      <span class="label-text">Constant Background Size</span>
     </div>
     
-    <div class="speed-control">
+    <div class="toggle-switch">
+      <input type="checkbox" id="pausePunctuation">
+      <label for="pausePunctuation" class="toggle-label"></label>
+      <span class="label-text">Pause on Punctuation</span>
+    </div>
+    
+    <div class="punctuation-range-control">
       <label for="pausePunctuationRange">Punctuation Pause Length:</label>
       <input type="range" id="pausePunctuationRange" min="1" max="10" value="4">
       <input type="number" id="pausePunctuationNumber" min="1" max="10" value="4">
