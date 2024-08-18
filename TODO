@@ -4,7 +4,8 @@
  - S̶t̶o̶p̶ d̶e̶b̶u̶g̶ p̶r̶i̶n̶t̶ e̶v̶e̶r̶y̶ w̶o̶r̶d̶
  - ̶M̶a̶k̶e̶ ̶s̶o̶ ̶e̶s̶c̶a̶p̶e̶ ̶t̶u̶r̶n̶s̶ ̶o̶f̶f̶ ̶s̶e̶l̶e̶c̶t̶ ̶m̶o̶d̶e̶ ̶
  - Fix multiple instances of the overlay running at once
- - fix odd small black circle occasionally occurs
+ - Fix odd small black circle occasionally occurs
+ - intelligent Read whole page mode, excludes images and social media and links etc.
 
  - Make a settings menu that has:
     - C̶h̶a̶n̶g̶i̶n̶g̶ ̶t̶e̶x̶t̶ ̶c̶o̶l̶o̶u̶r̶
