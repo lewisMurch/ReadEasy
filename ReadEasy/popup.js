@@ -24,7 +24,7 @@ document.addEventListener('DOMContentLoaded', () => {
         const backgroundColour = result.backgroundColour || '#000000';
         const pausePunctuation = result.pausePunctuation || false;
         const pausePunctuationLength = result.pausePunctuationLength || 4;
-        const fontType = result.fontType || "'Arial', sans-serif"
+        const fontType = result.fontType || "'Comic Sans MS', cursive"
 
 
         // Set the values for speed and text size elements //3rd storage change
@@ -82,8 +82,6 @@ document.addEventListener('DOMContentLoaded', () => {
     document.getElementById('pausePunctuationRange').addEventListener('input', updatePausePunctuationLength);
     document.getElementById('pausePunctuationNumber').addEventListener('input', updatePausePunctuationLength);
     document.getElementById('fontChooser').addEventListener('input', updatefontType);
-
-
 });
 
 //5th storage change below (make an update function)
@@ -225,8 +223,6 @@ function updatefontType(event) {
     chrome.storage.sync.set({ fontType: fontType }); // Save the current state to storage
 }
 
-
-
 // Exit button
 document.getElementById('exit').addEventListener('click', () => {
     endSelectionMode(); // End selection mode before closing the popup
@@ -269,7 +265,7 @@ function resetAllSettings() {
     const defaultOverlayPosition = 'auto';
     const defaultPausePunctuation = false;
     const defaultpausePunctuationLength = 4;
-    const defaultfontType = "'Arial', sans-serif";
+    const defaultfontType = "'Comic Sans MS', cursive";
 
     chrome.storage.sync.set({ readingSpeed: parseFloat(defaultSpeed) });
     chrome.storage.sync.set({ backgroundColour: defaultBackgroundColour });

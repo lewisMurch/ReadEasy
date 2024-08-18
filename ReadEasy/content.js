@@ -25,7 +25,8 @@ function showWord(speed, pausePunctuationLength) {
     const currentWord = words[currentIndex];
     
     if (currentWord !== undefined) {
-      overlay.textContent = currentWord;
+      overlay.textContent = '';  // Clear the overlay content before updating
+      overlay.textContent = currentWord;  // Update with the current word
 
       if (!fixedSizeBackground) {
         overlay.style.width = 'auto';
@@ -53,6 +54,7 @@ function showWord(speed, pausePunctuationLength) {
     overlay.remove();
   }
 }
+
 
 function displayWords(text, speed) {
   // Reset global variables
@@ -113,7 +115,7 @@ function displayWords(text, speed) {
     const overlayPosition = result.overlayPosition || { top: '50%', left: '50%' };
     pausePunctuation = result.pausePunctuation || false;
     pausePunctuationLength = result.pausePunctuationLength || 4;
-    const fontType = result.fontType || "'Arial', sans-serif";
+    const fontType = result.fontType || "'Comic Sans MS', cursive";
 
     overlay.style.position = 'fixed';
     overlay.style.top = overlayPosition.top;
