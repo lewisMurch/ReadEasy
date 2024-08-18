@@ -33,6 +33,31 @@
       box-shadow: 0 4px 6px rgba(0,0,0,0.1);
     }
 
+    .font-control select {
+      width: 100%;
+      padding: 10px;
+      font-size: 1.3em;
+      font-family: 'Helvetica Neue', Arial, sans-serif;
+      border: 1px solid #ddd;
+      border-radius: 4px;
+      background-color: #ffffff;
+      box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+      cursor: pointer;
+      appearance: none;
+      font-weight: bold;
+    }
+
+    .font-control label {
+      font-size: 1.3em;
+      color: #303030;
+      display: flex;
+      align-items: center;
+      font-weight: bold;
+      margin-bottom: 5px; /* Add a bit of space between the label and the select box */
+      padding-right: 10px;
+      padding-top: 8px;
+    }
+
     .punctuation-range-control {
       display: flex;
       align-items: center;
@@ -281,21 +306,21 @@
     <div class="font-control">
       <label for="fontChooser">Font:</label>
       <select id="fontChooser">
-        <option value="'Arial', sans-serif">Arial</option>
-        <option value="'Verdana', sans-serif">Verdana</option>
-        <option value="'Helvetica Neue', sans-serif">Helvetica Neue</option>
-        <option value="'Times New Roman', serif">Times New Roman</option>
-        <option value="'Courier New', monospace">Courier New</option>
-        <option value="'Georgia', serif">Georgia</option>
-        <option value="'Comic Sans MS', cursive">Comic Sans MS</option>
-        <option value="'Trebuchet MS', sans-serif">Trebuchet MS</option>
-        <option value="'Impact', sans-serif">Impact</option>
-        <option value="'Lucida Sans Unicode', sans-serif">Lucida Sans Unicode</option>
-        <option value="'Tahoma', sans-serif">Tahoma</option>
-        <option value="'Palatino Linotype', serif">Palatino Linotype</option>
-        <option value="'Gill Sans', sans-serif">Gill Sans</option>
-        <option value="'Roboto', sans-serif">Roboto</option>
-        <option value="'Open Sans', sans-serif">Open Sans</option>
+        <option value="'Arial', sans-serif" style="font-family: 'Arial', sans-serif;">Arial</option>
+        <option value="'Verdana', sans-serif" style="font-family: 'Verdana', sans-serif;">Verdana</option>
+        <option value="'Helvetica Neue', sans-serif" style="font-family: 'Helvetica Neue', sans-serif;">Helvetica Neue</option>
+        <option value="'Times New Roman', serif" style="font-family: 'Times New Roman', serif;">Times New Roman</option>
+        <option value="'Courier New', monospace" style="font-family: 'Courier New', monospace;">Courier New</option>
+        <option value="'Georgia', serif" style="font-family: 'Georgia', serif;">Georgia</option>
+        <option value="'Comic Sans MS', cursive" style="font-family: 'Comic Sans MS', cursive;">Comic Sans MS</option>
+        <option value="'Trebuchet MS', sans-serif" style="font-family: 'Trebuchet MS', sans-serif;">Trebuchet MS</option>
+        <option value="'Impact', sans-serif" style="font-family: 'Impact', sans-serif;">Impact</option>
+        <option value="'Lucida Sans Unicode', sans-serif" style="font-family: 'Lucida Sans Unicode', sans-serif;">Lucida Sans Unicode</option>
+        <option value="'Tahoma', sans-serif" style="font-family: 'Tahoma', sans-serif;">Tahoma</option>
+        <option value="'Palatino Linotype', serif" style="font-family: 'Palatino Linotype', serif;">Palatino Linotype</option>
+        <option value="'Gill Sans', sans-serif" style="font-family: 'Gill Sans', sans-serif;">Gill Sans</option>
+        <option value="'Roboto', sans-serif" style="font-family: 'Roboto', sans-serif;">Roboto</option>
+        <option value="'Open Sans', sans-serif" style="font-family: 'Open Sans', sans-serif;">Open Sans</option>
       </select>
     </div>
 
