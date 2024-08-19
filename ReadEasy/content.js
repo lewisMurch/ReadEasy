@@ -136,7 +136,7 @@ function displayWords(text, speed) {
 
   chrome.storage.sync.get(['fixedSizeBackground', 'textSize', 'textColour', 'backgroundColour', 'overlayPosition', 'pausePunctuation', 'pausePunctuationLength', 'fontType'], function(result) {
       fixedSizeBackground = result.fixedSizeBackground || false;
-      const textSize = result.textSize || '20px';  // Increase default text size
+      const textSize = result.textSize || '34px';  // Increase default text size
       const textColour = result.textColour || 'white';
       const backgroundColour = result.backgroundColour || 'black';
       const overlayPosition = result.overlayPosition || { top: '50%', left: '50%' };
@@ -154,7 +154,7 @@ function displayWords(text, speed) {
       currentOverlay.style.borderRadius = '5px';
       currentOverlay.style.textAlign = 'center';
       currentOverlay.style.fontFamily = fontType;
-      currentOverlay.style.fontSize = textSize;
+      currentOverlay.style.fontSize = textSize + 'px';  // Append 'px' to the text size
       currentOverlay.style.whiteSpace = 'nowrap';
       currentOverlay.style.cursor = 'move';
 
@@ -278,7 +278,7 @@ function displayWordsManual(text) {
 
   chrome.storage.sync.get(['fixedSizeBackground', 'textSize', 'textColour', 'backgroundColour', 'overlayPosition', 'fontType'], function(result) {
       fixedSizeBackground = result.fixedSizeBackground || false;
-      const textSize = result.textSize || '5px';
+      const textSize = result.textSize || '34px';
       const textColour = result.textColour || 'white';
       const backgroundColour = result.backgroundColour || 'black';
       const overlayPosition = result.overlayPosition || { top: '50%', left: '50%' };
