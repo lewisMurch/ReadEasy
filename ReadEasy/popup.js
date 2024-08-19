@@ -319,3 +319,46 @@ function resetAllSettings() {
     document.getElementById('manualMode').checked = defaultManualMode;
     document.getElementById('highlightSelectedText').checked = defaultHighlightSelectedText;
 }
+
+document.addEventListener('DOMContentLoaded', () => {
+    const fullPageButton = document.getElementById('fullPage');
+
+    fullPageButton.addEventListener('click', () => {
+        // Retrieve the saved speed from Chrome storage when the button is clicked
+        chrome.storage.sync.get(['readingSpeed'], (result) => {
+            const readingSpeed = result.readingSpeed || 4; // Default to 4 if the stored value isn't found
+            chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
+                injectIntelligentSelectionMode(readingSpeed);
+            });
+        });
+    });
+});
+
+function injectIntelligentSelectionMode(speed) {
+    chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
+        chrome.scripting.executeScript({
+            target: { tabId: tabs[0].id },
+            func: startIntelligentSelectionMode,
+            args: [parseFloat(speed)]
+        });
+    });
+}
+
+function startIntelligentSelectionMode(speed) {
+    let contentText = '';
+    const excludedSelectors = ['a', 'img', 'button', '.social', '.share', '.footer', 'header', 'nav', 'aside'];
+
+    document.querySelectorAll('p, h1, h2, h3, h4, h5, h6, article, section, div').forEach(element => {
+        if (!excludedSelectors.some(selector => element.matches(selector) || element.closest(selector))) {
+            const text = element.textContent.trim();
+            if (text.length > 0) {
+                contentText += text + ' ';
+            }
+        }
+    });
+
+    if (contentText.trim().length > 0) {
+        displayWords(contentText.trim(), speed);
+    }
+}
+
