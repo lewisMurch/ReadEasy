@@ -137,23 +137,31 @@ function startSelectionMode(speed) {
                 const currentSpeed = result.readingSpeed || speed;
                 const manualMode = result.manualMode || false;
     
-                // Proceed with paragraph click behavior
                 let target = event.target;
-                const paragraphText = target.textContent.trim();
-                document.body.style.cursor = '';
-                document.body.classList.remove('selection-mode');
     
-                if (paragraphText) {
-                    event.preventDefault();
-                    if (manualMode) {
-                        displayWordsManual(paragraphText);
-                    } else {
-                        displayWords(paragraphText, currentSpeed);
+                // Traverse up the DOM tree to find the nearest paragraph or similar container
+                while (target && !target.matches('p, div, section, article')) {
+                    target = target.parentElement;
+                }
+    
+                if (target) {
+                    const paragraphText = target.textContent.trim();
+                    document.body.style.cursor = '';
+                    document.body.classList.remove('selection-mode');
+    
+                    if (paragraphText) {
+                        event.preventDefault();
+                        if (manualMode) {
+                            displayWordsManual(paragraphText);
+                        } else {
+                            displayWords(paragraphText, currentSpeed);
+                        }
                     }
                 }
             });
         }
     };
+    
     document.addEventListener('mouseover', handleMouseOver);
     document.addEventListener('click', handleClick, { once: true });
 }
