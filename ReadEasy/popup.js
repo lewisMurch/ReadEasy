@@ -100,15 +100,6 @@ function injectProcessHighlightedText(text, speed, manualMode) {
 
 function injectSelectionMode(speed) {
     chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
-        chrome.tabs.sendMessage(tabs[0].id, {
-            action: "startSelectionMode",
-            speed: parseFloat(speed)
-        });
-    });
-}
-
-function injectSelectionMode(speed) {
-    chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
         chrome.scripting.executeScript({
             target: { tabId: tabs[0].id },
             func: startSelectionMode,
@@ -118,7 +109,6 @@ function injectSelectionMode(speed) {
 }
 
 function startSelectionMode(speed) {
-    console.log('Selection mode started with speed:', speed);
     document.body.classList.add('selection-mode');
 
     const handleMouseOver = function(event) {
@@ -150,6 +140,14 @@ function startSelectionMode(speed) {
                     document.body.classList.remove('selection-mode');
     
                     if (paragraphText) {
+                        // Add highlight class to the element for flash effect
+                        target.classList.add('highlight-flash');
+                        
+                        // Remove the highlight class after the animation ends
+                        setTimeout(() => {
+                            target.classList.remove('highlight-flash');
+                        }, 1000); // Match this duration with the animation duration
+    
                         event.preventDefault();
                         if (manualMode) {
                             displayWordsManual(paragraphText);
