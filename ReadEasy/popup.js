@@ -88,23 +88,23 @@ document.addEventListener('DOMContentLoaded', () => {
 
 function injectProcessHighlightedText(text, speed, manualMode) {
     chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
-        chrome.scripting.executeScript({
-            target: { tabId: tabs[0].id },
-            func: processHighlightedText,
-            args: [text, parseFloat(speed), manualMode] 
+        chrome.tabs.sendMessage(tabs[0].id, {
+            action: "showOverlay",
+            text: text,
+            speed: parseFloat(speed),
+            manualMode: manualMode
         });
     });
     closePopup(); 
 }
 
-function processHighlightedText(text, speed, manualMode) { 
-    if (text) {
-        if(manualMode){
-            displayWordsManual(text, speed);
-        } else {
-            displayWords(text, speed);
-        }
-    }
+function injectSelectionMode(speed) {
+    chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
+        chrome.tabs.sendMessage(tabs[0].id, {
+            action: "startSelectionMode",
+            speed: parseFloat(speed)
+        });
+    });
 }
 
 function injectSelectionMode(speed) {
