@@ -14,7 +14,7 @@ function debounce(func, delay) {
 }
 
 document.addEventListener('DOMContentLoaded', () => {
-    chrome.storage.sync.get(['readingSpeed', 'fixedSizeBackground', 'textSize', 'textColour', 'backgroundColour', 'pausePunctuation', 'pausePunctuationLength', 'fontType'], (result) => { //1st storage change
+    chrome.storage.sync.get(['readingSpeed', 'fixedSizeBackground', 'textSize', 'textColour', 'backgroundColour', 'pausePunctuation', 'pausePunctuationLength', 'fontType', 'manualMode'], (result) => { //1st storage change
 
         //2nd storage change
         const savedSpeed = result.readingSpeed || 4;
@@ -25,7 +25,7 @@ document.addEventListener('DOMContentLoaded', () => {
         const pausePunctuation = result.pausePunctuation || false;
         const pausePunctuationLength = result.pausePunctuationLength || 4;
         const fontType = result.fontType || "'Comic Sans MS', cursive"
-
+        const manualMode = result.manualMode || false
 
         // Set the values for speed and text size elements //3rd storage change
         document.getElementById('speedRange').value = savedSpeed;
@@ -39,8 +39,9 @@ document.addEventListener('DOMContentLoaded', () => {
         document.getElementById('pausePunctuationRange').value = pausePunctuationLength;
         document.getElementById('pausePunctuationNumber').value = pausePunctuationLength;
         document.getElementById('fontChooser').value = fontType;
-        
+        document.getElementById('manualMode').checked = manualMode;
 
+        
         if(pausePunctuation == true){
             document.getElementById('pausePunctuationNumber').parentElement.style.display = 'block';
         }
@@ -48,26 +49,24 @@ document.addEventListener('DOMContentLoaded', () => {
             document.getElementById('pausePunctuationNumber').parentElement.style.display = 'none';
         }
         
-
         chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
             chrome.scripting.executeScript({
                 target: { tabId: tabs[0].id },
                 func: () => {
                     const selectedText = window.getSelection().toString().trim();
-                    console.log("Selected text in tab: ", selectedText); // Debug output
                     return selectedText;
                 }
             }, (results) => {
                 const highlightedText = results[0].result;
-
+        
                 if (highlightedText) {
                     console.log('Popup opened, highlighted text found: ', highlightedText);
-                    injectProcessHighlightedText(highlightedText, savedSpeed, fixedSizeBackground);
+                    injectProcessHighlightedText(highlightedText, savedSpeed, manualMode); 
                 } else {
-                    injectSelectionMode(savedSpeed, fixedSizeBackground);
+                    injectSelectionMode(savedSpeed);
                 }
             });
-        });
+        });        
     });
 
     // Add event listeners //4th storage change
@@ -82,32 +81,32 @@ document.addEventListener('DOMContentLoaded', () => {
     document.getElementById('pausePunctuationRange').addEventListener('input', updatePausePunctuationLength);
     document.getElementById('pausePunctuationNumber').addEventListener('input', updatePausePunctuationLength);
     document.getElementById('fontChooser').addEventListener('input', updatefontType);
+    document.getElementById('manualMode').addEventListener('change', updateManualMode);
 });
 
 //5th storage change below (make an update function)
 
-// Functions to automatically process any highlighted text
-function injectProcessHighlightedText(text, speed) {
-    console.log("Injecting processHighlightedText with text:", text, "and speed:", speed); // Debug output
-
+function injectProcessHighlightedText(text, speed, manualMode) {
     chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
         chrome.scripting.executeScript({
             target: { tabId: tabs[0].id },
             func: processHighlightedText,
-            args: [text, parseFloat(speed)]
+            args: [text, parseFloat(speed), manualMode] 
         });
     });
-    closePopup(); // Close the popup after processing the text
+    closePopup(); 
 }
 
-function processHighlightedText(text, speed) {
-    console.log("Processing passed-in text:", text, "at speed:", speed); // Debug output
+function processHighlightedText(text, speed, manualMode) { 
     if (text) {
-        displayWords(text, speed);
+        if(manualMode){
+            displayWordsManual(text, speed);
+        } else {
+            displayWords(text, speed);
+        }
     }
 }
 
-// Functions to start selection mode with the given speed
 function injectSelectionMode(speed) {
     chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
         chrome.scripting.executeScript({
@@ -133,29 +132,32 @@ function startSelectionMode(speed) {
 
     const handleClick = function(event) {
         if (document.body.classList.contains('selection-mode')) {
-            // Re-check the speed from storage when a click is registered
-            chrome.storage.sync.get(['readingSpeed'], (result) => {
+            // Re-check the speed and manualMode from storage when a click is registered
+            chrome.storage.sync.get(['readingSpeed', 'manualMode'], (result) => {
                 const currentSpeed = result.readingSpeed || speed;
-
+                const manualMode = result.manualMode || false;
+    
                 // Proceed with paragraph click behavior
                 let target = event.target;
                 const paragraphText = target.textContent.trim();
                 document.body.style.cursor = '';
                 document.body.classList.remove('selection-mode');
-
+    
                 if (paragraphText) {
                     event.preventDefault();
-                    displayWords(paragraphText, currentSpeed);
+                    if (manualMode) {
+                        displayWordsManual(paragraphText);
+                    } else {
+                        displayWords(paragraphText, currentSpeed);
+                    }
                 }
             });
         }
     };
-
     document.addEventListener('mouseover', handleMouseOver);
     document.addEventListener('click', handleClick, { once: true });
 }
 
-// Update the speed in both the slider and the number input
 function updateSpeed(event) {
     const speed = event.target.value;
     document.getElementById('speedRange').value = speed;
@@ -165,7 +167,6 @@ function updateSpeed(event) {
     chrome.storage.sync.set({ readingSpeed: parseFloat(speed) });
 }
 
-// Update the text size in both the slider and the number input
 function updateTextSize(event) {
     const textSize = event.target.value;
     document.getElementById('textSizeNumber').value = textSize;
@@ -175,13 +176,11 @@ function updateTextSize(event) {
     chrome.storage.sync.set({ textSize: parseFloat(textSize) });
 }
 
-// Update the background checkbox
 function updateBackgroundSize(event) {
     const isChecked = event.target.checked; // Get the current state of the checkbox
     chrome.storage.sync.set({ fixedSizeBackground: isChecked }); // Save the current state to storage
 }
 
-// Update the text colour
 function updateTextColour(event) {
     const textColour = event.target.value; // Get the current state of the colour input
     document.getElementById('textColour').value = textColour;
@@ -221,6 +220,12 @@ function updatefontType(event) {
     const fontType = event.target.value; // Get the current state of the colour input
     document.getElementById('fontChooser').value = fontType;
     chrome.storage.sync.set({ fontType: fontType }); // Save the current state to storage
+}
+
+function updateManualMode(event) {
+    const manualMode = event.target.checked; // Get the current state of the checkbox
+    document.getElementById('manualMode').value = manualMode;
+    chrome.storage.sync.set({ manualMode: manualMode }); // Save the current state to storage
 }
 
 // Exit button
@@ -266,6 +271,7 @@ function resetAllSettings() {
     const defaultPausePunctuation = false;
     const defaultpausePunctuationLength = 4;
     const defaultfontType = "'Comic Sans MS', cursive";
+    const defaultManualMode = false;
 
     chrome.storage.sync.set({ readingSpeed: parseFloat(defaultSpeed) });
     chrome.storage.sync.set({ backgroundColour: defaultBackgroundColour });
@@ -276,6 +282,7 @@ function resetAllSettings() {
     chrome.storage.sync.set({ pausePunctuation: defaultPausePunctuation });
     chrome.storage.sync.set({ pausePunctuationLength: defaultpausePunctuationLength });
     chrome.storage.sync.set({ fontType: defaultfontType });
+    chrome.storage.sync.set({ manualMode: defaultManualMode });
 
     document.getElementById('speedRange').value = defaultSpeed;
     document.getElementById('speedNumber').value = defaultSpeed;
@@ -288,4 +295,5 @@ function resetAllSettings() {
     document.getElementById('pausePunctuationRange').value = defaultpausePunctuationLength;
     document.getElementById('pausePunctuationNumber').value = defaultpausePunctuationLength;
     document.getElementById('pausePunctuationNumber').parentElement.style.display = 'none';
+    document.getElementById('manualMode').checked = false;
 }
