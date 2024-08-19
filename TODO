@@ -9,7 +9,6 @@
  - Ignore bold tags when click select... otherwise it just reads out bold tag instead of its parent (the paragraph)
  - F̶i̶x̶ t̶e̶x̶t̶ s̶i̶z̶e̶ s̶l̶i̶d̶e̶r̶ m̶a̶x̶ w̶r̶i̶t̶e̶s̶ p̶e̶r̶ m̶i̶n̶u̶t̶e̶ t̶h̶i̶n̶g̶y̶ (̶s̶i̶m̶i̶l̶a̶r̶ f̶i̶x̶ t̶o̶ t̶h̶e̶ c̶o̶l̶o̶u̶r̶ p̶a̶l̶l̶e̶t̶)̶
  - M̶a̶k̶e̶ a̶ v̶i̶s̶i̶b̶l̶e̶ h̶i̶g̶h̶l̶i̶g̶h̶t̶ e̶f̶f̶e̶c̶t̶ o̶f̶ t̶h̶e̶ t̶e̶x̶t̶ y̶o̶u̶ a̶r̶e̶ r̶e̶a̶d̶i̶n̶g̶
- - Make manual mode hide the speed slider so the settings menu is less cluttered
 
  - Make a settings menu that has:
     - C̶h̶a̶n̶g̶i̶n̶g̶ ̶t̶e̶x̶t̶ ̶c̶o̶l̶o̶u̶r̶
