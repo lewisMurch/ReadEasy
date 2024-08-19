@@ -5,10 +5,10 @@
  - ̶M̶a̶k̶e̶ ̶s̶o̶ ̶e̶s̶c̶a̶p̶e̶ ̶t̶u̶r̶n̶s̶ ̶o̶f̶f̶ ̶s̶e̶l̶e̶c̶t̶ ̶m̶o̶d̶e̶ ̶
  - F̶i̶x̶ m̶u̶l̶t̶i̶p̶l̶e̶ i̶n̶s̶t̶a̶n̶c̶e̶s̶ o̶f̶ t̶h̶e̶ o̶v̶e̶r̶l̶a̶y̶ r̶u̶n̶n̶i̶n̶g̶ a̶t̶ o̶n̶c̶e̶
  - F̶i̶x̶ o̶d̶d̶ s̶m̶a̶l̶l̶ b̶l̶a̶c̶k̶ c̶i̶r̶c̶l̶e̶ o̶c̶c̶a̶s̶i̶o̶n̶a̶l̶l̶y̶ o̶c̶c̶u̶r̶s̶
- - intelligent Read whole page mode, excludes images and social media and links etc.
- - Ignore bold tags when click select... otherwise it just reads out bold tag instead of its parent (the paragraph)
+ - I̶g̶n̶o̶r̶e̶ b̶o̶l̶d̶ t̶a̶g̶s̶ w̶h̶e̶n̶ c̶l̶i̶c̶k̶ s̶e̶l̶e̶c̶t̶... o̶t̶h̶e̶r̶w̶i̶s̶e̶ i̶t̶ j̶u̶s̶t̶ r̶e̶a̶d̶s̶ o̶u̶t̶ b̶o̶l̶d̶ t̶a̶g̶ i̶n̶s̶t̶e̶a̶d̶ o̶f̶ i̶t̶s̶ p̶a̶r̶e̶n̶t̶ (̶t̶h̶e̶ p̶a̶r̶a̶g̶r̶a̶p̶h̶)̶
  - F̶i̶x̶ t̶e̶x̶t̶ s̶i̶z̶e̶ s̶l̶i̶d̶e̶r̶ m̶a̶x̶ w̶r̶i̶t̶e̶s̶ p̶e̶r̶ m̶i̶n̶u̶t̶e̶ t̶h̶i̶n̶g̶y̶ (̶s̶i̶m̶i̶l̶a̶r̶ f̶i̶x̶ t̶o̶ t̶h̶e̶ c̶o̶l̶o̶u̶r̶ p̶a̶l̶l̶e̶t̶)̶
  - M̶a̶k̶e̶ a̶ v̶i̶s̶i̶b̶l̶e̶ h̶i̶g̶h̶l̶i̶g̶h̶t̶ e̶f̶f̶e̶c̶t̶ o̶f̶ t̶h̶e̶ t̶e̶x̶t̶ y̶o̶u̶ a̶r̶e̶ r̶e̶a̶d̶i̶n̶g̶
+ - intelligent Read whole page mode, excludes images and social media and links etc.
 
  - Make a settings menu that has:
     - C̶h̶a̶n̶g̶i̶n̶g̶ ̶t̶e̶x̶t̶ ̶c̶o̶l̶o̶u̶r̶
