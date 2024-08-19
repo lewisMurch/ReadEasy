@@ -1,4 +1,5 @@
 let tempPause = false;
+let tempPauseShort = false;
 let timeoutId;  // To keep track of the timeout
 let paused = false;  // Flag to pause the display
 let stopDisplay = false;  // Flag to stop the display
@@ -62,9 +63,10 @@ function showWord(speed, pausePunctuationLength) {
 
           // Check if the current word ends with punctuation before advancing the index
           if (pausePunctuation && (currentWord.trim().endsWith('.') || currentWord.trim().endsWith('!'))) {
-              tempPause = true;
+            tempPause = true;
+          } else if (pausePunctuation && (currentWord.trim().endsWith(',') || currentWord.trim().endsWith(';') || currentWord.trim().endsWith(':') )) {
+            tempPauseShort = true;
           }
-
           currentIndex++;
 
           timeoutId = setTimeout(() => showWord(speed, pausePunctuationLength), 1500 / Math.pow(speed, 1.65));
@@ -77,6 +79,15 @@ function showWord(speed, pausePunctuationLength) {
                   playOverlay(speed);
               }, 160 * pausePunctuationLength);  // Pause after displaying the punctuation word
           }
+
+          if (tempPauseShort) {
+            pauseOverlay();
+            tempPauseShort = false;
+            setTimeout(function () {
+                console.log('pause over');
+                playOverlay(speed);
+            }, 66 * pausePunctuationLength);  // Pause after displaying the punctuation word
+        }
       }
   } else {
       if (currentOverlay) {
