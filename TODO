@@ -7,6 +7,7 @@
  - F̶i̶x̶ o̶d̶d̶ s̶m̶a̶l̶l̶ b̶l̶a̶c̶k̶ c̶i̶r̶c̶l̶e̶ o̶c̶c̶a̶s̶i̶o̶n̶a̶l̶l̶y̶ o̶c̶c̶u̶r̶s̶
  - intelligent Read whole page mode, excludes images and social media and links etc.
  - Ignore bold tags when click select... otherwise it just reads out bold tag instead of its parent (the paragraph)
+ - Fix text size slider max writes per minute thingy (similar fix to the colour pallet)
 
  - Make a settings menu that has:
     - C̶h̶a̶n̶g̶i̶n̶g̶ ̶t̶e̶x̶t̶ ̶c̶o̶l̶o̶u̶r̶
