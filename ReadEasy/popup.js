@@ -14,7 +14,7 @@ function debounce(func, delay) {
 }
 
 document.addEventListener('DOMContentLoaded', () => {
-    chrome.storage.sync.get(['readingSpeed', 'fixedSizeBackground', 'textSize', 'textColour', 'backgroundColour', 'pausePunctuation', 'pausePunctuationLength', 'fontType', 'manualMode'], (result) => { //1st storage change
+    chrome.storage.sync.get(['readingSpeed', 'fixedSizeBackground', 'textSize', 'textColour', 'backgroundColour', 'pausePunctuation', 'pausePunctuationLength', 'fontType', 'manualMode', 'highlightSelectedText'], (result) => { //1st storage change
 
         //2nd storage change
         const savedSpeed = result.readingSpeed || 4;
@@ -26,6 +26,8 @@ document.addEventListener('DOMContentLoaded', () => {
         const pausePunctuationLength = result.pausePunctuationLength || 4;
         const fontType = result.fontType || "'Comic Sans MS', cursive"
         const manualMode = result.manualMode || false
+        const highlightSelectedText = result.highlightSelectedText !== undefined ? result.highlightSelectedText : true;
+
 
         // Set the values for speed and text size elements //3rd storage change
         document.getElementById('speedRange').value = savedSpeed;
@@ -40,7 +42,7 @@ document.addEventListener('DOMContentLoaded', () => {
         document.getElementById('pausePunctuationNumber').value = pausePunctuationLength;
         document.getElementById('fontChooser').value = fontType;
         document.getElementById('manualMode').checked = manualMode;
-
+        document.getElementById('highlightSelectedText').checked = highlightSelectedText;
         
         if(pausePunctuation == true){
             document.getElementById('pausePunctuationNumber').parentElement.style.display = 'block';
@@ -82,6 +84,7 @@ document.addEventListener('DOMContentLoaded', () => {
     document.getElementById('pausePunctuationNumber').addEventListener('input', debounce(updatePausePunctuationLength, 100));
     document.getElementById('fontChooser').addEventListener('input', updatefontType);
     document.getElementById('manualMode').addEventListener('change', updateManualMode);
+    document.getElementById('highlightSelectedText').addEventListener('change', updateHighlightSelectedText);
 });
 
 //5th storage change below (make an update function)
@@ -122,10 +125,11 @@ function startSelectionMode(speed) {
 
     const handleClick = function(event) {
         if (document.body.classList.contains('selection-mode')) {
-            // Re-check the speed and manualMode from storage when a click is registered
-            chrome.storage.sync.get(['readingSpeed', 'manualMode'], (result) => {
+            // Re-check the speed, manualMode, and highlightSelectedText from storage when a click is registered
+            chrome.storage.sync.get(['readingSpeed', 'manualMode', 'highlightSelectedText'], (result) => {
                 const currentSpeed = result.readingSpeed || speed;
                 const manualMode = result.manualMode || false;
+                const highlightSelectedText = result.highlightSelectedText || false;
     
                 let target = event.target;
     
@@ -140,13 +144,15 @@ function startSelectionMode(speed) {
                     document.body.classList.remove('selection-mode');
     
                     if (paragraphText) {
-                        // Add highlight class to the element for flash effect
-                        target.classList.add('highlight-flash');
-                        
-                        // Remove the highlight class after the animation ends
-                        setTimeout(() => {
-                            target.classList.remove('highlight-flash');
-                        }, 1000); // Match this duration with the animation duration
+                        if (highlightSelectedText) {
+                            // Add highlight class to the element for flash effect
+                            target.classList.add('highlight-flash');
+                            
+                            // Remove the highlight class after the animation ends
+                            setTimeout(() => {
+                                target.classList.remove('highlight-flash');
+                            }, 1000); // Match this duration with the animation duration
+                        }
     
                         event.preventDefault();
                         if (manualMode) {
@@ -159,6 +165,7 @@ function startSelectionMode(speed) {
             });
         }
     };
+    
     
     document.addEventListener('mouseover', handleMouseOver);
     document.addEventListener('click', handleClick, { once: true });
@@ -230,8 +237,14 @@ function updatefontType(event) {
 
 function updateManualMode(event) {
     const manualMode = event.target.checked; // Get the current state of the checkbox
-    document.getElementById('manualMode').value = manualMode;
+    document.getElementById('manualMode').checked = manualMode;
     chrome.storage.sync.set({ manualMode: manualMode }); // Save the current state to storage
+}
+
+function updateHighlightSelectedText(event){
+    const highlightSelectedText = event.target.checked; // Get the current state of the checkbox
+    document.getElementById('highlightSelectedText').checked = highlightSelectedText;
+    chrome.storage.sync.set({ highlightSelectedText: highlightSelectedText }); // Save the current state to storage
 }
 
 // Exit button
@@ -278,6 +291,7 @@ function resetAllSettings() {
     const defaultpausePunctuationLength = 4;
     const defaultfontType = "'Comic Sans MS', cursive";
     const defaultManualMode = false;
+    const defaultHighlightSelectedText = true;
 
     chrome.storage.sync.set({ readingSpeed: parseFloat(defaultSpeed) });
     chrome.storage.sync.set({ backgroundColour: defaultBackgroundColour });
@@ -289,6 +303,7 @@ function resetAllSettings() {
     chrome.storage.sync.set({ pausePunctuationLength: defaultpausePunctuationLength });
     chrome.storage.sync.set({ fontType: defaultfontType });
     chrome.storage.sync.set({ manualMode: defaultManualMode });
+    chrome.storage.sync.set({ highlightSelectedText: defaultHighlightSelectedText });
 
     document.getElementById('speedRange').value = defaultSpeed;
     document.getElementById('speedNumber').value = defaultSpeed;
@@ -296,10 +311,11 @@ function resetAllSettings() {
     document.getElementById('textColour').value = defaultTextColour;
     document.getElementById('textSizeNumber').value = defaultTextSize;
     document.getElementById('textSizeRange').value = defaultTextSize;
-    document.getElementById('fixedSizeBackgroundToggle').checked = false;
-    document.getElementById('pausePunctuation').checked = false;
+    document.getElementById('fixedSizeBackgroundToggle').checked = defaultBackgroundSizeFlag;
+    document.getElementById('pausePunctuation').checked = defaultPausePunctuation;
     document.getElementById('pausePunctuationRange').value = defaultpausePunctuationLength;
     document.getElementById('pausePunctuationNumber').value = defaultpausePunctuationLength;
     document.getElementById('pausePunctuationNumber').parentElement.style.display = 'none';
-    document.getElementById('manualMode').checked = false;
+    document.getElementById('manualMode').checked = defaultManualMode;
+    document.getElementById('highlightSelectedText').checked = defaultHighlightSelectedText;
 }
