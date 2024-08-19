@@ -28,11 +28,10 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
 
 function showWord(speed, pausePunctuationLength) {
   if (stopDisplay) {
-    if (currentOverlay) {
-      currentOverlay.remove();  // Remove the overlay if the display is stopped
-      currentOverlay = null;    // Reset the currentOverlay immediately
-  }
-  
+      if (currentOverlay) {
+          currentOverlay.remove();  // Remove the overlay if the display is stopped
+          currentOverlay = null;    // Reset the currentOverlay immediately
+      }
       return;
   }
 
@@ -44,14 +43,24 @@ function showWord(speed, pausePunctuationLength) {
       const currentWord = words[currentIndex];
 
       if (currentWord !== undefined) {
-          currentOverlay.textContent = '';  // Clear the overlay content before updating
-          currentOverlay.textContent = currentWord;  // Update with the current word
+          // Temporarily remove the overlay from the DOM
+          document.body.removeChild(currentOverlay);
+
+          // Update the overlay's text content
+          currentOverlay.textContent = currentWord;
 
           if (!fixedSizeBackground) {
               currentOverlay.style.width = 'auto';
+              currentOverlay.style.height = 'auto';
           }
 
-          // Check if current word ends with punctuation before advancing the index, only if pausePunctuation is true
+          // Reattach the overlay to the DOM
+          document.body.appendChild(currentOverlay);
+
+          // Trigger a reflow (not usually needed but just in case)
+          currentOverlay.offsetHeight;
+
+          // Check if the current word ends with punctuation before advancing the index
           if (pausePunctuation && (currentWord.trim().endsWith('.') || currentWord.trim().endsWith('!'))) {
               tempPause = true;
           }
@@ -63,7 +72,7 @@ function showWord(speed, pausePunctuationLength) {
           if (tempPause) {
               pauseOverlay();
               tempPause = false;
-              setTimeout(function() {
+              setTimeout(function () {
                   console.log('pause over');
                   playOverlay(speed);
               }, 160 * pausePunctuationLength);  // Pause after displaying the punctuation word
@@ -78,9 +87,8 @@ function showWord(speed, pausePunctuationLength) {
 }
 
 function displayWords(text, speed) {
-
   if (currentOverlay) {
-    return;  // Exit if an overlay is already active
+      return;  // Exit if an overlay is already active
   }
 
   // Reset global variables
@@ -161,8 +169,10 @@ function displayWords(text, speed) {
       if (fixedSizeBackground) {
           const longestWord = words.reduce((longest, word) => word.length > longest.length ? word : longest, '');
           currentOverlay.style.width = `${longestWord.length + 2}ch`;
+          currentOverlay.style.height = 'auto'; // Ensure height adjusts automatically
       } else {
           currentOverlay.style.width = 'auto';
+          currentOverlay.style.height = 'auto'; // Ensure height adjusts automatically
       }
 
       makeDraggable(currentOverlay);
