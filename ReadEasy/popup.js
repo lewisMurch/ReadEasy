@@ -324,6 +324,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const fullPageButton = document.getElementById('fullPage');
 
     fullPageButton.addEventListener('click', () => {
+        closePopup();
         // Retrieve the saved speed from Chrome storage when the button is clicked
         chrome.storage.sync.get(['readingSpeed'], (result) => {
             const readingSpeed = result.readingSpeed || 4; // Default to 4 if the stored value isn't found
