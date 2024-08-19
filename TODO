@@ -8,7 +8,7 @@
  - intelligent Read whole page mode, excludes images and social media and links etc.
  - Ignore bold tags when click select... otherwise it just reads out bold tag instead of its parent (the paragraph)
  - F̶i̶x̶ t̶e̶x̶t̶ s̶i̶z̶e̶ s̶l̶i̶d̶e̶r̶ m̶a̶x̶ w̶r̶i̶t̶e̶s̶ p̶e̶r̶ m̶i̶n̶u̶t̶e̶ t̶h̶i̶n̶g̶y̶ (̶s̶i̶m̶i̶l̶a̶r̶ f̶i̶x̶ t̶o̶ t̶h̶e̶ c̶o̶l̶o̶u̶r̶ p̶a̶l̶l̶e̶t̶)̶
- - Make a visible highlight effect of the text you are reading
+ - M̶a̶k̶e̶ a̶ v̶i̶s̶i̶b̶l̶e̶ h̶i̶g̶h̶l̶i̶g̶h̶t̶ e̶f̶f̶e̶c̶t̶ o̶f̶ t̶h̶e̶ t̶e̶x̶t̶ y̶o̶u̶ a̶r̶e̶ r̶e̶a̶d̶i̶n̶g̶
 
  - Make a settings menu that has:
     - C̶h̶a̶n̶g̶i̶n̶g̶ ̶t̶e̶x̶t̶ ̶c̶o̶l̶o̶u̶r̶
@@ -19,6 +19,8 @@
     - V̶a̶r̶i̶a̶b̶l̶e̶ f̶o̶r̶ p̶a̶u̶s̶e̶ t̶i̶m̶e̶ ^̶
     - M̶a̶n̶u̶a̶l̶ m̶o̶d̶e̶ t̶o̶ u̶s̶e̶ a̶r̶r̶o̶w̶s̶ t̶o̶ r̶e̶a̶d̶ l̶e̶f̶t̶ a̶n̶d̶ r̶i̶g̶h̶t̶
     - C̶h̶o̶o̶s̶e̶ y̶o̶u̶r̶ o̶w̶n̶ f̶o̶n̶t̶
+    - Turn on/ off highlight mode
+    - Change highlight colour
 
  - A̶d̶d̶ ̶a̶ ̶c̶a̶n̶c̶e̶l̶ ̶b̶u̶t̶t̶o̶n̶ ̶w̶h̶i̶l̶e̶ ̶i̶t̶ ̶i̶s̶ ̶s̶t̶i̶l̶l̶ ̶r̶e̶a̶d̶i̶n̶g̶ ̶o̶u̶t̶
  - Add TTS mode
