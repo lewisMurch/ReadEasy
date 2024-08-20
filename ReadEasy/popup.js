@@ -347,10 +347,15 @@ function injectIntelligentSelectionMode(speed) {
 
 function startIntelligentSelectionMode(speed) {
     let contentText = '';
-    const excludedSelectors = ['a', 'img', 'button', '.social', '.share', '.footer', 'header', 'nav', 'aside'];
 
-    document.querySelectorAll('p, h1, h2, h3, h4, h5, h6, article, section, div').forEach(element => {
-        if (!excludedSelectors.some(selector => element.matches(selector) || element.closest(selector))) {
+    function isVisible(element) {
+        const style = window.getComputedStyle(element);
+        return style.display !== 'none' && style.visibility !== 'hidden' && style.opacity !== '0' && element.offsetParent !== null;
+    }
+
+    // Only select <p> tags and headings (<h1> to <h6>)
+    document.querySelectorAll('p, h1, h2, h3, h4, h5, h6').forEach(element => {
+        if (isVisible(element)) {
             const text = element.textContent.trim();
             if (text.length > 0) {
                 contentText += text + ' ';
@@ -362,4 +367,3 @@ function startIntelligentSelectionMode(speed) {
         displayWords(contentText.trim(), speed);
     }
 }
-
