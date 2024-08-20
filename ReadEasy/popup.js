@@ -89,16 +89,28 @@ document.addEventListener('DOMContentLoaded', () => {
 
 //5th storage change below (make an update function)
 
-function injectProcessHighlightedText(text, speed, manualMode) {
-    chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
-        chrome.tabs.sendMessage(tabs[0].id, {
-            action: "showOverlay",
-            text: text,
-            speed: parseFloat(speed),
-            manualMode: manualMode
+function injectProcessHighlightedText(text, speed) {
+    chrome.storage.sync.get(['manualMode'], (result) => {
+        const manualMode = result.manualMode;
+
+        chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
+            if (manualMode) {
+                chrome.tabs.sendMessage(tabs[0].id, {
+                    action: "showOverlayManual",
+                    text: text,
+                    speed: parseFloat(speed)
+                });
+            } else {
+                chrome.tabs.sendMessage(tabs[0].id, {
+                    action: "showOverlay",
+                    text: text,
+                    speed: parseFloat(speed)
+                });
+            }
         });
+
+        closePopup();
     });
-    closePopup(); 
 }
 
 function injectSelectionMode(speed) {
@@ -165,8 +177,6 @@ function startSelectionMode(speed) {
             });
         }
     };
-    
-    
     document.addEventListener('mouseover', handleMouseOver);
     document.addEventListener('click', handleClick, { once: true });
 }
@@ -320,59 +330,64 @@ function resetAllSettings() {
     document.getElementById('highlightSelectedText').checked = defaultHighlightSelectedText;
 }
 
+
+
+
 document.addEventListener('DOMContentLoaded', () => {
     const fullPageButton = document.getElementById('fullPage');
 
     fullPageButton.addEventListener('click', () => {
-        closePopup();
-        // Retrieve the saved speed and highlight option from Chrome storage when the button is clicked
-        chrome.storage.sync.get(['readingSpeed', 'highlightSelectedText'], (result) => {
-            const readingSpeed = result.readingSpeed || 4; // Default to 4 if the stored value isn't found
-            const highlightSelectedText = result.highlightSelectedText || false;
-
+        chrome.storage.sync.get(['readingSpeed', 'manualMode', 'highlightSelectedText'], ({ readingSpeed = 4, manualMode = false, highlightSelectedText = false }) => {
             chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
-                injectIntelligentSelectionMode(readingSpeed, highlightSelectedText);
+                injectMode(readingSpeed, manualMode, highlightSelectedText, tabs[0].id);
             });
         });
+        closePopup();
     });
 });
 
-function injectIntelligentSelectionMode(speed, highlightSelectedText) {
-    chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
-        chrome.scripting.executeScript({
-            target: { tabId: tabs[0].id },
-            func: startIntelligentSelectionMode,
-            args: [parseFloat(speed), highlightSelectedText]
-        });
+function injectMode(speed, manualMode, highlightSelectedText, tabId) {
+    chrome.scripting.executeScript({
+        target: { tabId },
+        func: startMode,
+        args: [speed, manualMode, highlightSelectedText]
     });
 }
 
-function startIntelligentSelectionMode(speed, highlightSelectedText) {
-    let contentText = '';
+function startMode(speed, manualMode, highlightSelectedText) {
+    const getTextContent = () => [...document.querySelectorAll('p, h1, h2, h3, h4, h5, h6')]
+        .filter(el => el.offsetParent !== null)
+        .map(el => {
+            if (highlightSelectedText) {
+                el.classList.add('highlight-flash');
+                setTimeout(() => el.classList.remove('highlight-flash'), 1000);
+            }
+            return el.textContent.trim();
+        })
+        .join(' ');
 
-    function isVisible(element) {
-        const style = window.getComputedStyle(element);
-        return style.display !== 'none' && style.visibility !== 'hidden' && style.opacity !== '0' && element.offsetParent !== null;
-    }
+    const contentText = getTextContent();
 
-    document.querySelectorAll('p, h1, h2, h3, h4, h5, h6').forEach(element => {
-        if (isVisible(element)) {
-            const text = element.textContent.trim();
-            if (text.length > 0) {
-                contentText += text + ' ';
+    if (manualMode) {
+        document.body.classList.add('selection-mode');
+        document.body.style.cursor = 'crosshair';
+
+        document.addEventListener('click', (event) => {
+            const target = event.target.closest('p, div, section, article');
+            if (target) {
+                const text = target.textContent.trim();
+                document.body.classList.remove('selection-mode');
+                document.body.style.cursor = '';
 
                 if (highlightSelectedText) {
-                    element.classList.add('highlight-flash');
-                    
-                    setTimeout(() => {
-                        element.classList.remove('highlight-flash');
-                    }, 1000); // Match this duration with the animation duration
+                    target.classList.add('highlight-flash');
+                    setTimeout(() => target.classList.remove('highlight-flash'), 1000);
                 }
-            }
-        }
-    });
 
-    if (contentText.trim().length > 0) {
-        displayWords(contentText.trim(), speed);
+                manualMode ? displayWordsManual(text) : displayWords(text, speed);
+            }
+        }, { once: true });
+    } else {
+        displayWords(contentText, speed);
     }
 }

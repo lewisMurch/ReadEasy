@@ -22,6 +22,14 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
       displayWords(message.text, message.speed, message.manualMode);
   }
 
+  if (message.action === "showOverlayManual") {
+    if (currentOverlay) {
+      currentOverlay.remove();  // Remove the existing overlay
+      currentOverlay = null;    // Reset the currentOverlay immediately
+    }
+    displayWordsManual(message.text);
+  }
+
   if (message.action === "startSelectionMode") {
       startSelectionMode(message.speed);
   }
