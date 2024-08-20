@@ -13,6 +13,27 @@ let fixedSizeBackground;
 let pausePunctuation;
 let pausePunctuationLength;
 
+function handleManualModeKeydown(event) {
+    if (event.key === 'ArrowRight') {
+        if (currentIndex < words.length - 1) {
+            currentIndex++;
+            showWordManual();
+        }
+    } else if (event.key === 'ArrowLeft') {
+        if (currentIndex > 0) {
+            currentIndex--;
+            showWordManual();
+        }
+    } else if (event.key === 'Escape') {
+        stopDisplay = true;
+        clearTimeout(timeoutId);
+        if (currentOverlay) {
+            currentOverlay.remove();
+            currentOverlay = null;
+        }
+    }
+}
+
 chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
   if (message.action === "showOverlay") {
     if (currentOverlay) {
@@ -214,6 +235,7 @@ function displayWords(text, speed) {
 
 function showWordManual() {
   if (stopDisplay) {
+      currentIndex = 0;
       if (currentOverlay) {
           currentOverlay.remove();  // Remove the overlay if the display is stopped
           currentOverlay = null;    // Reset the currentOverlay
@@ -253,13 +275,14 @@ function displayWordsManual(text) {
   // Reset global variables
   stopDisplay = false;
   paused = false;
-  currentIndex = 0;
 
-  words = text.split(/\s+/);  // Split text into words
+  currentIndex = 0; 
+  words = text.split(/\s+/); 
 
   if (currentOverlay) {
-      currentOverlay.remove();  // Remove any existing overlay
-      currentOverlay = null;    // Reset the currentOverlay
+    currentOverlay.remove();  // Remove any existing overlay
+    currentOverlay = null;    // Reset the currentOverlay
+    currentIndex = 0;         // reset the index
   }
 
   // Create the overlay
@@ -339,27 +362,9 @@ function displayWordsManual(text) {
       // Display the first word
       showWordManual();
 
-      // Add event listeners for arrow key navigation
-      document.addEventListener('keydown', function(event) {
-          if (event.key === 'ArrowRight') {
-              if (currentIndex < words.length - 1) {
-                  currentIndex++;
-                  showWordManual();
-              }
-          } else if (event.key === 'ArrowLeft') {
-              if (currentIndex > 0) {
-                  currentIndex--;
-                  showWordManual();
-              }
-          } else if (event.key === 'Escape') {
-              stopDisplay = true;
-              clearTimeout(timeoutId);
-              if (currentOverlay) {
-                  currentOverlay.remove();
-                  currentOverlay = null;
-              }
-          }
-      });
+      document.removeEventListener('keydown', handleManualModeKeydown);  // Remove the previous listener if it exists
+      document.addEventListener('keydown', handleManualModeKeydown);  // Add the new listener
+
   });
 }
 
