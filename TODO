@@ -13,6 +13,7 @@
  - Half puncutation flag rename, and make a second slider relating commas and fullstops
  - S̶l̶i̶d̶e̶r̶ s̶t̶o̶r̶a̶g̶e̶ s̶p̶e̶e̶d̶ c̶a̶p̶ O̶N̶L̶Y̶ a̶p̶p̶l̶i̶e̶d̶ t̶o̶ s̶t̶o̶r̶a̶g̶e̶, n̶o̶t̶ t̶o̶ v̶i̶s̶u̶a̶l̶s̶
  - F̶i̶x̶ m̶a̶n̶u̶a̶l̶ m̶o̶d̶e̶ s̶k̶i̶p̶p̶i̶n̶g̶ o̶v̶e̶r̶ e̶v̶e̶y̶ o̶t̶h̶e̶r̶ w̶o̶r̶d̶ w̶h̶e̶n̶ r̶a̶n̶ t̶w̶i̶c̶e̶
+ - Fix any errors/ warnings that crop up in the chrome extensions manager thingy, even if they don't cause any issues
 
  - Make a settings menu that has:
     - C̶h̶a̶n̶g̶i̶n̶g̶ ̶t̶e̶x̶t̶ ̶c̶o̶l̶o̶u̶r̶
