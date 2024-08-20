@@ -72,10 +72,10 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 
     // Add event listeners //4th storage change
-    document.getElementById('speedRange').addEventListener('input', debounce(updateSpeed, 100));
-    document.getElementById('speedNumber').addEventListener('input', debounce(updateSpeed, 100));
+    document.getElementById('speedRange').addEventListener('input', updateSpeed);
+    document.getElementById('speedNumber').addEventListener('input', updateSpeed);
     document.getElementById('fixedSizeBackgroundToggle').addEventListener('change', updateBackgroundSize);
-    document.getElementById('textSizeRange').addEventListener('input', debounce(updateTextSize, 100));
+    document.getElementById('textSizeRange').addEventListener('input', updateTextSize);
     document.getElementById('textSizeNumber').addEventListener('input', debounce(updateTextSize, 100));
     document.getElementById('textColour').addEventListener('input', debounce(updateTextColour, 300));
     document.getElementById('backgroundColour').addEventListener('input', debounce(updateBackgroundColour, 300));
@@ -87,7 +87,6 @@ document.addEventListener('DOMContentLoaded', () => {
     document.getElementById('highlightSelectedText').addEventListener('change', updateHighlightSelectedText);
 });
 
-//5th storage change below (make an update function)
 
 function injectProcessHighlightedText(text, speed) {
     chrome.storage.sync.get(['manualMode'], (result) => {
@@ -180,81 +179,118 @@ function startSelectionMode(speed) {
     document.addEventListener('click', handleClick, { once: true });
 }
 
-function updateSpeed(event) {
-    const speed = event.target.value;
-    document.getElementById('speedRange').value = speed;
-    document.getElementById('speedNumber').value = speed;
 
-    // Save the new speed value in Chrome storage
-    chrome.storage.sync.set({ readingSpeed: parseFloat(speed) });
-}
-
-function updateTextSize(event) {
-    const textSize = event.target.value;
-    document.getElementById('textSizeNumber').value = textSize;
-    document.getElementById('textSizeRange').value = textSize;
-
-    // Save the new text size value in Chrome storage
-    chrome.storage.sync.set({ textSize: parseFloat(textSize) });
-}
-
-function updateBackgroundSize(event) {
-    const isChecked = event.target.checked; // Get the current state of the checkbox
-    chrome.storage.sync.set({ fixedSizeBackground: isChecked }); // Save the current state to storage
-}
-
-function updateTextColour(event) {
-    const textColour = event.target.value; // Get the current state of the colour input
-    document.getElementById('textColour').value = textColour;
-    chrome.storage.sync.set({ textColour: textColour }); // Save the current state to storage
-}
-
-function updateBackgroundColour(event) {
-    const backgroundColour = event.target.value; // Get the current state of the colour input
-    document.getElementById('backgroundColour').value = backgroundColour;
-    chrome.storage.sync.set({ backgroundColour: backgroundColour }); // Save the current state to storage
-}
-
-function updatePausePunctuation(event) {
-    const pausePunctuation = event.target.checked; // Get the current state of the checkbox
-    document.getElementById('pausePunctuation').value = pausePunctuation;
-
-    if(pausePunctuation == true){
-        document.getElementById('pausePunctuationNumber').parentElement.style.display = 'block';
+//UPDATE FUNCTIONS BELOW:
+    function updateSpeed(event) {
+        const speed = event.target.value;
+        // Immediate visual update
+        document.getElementById('speedRange').value = speed;
+        document.getElementById('speedNumber').value = speed;
+        
+        // Debounced storage update
+        debounceSaveSpeed(speed);
     }
-    else{
-        document.getElementById('pausePunctuationNumber').parentElement.style.display = 'none';
+    // Debounced function for saving to storage
+    const debounceSaveSpeed = debounce((speed) => {
+        chrome.storage.sync.set({ readingSpeed: parseFloat(speed) });
+    }, 100);
+
+
+    function updateBackgroundSize(event) {
+        const isChecked = event.target.checked; // Get the current state of the checkbox
+        chrome.storage.sync.set({ fixedSizeBackground: isChecked }); // Save the current state to storage
     }
 
-    chrome.storage.sync.set({ pausePunctuation: pausePunctuation }); // Save the current state to storage
-}
 
-function updatePausePunctuationLength(event) {
-    const pausePunctuation = event.target.value;
-    document.getElementById('pausePunctuationRange').value = pausePunctuation;
-    document.getElementById('pausePunctuationNumber').value = pausePunctuation;
+    function updateTextSize(event) {
+        const textSize = event.target.value;
+        document.getElementById('textSizeNumber').value = textSize;
+        document.getElementById('textSizeRange').value = textSize;
 
-    // Save the new text size value in Chrome storage
-    chrome.storage.sync.set({ pausePunctuationLength: parseFloat(pausePunctuation) });
-}
+        // Save the new text size value in Chrome storage
+        debounceSaveTextSize(textSize);
+    }
+    // Debounced function for saving to storage
+    const debounceSaveTextSize = debounce((textSize) => {
+        chrome.storage.sync.set({ textSize: parseFloat(textSize) });
+    }, 100);
 
-function updatefontType(event) {
-    const fontType = event.target.value; // Get the current state of the colour input
-    document.getElementById('fontChooser').value = fontType;
-    chrome.storage.sync.set({ fontType: fontType }); // Save the current state to storage
-}
 
-function updateManualMode(event) {
-    const manualMode = event.target.checked; // Get the current state of the checkbox
-    document.getElementById('manualMode').checked = manualMode;
-    chrome.storage.sync.set({ manualMode: manualMode }); // Save the current state to storage
-}
+    function updateTextColour(event) {
+        const textColour = event.target.value;
+        document.getElementById('textColour').value = textColour;
 
-function updateHighlightSelectedText(event){
-    const highlightSelectedText = event.target.checked; // Get the current state of the checkbox
-    document.getElementById('highlightSelectedText').checked = highlightSelectedText;
-    chrome.storage.sync.set({ highlightSelectedText: highlightSelectedText }); // Save the current state to storage
-}
+        // Debounced save to storage
+        debounceSaveTextColour(textColour);
+    }
+    // Debounced functions for saving to storage
+    const debounceSaveTextColour = debounce((textColour) => {
+        chrome.storage.sync.set({ textColour: textColour });
+    }, 100);
+
+
+    function updateBackgroundColour(event) {
+        const backgroundColour = event.target.value;
+        document.getElementById('backgroundColour').value = backgroundColour;
+
+        // Debounced save to storage
+        debounceSaveBackgroundColour(backgroundColour);
+    }
+    // Debounced functions for saving to storage
+    const debounceSaveBackgroundColour = debounce((backgroundColour) => {
+        chrome.storage.sync.set({ backgroundColour: backgroundColour });
+    }, 100);
+
+
+    function updatePausePunctuation(event) {
+        const pausePunctuation = event.target.checked; // Get the current state of the checkbox
+        document.getElementById('pausePunctuation').value = pausePunctuation;
+
+        if(pausePunctuation == true){
+            document.getElementById('pausePunctuationNumber').parentElement.style.display = 'block';
+        }
+        else{
+            document.getElementById('pausePunctuationNumber').parentElement.style.display = 'none';
+        }
+
+        chrome.storage.sync.set({ pausePunctuation: pausePunctuation }); // Save the current state to storage
+    }
+
+
+    function updatePausePunctuationLength(event) {
+        const pausePunctuation = event.target.value;
+        document.getElementById('pausePunctuationRange').value = pausePunctuation;
+        document.getElementById('pausePunctuationNumber').value = pausePunctuation;
+
+        // Debounced save to storage
+        debounceSavePausePunctuationLength(pausePunctuation);
+    }
+    // Debounced functions for saving to storage
+    const debounceSavePausePunctuationLength = debounce((pausePunctuationLength) => {
+        chrome.storage.sync.set({ pausePunctuationLength: parseFloat(pausePunctuationLength) });
+    }, 100);
+
+
+    function updatefontType(event) {
+        const fontType = event.target.value; // Get the current state of the colour input
+        document.getElementById('fontChooser').value = fontType;
+        chrome.storage.sync.set({ fontType: fontType }); // Save the current state to storage
+    }
+
+
+    function updateManualMode(event) {
+        const manualMode = event.target.checked; // Get the current state of the checkbox
+        document.getElementById('manualMode').checked = manualMode;
+        chrome.storage.sync.set({ manualMode: manualMode }); // Save the current state to storage
+    }
+
+
+    function updateHighlightSelectedText(event){
+        const highlightSelectedText = event.target.checked; // Get the current state of the checkbox
+        document.getElementById('highlightSelectedText').checked = highlightSelectedText;
+        chrome.storage.sync.set({ highlightSelectedText: highlightSelectedText }); // Save the current state to storage
+    }
+//UPDATE FUNCTIONS ABOVE ^
 
 // Exit button
 document.getElementById('exit').addEventListener('click', () => {
