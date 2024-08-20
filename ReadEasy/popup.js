@@ -325,27 +325,29 @@ document.addEventListener('DOMContentLoaded', () => {
 
     fullPageButton.addEventListener('click', () => {
         closePopup();
-        // Retrieve the saved speed from Chrome storage when the button is clicked
-        chrome.storage.sync.get(['readingSpeed'], (result) => {
+        // Retrieve the saved speed and highlight option from Chrome storage when the button is clicked
+        chrome.storage.sync.get(['readingSpeed', 'highlightSelectedText'], (result) => {
             const readingSpeed = result.readingSpeed || 4; // Default to 4 if the stored value isn't found
+            const highlightSelectedText = result.highlightSelectedText || false;
+
             chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
-                injectIntelligentSelectionMode(readingSpeed);
+                injectIntelligentSelectionMode(readingSpeed, highlightSelectedText);
             });
         });
     });
 });
 
-function injectIntelligentSelectionMode(speed) {
+function injectIntelligentSelectionMode(speed, highlightSelectedText) {
     chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
         chrome.scripting.executeScript({
             target: { tabId: tabs[0].id },
             func: startIntelligentSelectionMode,
-            args: [parseFloat(speed)]
+            args: [parseFloat(speed), highlightSelectedText]
         });
     });
 }
 
-function startIntelligentSelectionMode(speed) {
+function startIntelligentSelectionMode(speed, highlightSelectedText) {
     let contentText = '';
 
     function isVisible(element) {
@@ -353,12 +355,19 @@ function startIntelligentSelectionMode(speed) {
         return style.display !== 'none' && style.visibility !== 'hidden' && style.opacity !== '0' && element.offsetParent !== null;
     }
 
-    // Only select <p> tags and headings (<h1> to <h6>)
     document.querySelectorAll('p, h1, h2, h3, h4, h5, h6').forEach(element => {
         if (isVisible(element)) {
             const text = element.textContent.trim();
             if (text.length > 0) {
                 contentText += text + ' ';
+
+                if (highlightSelectedText) {
+                    element.classList.add('highlight-flash');
+                    
+                    setTimeout(() => {
+                        element.classList.remove('highlight-flash');
+                    }, 1000); // Match this duration with the animation duration
+                }
             }
         }
     });
