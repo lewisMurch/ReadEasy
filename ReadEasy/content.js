@@ -375,6 +375,6 @@ function pauseOverlay() {
 function playOverlay(speed) {
   if (paused) {
       paused = false;
-      showWord(speed, pausePunctuationLength);
+      showWord(speed, pausePunctuationLength, pausePunctuationPercentage);
   }
 }
