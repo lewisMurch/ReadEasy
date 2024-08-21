@@ -274,37 +274,46 @@
   text-overflow: ellipsis; /* Show ellipsis for overflow text */
 }
 
-  </style>
+button#exit {
+  background-color: #d9534f; /* Change the background color to red */
+}
+
+button#exit:hover {
+  background-color: #c9302c; /* Change the hover background color to a darker red */
+}
+
+</style>
 </head>
 <body>
   <h3>Dyslexia Reader</h3>
 
   <details>
     <summary>Settings</summary>
+    
     <div class="speed-control">
-      <label for="speedRange">Speed:</label>
+      <label for="speedRange" title="Set the speed at which the text is shown.">Speed:</label>
       <input type="range" id="speedRange" min="1" max="10" value="4">
       <input type="number" id="speedNumber" min="1" max="10" value="4">
     </div>
 
     <div class="textSize-control">
-      <label for="textSizeRange">Text Size:</label>
+      <label for="textSizeRange" title="Adjust the size of the text.">Text Size:</label>
       <input type="range" id="textSizeRange" min="12" max="144" value="34">
       <input type="number" id="textSizeNumber" min="12" max="144" value="34">
     </div>
 
     <div class="color-control">
-      <label for="backgroundColour">Background Colour:</label>
+      <label for="backgroundColour" title="Change the background color of the overlay.">Background Colour:</label>
       <input type="color" id="backgroundColour" value="#000000">
     </div>
 
     <div class="color-control">
-      <label for="textColour">Text Colour:</label>
+      <label for="textColour" title="Change the color of the text.">Text Colour:</label>
       <input type="color" id="textColour" value="#f9f9f9">
     </div>
 
     <div class="font-control">
-      <label for="fontChooser">Font:</label>
+      <label for="fontChooser" title="Change the text font.">Font:</label>
       <select id="fontChooser">
         <option value="'Arial', sans-serif" style="font-family: 'Arial', sans-serif;">Arial</option>
         <option value="'Verdana', sans-serif" style="font-family: 'Verdana', sans-serif;">Verdana</option>
@@ -326,51 +335,52 @@
 
     <div class="toggle-switch">
       <input type="checkbox" id="fixedSizeBackgroundToggle">
-      <label for="fixedSizeBackgroundToggle" class="toggle-label"></label>
+      <label for="fixedSizeBackgroundToggle" class="toggle-label" title="Keep the background size constant regardless of text size."></label>
       <span class="label-text">Constant Background Size</span>
     </div>
     
     <div class="toggle-switch">
       <input type="checkbox" id="pausePunctuation">
-      <label for="pausePunctuation" class="toggle-label"></label>
+      <label for="pausePunctuation" class="toggle-label" title="Add a slight pause when encountaring sentence-ending punctuation (like a '.' or a '!')."></label>
       <span class="label-text">Pause on Punctuation</span>
     </div>
     
     <div class="punctuation-range-control">
-      <label for="pausePunctuationRange">Punctuation Pause Length:</label>
+      <label for="pausePunctuationRange" title="Adjust the length of pauses when encountaring sentence-ending punctuation (like '.' and '!').">Punctuation Pause Length:</label>
       <input type="range" id="pausePunctuationRange" min="1" max="10" value="4">
       <input type="number" id="pausePunctuationNumber" min="1" max="10" value="4">
     </div>
 
     <div class="punctuation-range-control">
-      <label for="pausePunctuationPercentage">Punctuation Pause Percentage:</label>
+      <label for="pausePunctuationPercentage" title="Adjust the pause duration for sentence-splitting punctuation (like ',' and ':') as a percentage of the pause for sentence-ending puncation (like '.' and '!'). Setting this to 100% will make the pause the same length as for a period or exclamation mark.">Punctuation Pause Percentage:</label>
       <input type="range" id="pausePunctuationPercentageRange" min="1" max="100" value="40">
       <input type="number" id="pausePunctuationPercentageNumber" min="1" max="100" value="40">
     </div>
 
     <div class="toggle-switch">
       <input type="checkbox" id="manualMode">
-      <label for="manualMode" class="toggle-label"></label>
+      <label for="manualMode" class="toggle-label" title="Enable manual mode for reading. Press the left and right arrow keys to navigate the words. Press escape to exit the overlay."></label>
       <span class="label-text">Manual Mode</span>
     </div>
 
     <div class="toggle-switch">
       <input type="checkbox" id="highlightSelectedText">
-      <label for="highlightSelectedText" class="toggle-label"></label>
+      <label for="highlightSelectedText" class="toggle-label" title="Briefly highlight the selected text before reading, demonstrating what text has been selected."></label>
       <span class="label-text">Highlight Selected Text</span>
     </div>
     
     <div class="settings">
-      <button id="reset" style="display: block;">Reset Settings</button>
+      <button id="reset" style="display: block;" title="Reset all settings to default values.">Reset Settings</button>
     </div>
   </details>
 
   <div class="settings">
-    <button id="fullPage" style="display: block;">Read Full Page</button>
+    <button id="fullPage" style="display: block;" title="Start reading the full page.">Read Full Page</button>
   </div>
 
-  <button id="exit" style="display: block;">Exit</button>
+  <button id="exit" style="display: block;" title="Exit the Plugin.">Exit</button>
 
   <script src="popup.js"></script>
 </body>
 </html>
+
