@@ -10,12 +10,12 @@
  - M̶a̶k̶e̶ a̶ v̶i̶s̶i̶b̶l̶e̶ h̶i̶g̶h̶l̶i̶g̶h̶t̶ e̶f̶f̶e̶c̶t̶ o̶f̶ t̶h̶e̶ t̶e̶x̶t̶ y̶o̶u̶ a̶r̶e̶ r̶e̶a̶d̶i̶n̶g̶
  - i̶n̶t̶e̶l̶l̶i̶g̶e̶n̶t̶ R̶e̶a̶d̶ w̶h̶o̶l̶e̶ p̶a̶g̶e̶ m̶o̶d̶e̶, e̶x̶c̶l̶u̶d̶e̶s̶ i̶m̶a̶g̶e̶s̶ a̶n̶d̶ s̶o̶c̶i̶a̶l̶ m̶e̶d̶i̶a̶ a̶n̶d̶ l̶i̶n̶k̶s̶ e̶t̶c̶.
  - M̶a̶k̶e̶ m̶a̶n̶u̶a̶l̶ m̶o̶d̶e̶ a̶p̶p̶l̶y̶ t̶o̶ f̶u̶l̶l̶-̶p̶a̶g̶e̶ r̶e̶a̶d̶ o̶u̶t̶
- - Half puncutation flag rename, and make a second slider relating commas and fullstops
  - S̶l̶i̶d̶e̶r̶ s̶t̶o̶r̶a̶g̶e̶ s̶p̶e̶e̶d̶ c̶a̶p̶ O̶N̶L̶Y̶ a̶p̶p̶l̶i̶e̶d̶ t̶o̶ s̶t̶o̶r̶a̶g̶e̶, n̶o̶t̶ t̶o̶ v̶i̶s̶u̶a̶l̶s̶
  - F̶i̶x̶ m̶a̶n̶u̶a̶l̶ m̶o̶d̶e̶ s̶k̶i̶p̶p̶i̶n̶g̶ o̶v̶e̶r̶ e̶v̶e̶y̶ o̶t̶h̶e̶r̶ w̶o̶r̶d̶ w̶h̶e̶n̶ r̶a̶n̶ t̶w̶i̶c̶e̶
+ - A̶d̶d̶ ̶a̶ ̶c̶a̶n̶c̶e̶l̶ ̶b̶u̶t̶t̶o̶n̶ ̶w̶h̶i̶l̶e̶ ̶i̶t̶ ̶i̶s̶ ̶s̶t̶i̶l̶l̶ ̶r̶e̶a̶d̶i̶n̶g̶ ̶o̶u̶t̶
  - Fix any errors/ warnings that crop up in the chrome extensions manager thingy, even if they don't cause any issues
  - Add mini '?' next to each setting that people can hover over to see what certain settings do
-
+ - Half puncutation flag rename, and make a second slider relating commas and fullstops
 
  - Make a settings menu that has:
     - C̶h̶a̶n̶g̶i̶n̶g̶ ̶t̶e̶x̶t̶ ̶c̶o̶l̶o̶u̶r̶
@@ -28,5 +28,3 @@
     - C̶h̶o̶o̶s̶e̶ y̶o̶u̶r̶ o̶w̶n̶ f̶o̶n̶t̶
     - T̶u̶r̶n̶ o̶n̶/ o̶f̶f̶ h̶i̶g̶h̶l̶i̶g̶h̶t̶ m̶o̶d̶e̶
 
- - A̶d̶d̶ ̶a̶ ̶c̶a̶n̶c̶e̶l̶ ̶b̶u̶t̶t̶o̶n̶ ̶w̶h̶i̶l̶e̶ ̶i̶t̶ ̶i̶s̶ ̶s̶t̶i̶l̶l̶ ̶r̶e̶a̶d̶i̶n̶g̶ ̶o̶u̶t̶
- - Add TTS mode
