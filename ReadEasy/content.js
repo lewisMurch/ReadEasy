@@ -82,13 +82,24 @@ function showWord(speed, pausePunctuationLength, pausePunctuationPercentage) {
 
             if (!fixedSizeBackground) {
                 currentOverlay.style.width = 'auto';
-                currentOverlay.style.height = 'auto';
+                currentOverlay.style.height = 'auto'; // Ensure the height is reset
             }
+            
+            // Reattach the overlay to the DOM
+            document.body.appendChild(currentOverlay);
+            
+            // Trigger a reflow
+            currentOverlay.style.height = `${currentOverlay.scrollHeight*1.3}px`;
+
+            // Ensure text is vertically centered
+            currentOverlay.style.display = 'flex';
+            currentOverlay.style.alignItems = 'center';
+            currentOverlay.style.justifyContent = 'center';
 
             // Reattach the overlay to the DOM
             document.body.appendChild(currentOverlay);
 
-            // Trigger a reflow (not usually needed but just in case)
+            // Trigger a reflow 
             currentOverlay.offsetHeight;
 
             // Calculate the display duration for the current word
@@ -181,43 +192,59 @@ function displayWords(text, speed) {
   }
 
   chrome.storage.sync.get(['fixedSizeBackground', 'textSize', 'textColour', 'backgroundColour', 'overlayPosition', 'pausePunctuation', 'pausePunctuationLength', 'fontType', 'pausePunctuationPercentage'], function(result) {
-      fixedSizeBackground = result.fixedSizeBackground || false;
-      const textSize = result.textSize || '34px';  
-      const textColour = result.textColour || 'white';
-      const backgroundColour = result.backgroundColour || 'black';
-      const overlayPosition = result.overlayPosition || { top: '50%', left: '50%' };
-      pausePunctuation = result.pausePunctuation || false;
-      pausePunctuationLength = result.pausePunctuationLength || 4;
-      const fontType = result.fontType || "'Comic Sans MS', cursive";
-      pausePunctuationPercentage = result.pausePunctuationPercentage || 40;
+    fixedSizeBackground = result.fixedSizeBackground || false;
+    const textSize = result.textSize || '34px';  
+    const textColour = result.textColour || 'white';
+    const backgroundColour = result.backgroundColour || 'black';
+    const overlayPosition = result.overlayPosition || { top: '50%', left: '50%' };
+    pausePunctuation = result.pausePunctuation || false;
+    pausePunctuationLength = result.pausePunctuationLength || 4;
+    const fontType = result.fontType || "'Comic Sans MS', cursive";
+    pausePunctuationPercentage = result.pausePunctuationPercentage || 40;
 
-      currentOverlay.style.position = 'fixed';
-      currentOverlay.style.top = overlayPosition.top;
-      currentOverlay.style.left = overlayPosition.left;
-      currentOverlay.style.transform = 'translate(-50%, -50%)';
-      currentOverlay.style.backgroundColor = backgroundColour;
-      currentOverlay.style.color = textColour;
-      currentOverlay.style.padding = '10px';
-      currentOverlay.style.borderRadius = '5px';
-      currentOverlay.style.textAlign = 'center';
-      currentOverlay.style.fontFamily = fontType;
-      currentOverlay.style.fontSize = textSize + 'px';  
-      currentOverlay.style.whiteSpace = 'nowrap';
-      currentOverlay.style.cursor = 'move';
+    currentOverlay.style.position = 'fixed';
+    currentOverlay.style.top = overlayPosition.top;
+    currentOverlay.style.left = overlayPosition.left;
+    currentOverlay.style.transform = 'translate(-50%, -50%)';
+    currentOverlay.style.backgroundColor = backgroundColour;
+    currentOverlay.style.color = textColour;
+    currentOverlay.style.padding = '10px';
+    currentOverlay.style.borderRadius = '5px';
+    currentOverlay.style.textAlign = 'center';
+    currentOverlay.style.fontFamily = fontType;
+    currentOverlay.style.fontSize = textSize + 'px';  
+    currentOverlay.style.whiteSpace = 'nowrap';
+    currentOverlay.style.cursor = 'move';
 
-      if (fixedSizeBackground) {
-          const longestWord = words.reduce((longest, word) => word.length > longest.length ? word : longest, '');
-          currentOverlay.style.width = `${longestWord.length + 2}ch`;
-          currentOverlay.style.height = 'auto';
-      } else {
-          currentOverlay.style.width = 'auto';
-          currentOverlay.style.height = 'auto'; 
-      }
+    if (fixedSizeBackground) {
+        const longestWord = words.reduce((longest, word) => word.length > longest.length ? word : longest, '');
+        currentOverlay.style.width = `${longestWord.length + 2}ch`;
+        currentOverlay.style.height = 'auto';
+    } else {
+        currentOverlay.style.width = 'auto';
+        currentOverlay.style.height = 'auto'; 
+    }
+    // Reattach the overlay to the DOM
+    document.body.appendChild(currentOverlay);
 
-      makeDraggable(currentOverlay);
+    // Trigger a reflow
+    currentOverlay.style.height = `${currentOverlay.scrollHeight*1.3}px`;
 
-      // Start displaying words automatically
-      showWord(speed, pausePunctuationLength, pausePunctuationPercentage);
+    // Ensure text is vertically centered
+    currentOverlay.style.display = 'flex';
+    currentOverlay.style.alignItems = 'center';
+    currentOverlay.style.justifyContent = 'center';
+
+    // Reattach the overlay to the DOM
+    document.body.appendChild(currentOverlay);
+
+    // Trigger a reflow 
+    currentOverlay.offsetHeight;
+
+    makeDraggable(currentOverlay);
+
+    // Start displaying words automatically
+    showWord(speed, pausePunctuationLength, pausePunctuationPercentage);
   });
 
   document.addEventListener('keydown', (event) => {
@@ -254,8 +281,20 @@ function showWordManual() {
           currentOverlay.textContent = currentWord;  // Update with the current word
 
           if (!fixedSizeBackground) {
-              currentOverlay.style.width = 'auto';
+            currentOverlay.style.width = 'auto';
+            currentOverlay.style.height = 'auto';
           }
+
+        // Trigger a reflow
+        currentOverlay.style.height = `${currentOverlay.scrollHeight*1.3}px`;
+
+        // Ensure text is vertically centered
+        currentOverlay.style.display = 'flex';
+        currentOverlay.style.alignItems = 'center';
+        currentOverlay.style.justifyContent = 'center';
+
+        // Trigger a reflow 
+        currentOverlay.offsetHeight;
       }
   } else if (currentIndex >= words.length) {
       if (currentOverlay) {
@@ -328,41 +367,55 @@ function displayWordsManual(text) {
   }
 
   chrome.storage.sync.get(['fixedSizeBackground', 'textSize', 'textColour', 'backgroundColour', 'overlayPosition', 'fontType'], function(result) {
-      fixedSizeBackground = result.fixedSizeBackground || false;
-      const textSize = result.textSize || '34px';
-      const textColour = result.textColour || 'white';
-      const backgroundColour = result.backgroundColour || 'black';
-      const overlayPosition = result.overlayPosition || { top: '50%', left: '50%' };
-      const fontType = result.fontType || "'Comic Sans MS', cursive";
+    fixedSizeBackground = result.fixedSizeBackground || false;
+    const textSize = result.textSize || '34px';
+    const textColour = result.textColour || 'white';
+    const backgroundColour = result.backgroundColour || 'black';
+    const overlayPosition = result.overlayPosition || { top: '50%', left: '50%' };
+    const fontType = result.fontType || "'Comic Sans MS', cursive";
 
-      currentOverlay.style.position = 'fixed';
-      currentOverlay.style.top = overlayPosition.top;
-      currentOverlay.style.left = overlayPosition.left;
-      currentOverlay.style.transform = 'translate(-50%, -50%)';
-      currentOverlay.style.backgroundColor = backgroundColour;
-      currentOverlay.style.color = textColour;
-      currentOverlay.style.padding = '10px';
-      currentOverlay.style.borderRadius = '5px';
-      currentOverlay.style.textAlign = 'center';
-      currentOverlay.style.fontFamily = fontType;
-      currentOverlay.style.fontSize = textSize + 'px';
-      currentOverlay.style.whiteSpace = 'nowrap';
-      currentOverlay.style.cursor = 'move';
+    currentOverlay.style.position = 'fixed';
+    currentOverlay.style.top = overlayPosition.top;
+    currentOverlay.style.left = overlayPosition.left;
+    currentOverlay.style.transform = 'translate(-50%, -50%)';
+    currentOverlay.style.backgroundColor = backgroundColour;
+    currentOverlay.style.color = textColour;
+    currentOverlay.style.padding = '10px';
+    currentOverlay.style.borderRadius = '5px';
+    currentOverlay.style.textAlign = 'center';
+    currentOverlay.style.fontFamily = fontType;
+    currentOverlay.style.fontSize = textSize + 'px';
+    currentOverlay.style.whiteSpace = 'nowrap';
+    currentOverlay.style.cursor = 'move';
 
-      if (fixedSizeBackground) {
-          const longestWord = words.reduce((longest, word) => word.length > longest.length ? word : longest, '');
-          currentOverlay.style.width = `${longestWord.length + 2}ch`;
-      } else {
-          currentOverlay.style.width = 'auto';
-      }
+    if (fixedSizeBackground) {
+        const longestWord = words.reduce((longest, word) => word.length > longest.length ? word : longest, '');
+        currentOverlay.style.width = `${longestWord.length + 2}ch`;
+    } else {
+        currentOverlay.style.width = 'auto';
+        currentOverlay.style.height = 'auto';
+    }
 
-      makeDraggable(currentOverlay);
+    // Trigger a reflow
+    currentOverlay.style.height = `${currentOverlay.scrollHeight*1.3}px`;
 
-      // Display the first word
-      showWordManual();
 
-      document.removeEventListener('keydown', handleManualModeKeydown);  // Remove the previous listener if it exists
-      document.addEventListener('keydown', handleManualModeKeydown);  // Add the new listener
+    // Ensure text is vertically centered
+    currentOverlay.style.display = 'flex';
+    currentOverlay.style.alignItems = 'center';
+    currentOverlay.style.justifyContent = 'center';
+
+    // Trigger a reflow 
+    currentOverlay.offsetHeight;
+
+
+    makeDraggable(currentOverlay);
+
+    // Display the first word
+    showWordManual();
+
+    document.removeEventListener('keydown', handleManualModeKeydown);  // Remove the previous listener if it exists
+    document.addEventListener('keydown', handleManualModeKeydown);  // Add the new listener
 
   });
 }
