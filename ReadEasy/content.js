@@ -15,22 +15,24 @@ let pausePunctuationLength;
 let pausePunctuationPercentage;
 
 function handleManualModeKeydown(event) {
-    if (event.key === 'ArrowRight') {
-        if (currentIndex < words.length - 1) {
-            currentIndex++;
-            showWordManual();
-        }
-    } else if (event.key === 'ArrowLeft') {
-        if (currentIndex > 0) {
-            currentIndex--;
-            showWordManual();
-        }
-    } else if (event.key === 'Escape') {
-        stopDisplay = true;
-        clearTimeout(timeoutId);
-        if (currentOverlay) {
-            currentOverlay.remove();
-            currentOverlay = null;
+    if(manualMode == true){
+        if (event.key === 'ArrowRight') {
+            if (currentIndex < words.length - 1) {
+                currentIndex++;
+                showWordManual();
+            }
+        } else if (event.key === 'ArrowLeft') {
+            if (currentIndex > 0) {
+                currentIndex--;
+                showWordManual();
+            }
+        } else if (event.key === 'Escape') {
+            stopDisplay = true;
+            clearTimeout(timeoutId);
+            if (currentOverlay) {
+                currentOverlay.remove();
+                currentOverlay = null;
+            }
         }
     }
 }

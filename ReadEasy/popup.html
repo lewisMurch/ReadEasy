@@ -208,79 +208,106 @@
       margin-top: 15px; /* Add space between summary and first setting option */
     }
 
-/* Hide the default checkbox */
-.toggle-switch input[type="checkbox"] {
-  display: none;
-}
+    /* Hide the default checkbox */
+    .toggle-switch input[type="checkbox"] {
+      display: none;
+    }
 
-/* Container for each toggle switch and label */
-.toggle-switch {
-  display: flex;
-  align-items: center;
-  justify-content: flex-start; /* Align content to the left */
-  margin-bottom: 10px; /* Space between each toggle switch group */
-}
+    /* Container for each toggle switch and label */
+    .toggle-switch {
+      display: flex;
+      align-items: center;
+      justify-content: flex-start; /* Align content to the left */
+      margin-bottom: 10px; /* Space between each toggle switch group */
+    }
 
-/* The toggle switch itself */
-.toggle-switch .toggle-label {
-  position: relative;
-  cursor: pointer;
-  margin-right: 10px; /* Space between the toggle and the label text */
-  width: 40px;
-  height: 24px;
-  flex-shrink: 0; /* Prevent the toggle from shrinking */
-}
+    /* The toggle switch itself */
+    .toggle-switch .toggle-label {
+      position: relative;
+      cursor: pointer;
+      margin-right: 10px; /* Space between the toggle and the label text */
+      width: 40px;
+      height: 24px;
+      flex-shrink: 0; /* Prevent the toggle from shrinking */
+    }
 
-/* The background of the toggle switch */
-.toggle-switch .toggle-label::before {
-  content: '';
-  position: absolute;
-  left: 0;
-  top: 0;
-  width: 100%;
-  height: 100%;
-  background-color: #ccc;
-  border-radius: 12px;
-  transition: background-color 0.3s;
-}
+    /* The background of the toggle switch */
+    .toggle-switch .toggle-label::before {
+      content: '';
+      position: absolute;
+      left: 0;
+      top: 0;
+      width: 100%;
+      height: 100%;
+      background-color: #ccc;
+      border-radius: 12px;
+      transition: background-color 0.3s;
+    }
 
-/* The round slider inside the switch */
-.toggle-switch .toggle-label::after {
-  content: '';
-  position: absolute;
-  left: 4px;
-  top: 4px;
-  width: 16px;
-  height: 16px;
-  background-color: white;
-  border-radius: 50%;
-  transition: transform 0.3s;
-}
+    /* The round slider inside the switch */
+    .toggle-switch .toggle-label::after {
+      content: '';
+      position: absolute;
+      left: 4px;
+      top: 4px;
+      width: 16px;
+      height: 16px;
+      background-color: white;
+      border-radius: 50%;
+      transition: transform 0.3s;
+    }
 
-/* When the checkbox is checked, change the background and move the slider */
-.toggle-switch input[type="checkbox"]:checked + .toggle-label::before {
-  background-color: #4CAF50;
-}
+    /* When the checkbox is checked, change the background and move the slider */
+    .toggle-switch input[type="checkbox"]:checked + .toggle-label::before {
+      background-color: #4CAF50;
+    }
 
-.toggle-switch input[type="checkbox"]:checked + .toggle-label::after {
-  transform: translateX(16px);
-}
+    .toggle-switch input[type="checkbox"]:checked + .toggle-label::after {
+      transform: translateX(16px);
+    }
 
-/* Style for the label text */
-.toggle-switch .label-text {
-  flex-grow: 1; /* Allow the label text to take up remaining space */
-  white-space: nowrap; /* Prevent text from wrapping */
-  overflow: hidden; /* Hide overflow text */
-  text-overflow: ellipsis; /* Show ellipsis for overflow text */
-}
+    /* Style for the label text */
+    .toggle-switch .label-text {
+      flex-grow: 1; /* Allow the label text to take up remaining space */
+      white-space: nowrap; /* Prevent text from wrapping */
+      overflow: hidden; /* Hide overflow text */
+      text-overflow: ellipsis; /* Show ellipsis for overflow text */
+    }
 
-button#exit {
-  background-color: #d9534f; /* Change the background color to red */
-}
+    button#exit {
+      background-color: #d9534f; /* Change the background color to red */
+    }
 
-button#exit:hover {
-  background-color: #c9302c; /* Change the hover background color to a darker red */
-}
+    button#exit:hover {
+      background-color: #c9302c; /* Change the hover background color to a darker red */
+    }
+
+    /* Style for the donation buttons container */
+    .donation-buttons {
+      position: fixed;
+      bottom: 10px;
+      right: 10px;
+      display: flex;
+      gap: 10px; /* Space between the buttons */
+    }
+
+    /* Common button styles */
+    .donate-button {
+      background-color: #ff813f;
+      color: white;
+      padding: 5px 10px;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+      font-size: 12px;
+      text-decoration: none;
+      box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+      display: inline-block;
+    }
+
+    .paypal-button {
+      background-color: #0070ba;
+    }
 
 </style>
 </head>
@@ -379,6 +406,12 @@ button#exit:hover {
   </div>
 
   <button id="exit" style="display: block;" title="Exit the Plugin.">Exit</button>
+
+ <!-- Optional Donations -->
+  <div class="donation-buttons">
+    <a href="https://www.buymeacoffee.com/yourusername" target="_blank" class="donate-button" title="Support me with a coffee!">Buy me a coffee</a>
+    <a href="https://www.paypal.com/donate?hosted_button_id=yourbuttonid" target="_blank" class="donate-button paypal-button" title="Support me via PayPal!">Donate with PayPal</a>
+  </div>
 
   <script src="popup.js"></script>
 </body>
