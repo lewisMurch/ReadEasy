@@ -80,9 +80,13 @@ function showWord(speed, pausePunctuationLength, pausePunctuationPercentage) {
             // Update the overlay's text content
             currentOverlay.textContent = currentWord;
 
-            if (!fixedSizeBackground) {
+            if (fixedSizeBackground) {
+                const longestWord = words.reduce((longest, word) => word.length > longest.length ? word : longest, '');
+                currentOverlay.style.width = `${longestWord.length + 2}ch`;
+                currentOverlay.style.height = 'auto';
+            } else {
                 currentOverlay.style.width = 'auto';
-                currentOverlay.style.height = 'auto'; // Ensure the height is reset
+                currentOverlay.style.height = 'auto'; 
             }
             
             // Reattach the overlay to the DOM
@@ -276,14 +280,18 @@ function showWordManual() {
   if (currentIndex >= 0 && currentIndex < words.length) {
       const currentWord = words[currentIndex];
 
-      if (currentWord !== undefined) {
-          currentOverlay.textContent = '';  // Clear the overlay content before updating
-          currentOverlay.textContent = currentWord;  // Update with the current word
+        if (currentWord !== undefined) {
+            currentOverlay.textContent = '';  // Clear the overlay content before updating
+            currentOverlay.textContent = currentWord;  // Update with the current word
 
-          if (!fixedSizeBackground) {
+        if (fixedSizeBackground) {
+        const longestWord = words.reduce((longest, word) => word.length > longest.length ? word : longest, '');
+        currentOverlay.style.width = `${longestWord.length + 2}ch`;
+        currentOverlay.style.height = 'auto';
+        } else {
             currentOverlay.style.width = 'auto';
-            currentOverlay.style.height = 'auto';
-          }
+            currentOverlay.style.height = 'auto'; 
+        }
 
         // Trigger a reflow
         currentOverlay.style.height = `${currentOverlay.scrollHeight*1.3}px`;
@@ -391,14 +399,14 @@ function displayWordsManual(text) {
     if (fixedSizeBackground) {
         const longestWord = words.reduce((longest, word) => word.length > longest.length ? word : longest, '');
         currentOverlay.style.width = `${longestWord.length + 2}ch`;
+        currentOverlay.style.height = 'auto';
     } else {
         currentOverlay.style.width = 'auto';
-        currentOverlay.style.height = 'auto';
+        currentOverlay.style.height = 'auto'; 
     }
 
     // Trigger a reflow
     currentOverlay.style.height = `${currentOverlay.scrollHeight*1.3}px`;
-
 
     // Ensure text is vertically centered
     currentOverlay.style.display = 'flex';
