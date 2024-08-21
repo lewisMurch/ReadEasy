@@ -13,7 +13,7 @@
  - S̶l̶i̶d̶e̶r̶ s̶t̶o̶r̶a̶g̶e̶ s̶p̶e̶e̶d̶ c̶a̶p̶ O̶N̶L̶Y̶ a̶p̶p̶l̶i̶e̶d̶ t̶o̶ s̶t̶o̶r̶a̶g̶e̶, n̶o̶t̶ t̶o̶ v̶i̶s̶u̶a̶l̶s̶
  - F̶i̶x̶ m̶a̶n̶u̶a̶l̶ m̶o̶d̶e̶ s̶k̶i̶p̶p̶i̶n̶g̶ o̶v̶e̶r̶ e̶v̶e̶y̶ o̶t̶h̶e̶r̶ w̶o̶r̶d̶ w̶h̶e̶n̶ r̶a̶n̶ t̶w̶i̶c̶e̶
  - A̶d̶d̶ ̶a̶ ̶c̶a̶n̶c̶e̶l̶ ̶b̶u̶t̶t̶o̶n̶ ̶w̶h̶i̶l̶e̶ ̶i̶t̶ ̶i̶s̶ ̶s̶t̶i̶l̶l̶ ̶r̶e̶a̶d̶i̶n̶g̶ ̶o̶u̶t̶
- - Fix any errors/ warnings that crop up in the chrome extensions manager thingy, even if they don't cause any issues
+ - F̶i̶x̶ a̶n̶y̶ e̶r̶r̶o̶r̶s̶/ w̶a̶r̶n̶i̶n̶g̶s̶ t̶h̶a̶t̶ c̶r̶o̶p̶ u̶p̶ i̶n̶ t̶h̶e̶ c̶h̶r̶o̶m̶e̶ e̶x̶t̶e̶n̶s̶i̶o̶n̶s̶ m̶a̶n̶a̶g̶e̶r̶ t̶h̶i̶n̶g̶y̶, e̶v̶e̶n̶ i̶f̶ t̶h̶e̶y̶ d̶o̶n̶'t̶ c̶a̶u̶s̶e̶ a̶n̶y̶ i̶s̶s̶u̶e̶s̶
  - A̶d̶d̶ t̶o̶o̶l̶t̶i̶p̶s̶ f̶o̶r̶ e̶a̶c̶h̶ s̶e̶t̶t̶i̶n̶g̶ t̶h̶a̶t̶ p̶e̶o̶p̶l̶e̶ c̶a̶n̶ h̶o̶v̶e̶r̶ o̶v̶e̶r̶ t̶o̶ s̶e̶e̶ w̶h̶a̶t̶ c̶e̶r̶t̶a̶i̶n̶ s̶e̶t̶t̶i̶n̶g̶s̶ d̶o̶
  - M̶a̶k̶e̶ t̶o̶o̶l̶t̶i̶p̶s̶ o̶n̶ l̶a̶b̶e̶l̶ a̶s̶ w̶e̶l̶l̶ a̶s̶ t̶o̶g̶g̶l̶e̶ s̶w̶i̶t̶c̶h̶e̶s̶
  - try to break plugin to find errors
