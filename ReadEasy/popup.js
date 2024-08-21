@@ -14,7 +14,7 @@ function debounce(func, delay) {
 }
 
 document.addEventListener('DOMContentLoaded', () => {
-    chrome.storage.sync.get(['readingSpeed', 'fixedSizeBackground', 'textSize', 'textColour', 'backgroundColour', 'pausePunctuation', 'pausePunctuationLength', 'fontType', 'manualMode', 'highlightSelectedText'], (result) => { //1st storage change
+    chrome.storage.sync.get(['readingSpeed', 'fixedSizeBackground', 'textSize', 'textColour', 'backgroundColour', 'pausePunctuation', 'pausePunctuationLength', 'fontType', 'manualMode', 'highlightSelectedText', 'pausePunctuationPercentage'], (result) => { //1st storage change
 
         //2nd storage change
         const savedSpeed = result.readingSpeed || 4;
@@ -27,6 +27,7 @@ document.addEventListener('DOMContentLoaded', () => {
         const fontType = result.fontType || "'Comic Sans MS', cursive"
         const manualMode = result.manualMode || false
         const highlightSelectedText = result.highlightSelectedText !== undefined ? result.highlightSelectedText : true;
+        const pausePunctuationPercentage = result.pausePunctuationPercentage || 40;
 
 
         // Set the values for speed and text size elements //3rd storage change
@@ -43,12 +44,17 @@ document.addEventListener('DOMContentLoaded', () => {
         document.getElementById('fontChooser').value = fontType;
         document.getElementById('manualMode').checked = manualMode;
         document.getElementById('highlightSelectedText').checked = highlightSelectedText;
+        document.getElementById('pausePunctuationPercentageRange').value = pausePunctuationPercentage;
+        document.getElementById('pausePunctuationPercentageNumber').value = pausePunctuationPercentage;
         
+
         if(pausePunctuation == true){
             document.getElementById('pausePunctuationNumber').parentElement.style.display = 'block';
+            document.getElementById('pausePunctuationPercentageNumber').parentElement.style.display = 'block';
         }
         else{
             document.getElementById('pausePunctuationNumber').parentElement.style.display = 'none';
+            document.getElementById('pausePunctuationPercentageNumber').parentElement.style.display = 'none';
         }
 
         chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
@@ -85,6 +91,8 @@ document.addEventListener('DOMContentLoaded', () => {
     document.getElementById('fontChooser').addEventListener('input', updatefontType);
     document.getElementById('manualMode').addEventListener('change', updateManualMode);
     document.getElementById('highlightSelectedText').addEventListener('change', updateHighlightSelectedText);
+    document.getElementById('pausePunctuationPercentageRange').addEventListener('input', updatePausePunctuationPercentageLength);
+    document.getElementById('pausePunctuationPercentageNumber').addEventListener('input', updatePausePunctuationPercentageLength);
 });
 
 
@@ -248,9 +256,11 @@ function startSelectionMode(speed) {
 
         if(pausePunctuation == true){
             document.getElementById('pausePunctuationNumber').parentElement.style.display = 'block';
+            document.getElementById('pausePunctuationPercentageNumber').parentElement.style.display = 'block';
         }
         else{
             document.getElementById('pausePunctuationNumber').parentElement.style.display = 'none';
+            document.getElementById('pausePunctuationPercentageNumber').parentElement.style.display = 'none';
         }
 
         chrome.storage.sync.set({ pausePunctuation: pausePunctuation }); // Save the current state to storage
@@ -290,6 +300,22 @@ function startSelectionMode(speed) {
         document.getElementById('highlightSelectedText').checked = highlightSelectedText;
         chrome.storage.sync.set({ highlightSelectedText: highlightSelectedText }); // Save the current state to storage
     }
+
+
+    function updatePausePunctuationPercentageLength(event) {
+        const pausePunctuationPercentage = event.target.value;
+        document.getElementById('pausePunctuationPercentageRange').value = pausePunctuationPercentage;
+        document.getElementById('pausePunctuationPercentageNumber').value = pausePunctuationPercentage;
+
+        // Debounced save to storage
+        debounceSavePausePunctuationPercentageLength(pausePunctuationPercentage);
+    }
+    // Debounced functions for saving to storage
+    const debounceSavePausePunctuationPercentageLength = debounce((pausePunctuationPercentage) => {
+        chrome.storage.sync.set({ pausePunctuationPercentage: parseFloat(pausePunctuationPercentage) });
+    }, 100);
+    
+    
 //UPDATE FUNCTIONS ABOVE ^
 
 // Exit button
@@ -319,53 +345,58 @@ function endSelectionMode() {
 }
 
 // Reset settings button
-document.getElementById('reset').addEventListener('click', () => {
-    resetAllSettings();
-});
+    document.getElementById('reset').addEventListener('click', () => {
+        resetAllSettings();
+    });
 
-function resetAllSettings() {
-    console.log("Resetting settings"); // Debug output
-    //default values
-    const defaultSpeed = 4;
-    const defaultBackgroundColour = '#000000';
-    const defaultTextColour = '#FFFFFF';
-    const defaultTextSize = 34;
-    const defaultBackgroundSizeFlag = false;
-    const defaultOverlayPosition = 'auto';
-    const defaultPausePunctuation = false;
-    const defaultpausePunctuationLength = 4;
-    const defaultfontType = "'Comic Sans MS', cursive";
-    const defaultManualMode = false;
-    const defaultHighlightSelectedText = true;
-
-    chrome.storage.sync.set({ readingSpeed: parseFloat(defaultSpeed) });
-    chrome.storage.sync.set({ backgroundColour: defaultBackgroundColour });
-    chrome.storage.sync.set({ textColour: defaultTextColour });
-    chrome.storage.sync.set({ textSize: defaultTextSize });
-    chrome.storage.sync.set({ fixedSizeBackground: defaultBackgroundSizeFlag });
-    chrome.storage.sync.set({ overlayPosition: defaultOverlayPosition });
-    chrome.storage.sync.set({ pausePunctuation: defaultPausePunctuation });
-    chrome.storage.sync.set({ pausePunctuationLength: defaultpausePunctuationLength });
-    chrome.storage.sync.set({ fontType: defaultfontType });
-    chrome.storage.sync.set({ manualMode: defaultManualMode });
-    chrome.storage.sync.set({ highlightSelectedText: defaultHighlightSelectedText });
-
-    document.getElementById('speedRange').value = defaultSpeed;
-    document.getElementById('speedNumber').value = defaultSpeed;
-    document.getElementById('backgroundColour').value = defaultBackgroundColour;
-    document.getElementById('textColour').value = defaultTextColour;
-    document.getElementById('textSizeNumber').value = defaultTextSize;
-    document.getElementById('textSizeRange').value = defaultTextSize;
-    document.getElementById('fixedSizeBackgroundToggle').checked = defaultBackgroundSizeFlag;
-    document.getElementById('pausePunctuation').checked = defaultPausePunctuation;
-    document.getElementById('pausePunctuationRange').value = defaultpausePunctuationLength;
-    document.getElementById('pausePunctuationNumber').value = defaultpausePunctuationLength;
-    document.getElementById('pausePunctuationNumber').parentElement.style.display = 'none';
-    document.getElementById('manualMode').checked = defaultManualMode;
-    document.getElementById('highlightSelectedText').checked = defaultHighlightSelectedText;
-}
+    function resetAllSettings() {
+        console.log("Resetting settings"); // Debug output
+        //default values
+        const defaultSpeed = 4;
+        const defaultBackgroundColour = '#000000';
+        const defaultTextColour = '#FFFFFF';
+        const defaultTextSize = 34;
+        const defaultBackgroundSizeFlag = false;
+        const defaultOverlayPosition = 'auto';
+        const defaultPausePunctuation = false;
+        const defaultPausePunctuationLength = 4;
+        const defaultfontType = "'Comic Sans MS', cursive";
+        const defaultManualMode = false;
+        const defaultHighlightSelectedText = true;
+        const defaultPausePunctuationPercentage = 40;
 
 
+        chrome.storage.sync.set({ readingSpeed: parseFloat(defaultSpeed) });
+        chrome.storage.sync.set({ backgroundColour: defaultBackgroundColour });
+        chrome.storage.sync.set({ textColour: defaultTextColour });
+        chrome.storage.sync.set({ textSize: defaultTextSize });
+        chrome.storage.sync.set({ fixedSizeBackground: defaultBackgroundSizeFlag });
+        chrome.storage.sync.set({ overlayPosition: defaultOverlayPosition });
+        chrome.storage.sync.set({ pausePunctuation: defaultPausePunctuation });
+        chrome.storage.sync.set({ pausePunctuationLength: defaultPausePunctuationLength });
+        chrome.storage.sync.set({ fontType: defaultfontType });
+        chrome.storage.sync.set({ manualMode: defaultManualMode });
+        chrome.storage.sync.set({ highlightSelectedText: defaultHighlightSelectedText });
+        chrome.storage.sync.set({ pausePunctuationPercentage: defaultPausePunctuationPercentage });
+
+        
+        document.getElementById('speedRange').value = defaultSpeed;
+        document.getElementById('speedNumber').value = defaultSpeed;
+        document.getElementById('backgroundColour').value = defaultBackgroundColour;
+        document.getElementById('textColour').value = defaultTextColour;
+        document.getElementById('textSizeNumber').value = defaultTextSize;
+        document.getElementById('textSizeRange').value = defaultTextSize;
+        document.getElementById('fixedSizeBackgroundToggle').checked = defaultBackgroundSizeFlag;
+        document.getElementById('pausePunctuation').checked = defaultPausePunctuation;
+        document.getElementById('pausePunctuationRange').value = defaultPausePunctuationLength;
+        document.getElementById('pausePunctuationNumber').value = defaultPausePunctuationLength;
+        document.getElementById('pausePunctuationNumber').parentElement.style.display = 'none';
+        document.getElementById('manualMode').checked = defaultManualMode;
+        document.getElementById('highlightSelectedText').checked = defaultHighlightSelectedText;
+        document.getElementById('pausePunctuationPercentageRange').checked = defaultPausePunctuationPercentage;
+        document.getElementById('pausePunctuationPercentageNumber').checked = defaultPausePunctuationPercentage;
+    }
+// Reset settings button
 
 document.getElementById('fullPage').addEventListener('click', () => {
     chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {

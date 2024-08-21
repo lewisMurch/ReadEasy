@@ -12,7 +12,7 @@ let currentOverlay = null;  // Track the current overlay
 let fixedSizeBackground;
 let pausePunctuation;
 let pausePunctuationLength;
-let pausePunctuationPercentage = 30;
+let pausePunctuationPercentage;
 
 function handleManualModeKeydown(event) {
     if (event.key === 'ArrowRight') {
@@ -57,7 +57,7 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
   }
 });
 
-function showWord(speed, pausePunctuationLength) {
+function showWord(speed, pausePunctuationLength, pausePunctuationPercentage) {
     if (stopDisplay) {
         if (currentOverlay) {
             currentOverlay.remove();  // Remove the overlay if the display is stopped
@@ -105,7 +105,7 @@ function showWord(speed, pausePunctuationLength) {
             currentIndex++;
 
             // Set a timeout for the next word display based on the calculated display duration
-            timeoutId = setTimeout(() => showWord(speed, pausePunctuationLength), displayDuration);
+            timeoutId = setTimeout(() => showWord(speed, pausePunctuationLength, pausePunctuationPercentage), displayDuration);
             console.log(timeoutId);
 
             if (punctuationPauseDuration > 0) {
@@ -123,7 +123,6 @@ function showWord(speed, pausePunctuationLength) {
         }
     }
 }
-
 
 function displayWords(text, speed) {
   if (currentOverlay) {
@@ -181,15 +180,16 @@ function displayWords(text, speed) {
       }
   }
 
-  chrome.storage.sync.get(['fixedSizeBackground', 'textSize', 'textColour', 'backgroundColour', 'overlayPosition', 'pausePunctuation', 'pausePunctuationLength', 'fontType'], function(result) {
+  chrome.storage.sync.get(['fixedSizeBackground', 'textSize', 'textColour', 'backgroundColour', 'overlayPosition', 'pausePunctuation', 'pausePunctuationLength', 'fontType', 'pausePunctuationPercentage'], function(result) {
       fixedSizeBackground = result.fixedSizeBackground || false;
-      const textSize = result.textSize || '34px';  // Increase default text size
+      const textSize = result.textSize || '34px';  
       const textColour = result.textColour || 'white';
       const backgroundColour = result.backgroundColour || 'black';
       const overlayPosition = result.overlayPosition || { top: '50%', left: '50%' };
       pausePunctuation = result.pausePunctuation || false;
       pausePunctuationLength = result.pausePunctuationLength || 4;
       const fontType = result.fontType || "'Comic Sans MS', cursive";
+      pausePunctuationPercentage = result.pausePunctuationPercentage || 40;
 
       currentOverlay.style.position = 'fixed';
       currentOverlay.style.top = overlayPosition.top;
@@ -201,23 +201,23 @@ function displayWords(text, speed) {
       currentOverlay.style.borderRadius = '5px';
       currentOverlay.style.textAlign = 'center';
       currentOverlay.style.fontFamily = fontType;
-      currentOverlay.style.fontSize = textSize + 'px';  // Append 'px' to the text size
+      currentOverlay.style.fontSize = textSize + 'px';  
       currentOverlay.style.whiteSpace = 'nowrap';
       currentOverlay.style.cursor = 'move';
 
       if (fixedSizeBackground) {
           const longestWord = words.reduce((longest, word) => word.length > longest.length ? word : longest, '');
           currentOverlay.style.width = `${longestWord.length + 2}ch`;
-          currentOverlay.style.height = 'auto'; // Ensure height adjusts automatically
+          currentOverlay.style.height = 'auto';
       } else {
           currentOverlay.style.width = 'auto';
-          currentOverlay.style.height = 'auto'; // Ensure height adjusts automatically
+          currentOverlay.style.height = 'auto'; 
       }
 
       makeDraggable(currentOverlay);
 
       // Start displaying words automatically
-      showWord(speed, pausePunctuationLength);
+      showWord(speed, pausePunctuationLength, pausePunctuationPercentage);
   });
 
   document.addEventListener('keydown', (event) => {
