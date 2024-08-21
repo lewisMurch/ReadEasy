@@ -76,12 +76,12 @@ document.addEventListener('DOMContentLoaded', () => {
     document.getElementById('speedNumber').addEventListener('input', updateSpeed);
     document.getElementById('fixedSizeBackgroundToggle').addEventListener('change', updateBackgroundSize);
     document.getElementById('textSizeRange').addEventListener('input', updateTextSize);
-    document.getElementById('textSizeNumber').addEventListener('input', debounce(updateTextSize, 100));
-    document.getElementById('textColour').addEventListener('input', debounce(updateTextColour, 300));
-    document.getElementById('backgroundColour').addEventListener('input', debounce(updateBackgroundColour, 300));
+    document.getElementById('textSizeNumber').addEventListener('input', updateTextSize);
+    document.getElementById('textColour').addEventListener('input', updateTextColour);
+    document.getElementById('backgroundColour').addEventListener('input', updateBackgroundColour);
     document.getElementById('pausePunctuation').addEventListener('change', updatePausePunctuation);
-    document.getElementById('pausePunctuationRange').addEventListener('input', debounce(updatePausePunctuationLength, 100));
-    document.getElementById('pausePunctuationNumber').addEventListener('input', debounce(updatePausePunctuationLength, 100));
+    document.getElementById('pausePunctuationRange').addEventListener('input', updatePausePunctuationLength);
+    document.getElementById('pausePunctuationNumber').addEventListener('input', updatePausePunctuationLength);
     document.getElementById('fontChooser').addEventListener('input', updatefontType);
     document.getElementById('manualMode').addEventListener('change', updateManualMode);
     document.getElementById('highlightSelectedText').addEventListener('change', updateHighlightSelectedText);

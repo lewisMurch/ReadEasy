@@ -1,5 +1,5 @@
-let tempPause = false;
-let tempPauseShort = false;
+let fullPunctuationPause = false;
+let halfPunctuationPause = false;
 let timeoutId;  // To keep track of the timeout
 let paused = false;  // Flag to pause the display
 let stopDisplay = false;  // Flag to stop the display
@@ -12,6 +12,7 @@ let currentOverlay = null;  // Track the current overlay
 let fixedSizeBackground;
 let pausePunctuation;
 let pausePunctuationLength;
+let pausePunctuationPercentage = 30;
 
 function handleManualModeKeydown(event) {
     if (event.key === 'ArrowRight') {
@@ -57,74 +58,72 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
 });
 
 function showWord(speed, pausePunctuationLength) {
-  if (stopDisplay) {
-      if (currentOverlay) {
-          currentOverlay.remove();  // Remove the overlay if the display is stopped
-          currentOverlay = null;    // Reset the currentOverlay immediately
-      }
-      return;
-  }
-
-  if (paused) {
-      return;  // Do nothing if the display is paused
-  }
-
-  if (currentIndex < words.length) {
-      const currentWord = words[currentIndex];
-
-      if (currentWord !== undefined) {
-          // Temporarily remove the overlay from the DOM
-          document.body.removeChild(currentOverlay);
-
-          // Update the overlay's text content
-          currentOverlay.textContent = currentWord;
-
-          if (!fixedSizeBackground) {
-              currentOverlay.style.width = 'auto';
-              currentOverlay.style.height = 'auto';
-          }
-
-          // Reattach the overlay to the DOM
-          document.body.appendChild(currentOverlay);
-
-          // Trigger a reflow (not usually needed but just in case)
-          currentOverlay.offsetHeight;
-
-          // Check if the current word ends with punctuation before advancing the index
-          if (pausePunctuation && (currentWord.trim().endsWith('.') || currentWord.trim().endsWith('!'))) {
-            tempPause = true;
-          } else if (pausePunctuation && (currentWord.trim().endsWith(',') || currentWord.trim().endsWith(';') || currentWord.trim().endsWith(':') )) {
-            tempPauseShort = true;
-          }
-          currentIndex++;
-
-          timeoutId = setTimeout(() => showWord(speed, pausePunctuationLength), 1500 / Math.pow(speed, 1.65));
-
-          if (tempPause) {
-              pauseOverlay();
-              tempPause = false;
-              setTimeout(function () {
-                  console.log('pause over');
-                  playOverlay(speed);
-              }, 160 * pausePunctuationLength);  // Pause after displaying the punctuation word
-          }
-
-          if (tempPauseShort) {
-            pauseOverlay();
-            tempPauseShort = false;
-            setTimeout(function () {
-                console.log('pause over');
-                playOverlay(speed);
-            }, 66 * pausePunctuationLength);  // Pause after displaying the punctuation word
+    if (stopDisplay) {
+        if (currentOverlay) {
+            currentOverlay.remove();  // Remove the overlay if the display is stopped
+            currentOverlay = null;    // Reset the currentOverlay immediately
         }
-      }
-  } else {
-      if (currentOverlay) {
-          currentOverlay.remove();  // Ensure overlay is removed when done
-          currentOverlay = null;
-      }
-  }
+        return;
+    }
+
+    if (paused) {
+        return;  // Do nothing if the display is paused
+    }
+
+    if (currentIndex < words.length) {
+        const currentWord = words[currentIndex];
+
+        if (currentWord !== undefined) {
+            // Temporarily remove the overlay from the DOM
+            document.body.removeChild(currentOverlay);
+
+            // Update the overlay's text content
+            currentOverlay.textContent = currentWord;
+
+            if (!fixedSizeBackground) {
+                currentOverlay.style.width = 'auto';
+                currentOverlay.style.height = 'auto';
+            }
+
+            // Reattach the overlay to the DOM
+            document.body.appendChild(currentOverlay);
+
+            // Trigger a reflow (not usually needed but just in case)
+            currentOverlay.offsetHeight;
+
+            // Calculate the display duration for the current word
+            const displayDuration = 1500 / Math.pow(speed, 1.65);
+            let punctuationPauseDuration = 0;
+
+            // Check if the current word ends with punctuation before advancing the index
+            if (pausePunctuation && (currentWord.trim().endsWith('.') || currentWord.trim().endsWith('…') || currentWord.trim().endsWith('!') || currentWord.trim().endsWith('?'))) {
+                punctuationPauseDuration = Math.max(displayDuration, 160 * pausePunctuationLength);
+            } else if (pausePunctuation && (currentWord.trim().endsWith(',') || currentWord.trim().endsWith(';') || currentWord.trim().endsWith(':'))) {
+                punctuationPauseDuration = Math.max(displayDuration, ((160 * pausePunctuationLength) / 100) * pausePunctuationPercentage);
+            }
+
+            currentIndex++;
+
+            // Set a timeout for the next word display based on the calculated display duration
+            timeoutId = setTimeout(() => showWord(speed, pausePunctuationLength), displayDuration);
+            console.log(timeoutId);
+
+            if (punctuationPauseDuration > 0) {
+                pauseOverlay();
+                setTimeout(function () {
+                    console.log('pause over');
+                    playOverlay(speed);
+                }, punctuationPauseDuration);  // Pause after displaying a punctuation word
+            }
+        }
+    } else {
+        if (currentOverlay) {
+            currentOverlay.remove();  // Ensure overlay is removed when done
+            currentOverlay = null;
+        }
+    }
 }
+
 
 function displayWords(text, speed) {
   if (currentOverlay) {
@@ -134,7 +133,7 @@ function displayWords(text, speed) {
   // Reset global variables
   stopDisplay = false;
   paused = false;
-  tempPause = false;
+  fullPunctuationPause = false;
   currentIndex = 0;
 
   words = text.split(/\s+/);  // Split text into words
