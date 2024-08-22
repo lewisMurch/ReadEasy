@@ -1,7 +1,5 @@
 let isPopupClosed = false; // Flag to track if the popup has been closed
 
-
-
 // Debounce function to limit how often a function is executed
     function debounce(func, delay) {
         let timeoutId;
@@ -468,3 +466,17 @@ let isPopupClosed = false; // Flag to track if the popup has been closed
         });
     }
 //Full page stuff
+
+
+
+//Donation button logic
+    //Get the donation and settings dropdown objects and set them to constants
+    const donationDetails = document.querySelector('.donation-buttons');
+    const settingsDetails = document.querySelector('details');
+    //If the settings dropdown is opened, make the donation button visible
+    donationDetails.style.display = settingsDetails.open ? 'block' : 'none';
+    // Add an event listener for when the settings menu is opened, then make the donation button visible 
+    settingsDetails.addEventListener('toggle', () => {
+        donationDetails.style.display = settingsDetails.open ? 'block' : 'none';
+    });
+//Donation button logic
