@@ -400,7 +400,6 @@ let isPopupClosed = false; // Flag to track if the popup has been closed
 // Reset settings button
 
 
-
 //Full page stuff
     document.getElementById('fullPage').addEventListener('click', () => {
         chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
@@ -469,14 +468,77 @@ let isPopupClosed = false; // Flag to track if the popup has been closed
 
 
 
+
 //Donation button logic
-    //Get the donation and settings dropdown objects and set them to constants
+    // Get the donation, settings dropdown objects, and the buttons with IDs 'fullPage' and 'exit', and set them to constants
     const donationDetails = document.querySelector('.donation-buttons');
     const settingsDetails = document.querySelector('details');
-    //If the settings dropdown is opened, make the donation button visible
+    const fullPageButton = document.getElementById('fullPage');
+    const exitButton = document.getElementById('exit');
+
+    // If the settings dropdown is opened, make the donation button visible, hide 'fullPage' button, and move 'exit' button up
     donationDetails.style.display = settingsDetails.open ? 'block' : 'none';
-    // Add an event listener for when the settings menu is opened, then make the donation button visible 
+    fullPageButton.style.display = settingsDetails.open ? 'none' : 'block';
+    exitButton.style.transform = settingsDetails.open ? 'translateY(-20px)' : 'translateY(0)';
+
+    // Add an event listener for when the settings menu is opened
     settingsDetails.addEventListener('toggle', () => {
         donationDetails.style.display = settingsDetails.open ? 'block' : 'none';
+        fullPageButton.style.display = settingsDetails.open ? 'none' : 'block';
+        exitButton.style.transform = settingsDetails.open ? 'translateY(-20px)' : 'translateY(0)';
     });
 //Donation button logic
+
+
+
+
+document.getElementById('colorModeToggle').addEventListener('change', function() {
+    if (this.checked) {
+        // Enable dark mode
+        document.body.style.backgroundColor = '#141414';
+        document.body.style.color = 'white'; // Set all text to white
+
+        // Change all buttons, divs, labels, and .label-text to dark background and white text,
+        // except buttons with IDs 'reset' and 'exit'
+        document.querySelectorAll('button, div, label, .label-text').forEach(function(element) {
+            if (element.id !== 'reset' && element.id !== 'exit') {
+                element.style.backgroundColor = '#222222';
+                element.style.color = 'white';
+            }
+        });
+
+        // Ensure <h3> elements keep a black background and white text
+        document.querySelectorAll('h3').forEach(function(element) {
+            element.style.backgroundColor = '#141414';
+            element.style.color = 'white';
+        });
+
+        // Set 'reset' button container to black background
+        const resetButtonContainer = document.getElementById('reset').parentElement;
+        resetButtonContainer.style.backgroundColor = ' #141414';
+
+    } else {
+        // Revert to light mode
+        document.body.style.backgroundColor = 'white';
+        document.body.style.color = 'black'; // Set all text back to black
+
+        // Change all buttons, divs, labels, and .label-text to light background and black text,
+        // except buttons with IDs 'reset' and 'exit'
+        document.querySelectorAll('button, div, label, .label-text').forEach(function(element) {
+            if (element.id !== 'reset' && element.id !== 'exit' && element.id !== 'fullPage') {
+                element.style.backgroundColor = 'white';
+                element.style.color = 'black';
+            }
+        });
+
+        // Ensure <h3> elements revert to light mode
+        document.querySelectorAll('h3').forEach(function(element) {
+            element.style.backgroundColor = 'white';
+            element.style.color = 'black';
+        });
+
+        // Revert 'reset' button container to light mode
+        const resetButtonContainer = document.getElementById('reset').parentElement;
+        resetButtonContainer.style.backgroundColor = 'white';
+    }
+});

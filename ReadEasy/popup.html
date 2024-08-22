@@ -308,6 +308,46 @@
       background-color: #0070ba;
     }
 
+
+/* Style for the new toggle switch */
+#colorModeToggle + .toggle-label {
+  width: 50px;
+  height: 25px;
+  background-color: #ccc;
+  border-radius: 50px;
+  position: relative;
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+
+#colorModeToggle + .toggle-label::after {
+  content: '';
+  width: 20px;
+  height: 20px;
+  background-color: white;
+  border-radius: 50%;
+  position: absolute;
+  top: 50%;
+  left: 5px;
+  transform: translateY(-50%);
+  transition: left 0.3s;
+}
+
+#colorModeToggle:checked + .toggle-label {
+  background-color: #333;
+}
+
+#colorModeToggle:checked + .toggle-label::after {
+  left: 25px;
+}
+
+#colorModeToggle + .label-text {
+  margin-left: 10px;
+  font-size: 14px;
+  cursor: pointer;
+}
+
+
 </style>
 </head>
 <body>
@@ -395,6 +435,12 @@
       <span class="label-text" title="Briefly highlight the selected text before reading, demonstrating what text has been selected.">Highlight Selected Text</span>
     </div>
     
+    <div class="toggle-switch">
+      <input type="checkbox" id="colorModeToggle">
+      <label for="colorModeToggle" class="toggle-label"></label>
+      <span class="label-text">Dark Mode</span>
+    </div>
+    
     <div class="settings">
       <button id="reset" style="display: block;" title="Reset all settings to default values.">Reset Settings</button>
     </div>
@@ -406,7 +452,7 @@
 
   <button id="exit" style="display: block; margin-bottom: 10px;" title="Exit the Plugin.">Exit</button>
 
-  <!-- Optional Donation buttons: -->
+  <!-- Donation buttons: -->
   <details class="donation-buttons" style="width: 100%; margin-top: 30px; margin-bottom: 1px;">
     <summary>Donate</summary>
     <a href="https://www.buymeacoffee.com/lewism" target="_blank" class="donate-button" style="float: left; margin-right: 10px;" title="Support me with a coffee! Only donate if you have the money spare :D">Buy me a coffee</a>
@@ -417,4 +463,3 @@
   <script src="popup.js"></script>
 </body>
 </html>
-
