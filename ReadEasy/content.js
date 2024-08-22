@@ -95,7 +95,7 @@ function showWord(speed, pausePunctuationLength, pausePunctuationPercentage) {
             document.body.appendChild(currentOverlay);
             
             // Trigger a reflow
-            currentOverlay.style.height = `${currentOverlay.scrollHeight*1.3}px`;
+            currentOverlay.style.height = `${currentOverlay.scrollHeight*1.6}px`;
 
             // Ensure text is vertically centered
             currentOverlay.style.display = 'flex';
@@ -218,9 +218,15 @@ function displayWords(text, speed) {
     currentOverlay.style.borderRadius = '5px';
     currentOverlay.style.textAlign = 'center';
     currentOverlay.style.fontFamily = fontType;
-    currentOverlay.style.fontSize = textSize + 'px';  
+    currentOverlay.style.fontSize = textSize + 'px';
     currentOverlay.style.whiteSpace = 'nowrap';
     currentOverlay.style.cursor = 'move';
+    
+    // Override inherited styles
+    currentOverlay.style.lineHeight = '1';  // Normalize line height
+    currentOverlay.style.margin = '0';  // Remove any margin
+    currentOverlay.style.boxSizing = 'border-box';  // Include padding and border in the element's width and height
+    
 
     if (fixedSizeBackground) {
         const longestWord = words.reduce((longest, word) => word.length > longest.length ? word : longest, '');
@@ -233,8 +239,7 @@ function displayWords(text, speed) {
     // Reattach the overlay to the DOM
     document.body.appendChild(currentOverlay);
 
-    // Trigger a reflow
-    currentOverlay.style.height = `${currentOverlay.scrollHeight*1.3}px`;
+
 
     // Ensure text is vertically centered
     currentOverlay.style.display = 'flex';
@@ -286,17 +291,22 @@ function showWordManual() {
             currentOverlay.textContent = '';  // Clear the overlay content before updating
             currentOverlay.textContent = currentWord;  // Update with the current word
 
-        if (fixedSizeBackground) {
-        const longestWord = words.reduce((longest, word) => word.length > longest.length ? word : longest, '');
-        currentOverlay.style.width = `${longestWord.length + 2}ch`;
-        currentOverlay.style.height = 'auto';
-        } else {
-            currentOverlay.style.width = 'auto';
-            currentOverlay.style.height = 'auto'; 
-        }
+            if (fixedSizeBackground) {
+                const longestWord = words.reduce((longest, word) => word.length > longest.length ? word : longest, '');
+                currentOverlay.style.width = `${longestWord.length + 2}ch`;
+                currentOverlay.style.height = 'auto';
+            } else {
+                currentOverlay.style.width = 'auto';
+                currentOverlay.style.height = 'auto'; 
+            }
+            
+            // Override inherited styles
+            currentOverlay.style.lineHeight = '1';  // Normalize line height
+            currentOverlay.style.margin = '0';  // Remove any margin
+            currentOverlay.style.boxSizing = 'border-box';  // Include padding and border in the element's width and height
 
         // Trigger a reflow
-        currentOverlay.style.height = `${currentOverlay.scrollHeight*1.3}px`;
+        currentOverlay.style.height = `${currentOverlay.scrollHeight*1.6}px`;
 
         // Ensure text is vertically centered
         currentOverlay.style.display = 'flex';
@@ -397,6 +407,12 @@ function displayWordsManual(text) {
     currentOverlay.style.fontSize = textSize + 'px';
     currentOverlay.style.whiteSpace = 'nowrap';
     currentOverlay.style.cursor = 'move';
+    
+    // Override inherited styles
+    currentOverlay.style.lineHeight = '1';  // Normalize line height
+    currentOverlay.style.margin = '0';  // Remove any margin
+    currentOverlay.style.boxSizing = 'border-box';  // Include padding and border in the element's width and height
+    
 
     if (fixedSizeBackground) {
         const longestWord = words.reduce((longest, word) => word.length > longest.length ? word : longest, '');
@@ -406,9 +422,6 @@ function displayWordsManual(text) {
         currentOverlay.style.width = 'auto';
         currentOverlay.style.height = 'auto'; 
     }
-
-    // Trigger a reflow
-    currentOverlay.style.height = `${currentOverlay.scrollHeight*1.3}px`;
 
     // Ensure text is vertically centered
     currentOverlay.style.display = 'flex';
