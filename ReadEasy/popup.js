@@ -12,9 +12,95 @@ let isPopupClosed = false; // Flag to track if the popup has been closed
 
 
 
+//Darkmode logic
+function darkModeLogic(darkMode) {
+    const fontSelector = document.getElementById('fontChooser');
+    const resetButtonContainer = document.getElementById('reset').parentElement;
+    const fullPageButtonContainer = document.getElementById('fullPage').parentElement;
+    if (darkMode) {
+        // Enable dark mode
+        document.body.style.backgroundColor = '#141414';
+        document.body.style.color = 'white'; // Set all text to white
+
+        // Change all buttons, divs, labels, and .label-text to dark background and white text,
+        // except buttons with IDs 'reset' and 'exit'
+        document.querySelectorAll('button, div, label, .label-text').forEach(function(element) {
+            if (element.id !== 'reset' && element.id !== 'exit' && element.id !== 'fullPage') {
+                element.style.backgroundColor = '#222222';
+                element.style.color = 'white';
+            }
+        });
+
+        // Ensure <h3> elements keep a black background and white text
+        document.querySelectorAll('h3').forEach(function(element) {
+            element.style.backgroundColor = '#141414';
+            element.style.color = 'white';
+        });
+
+        // Set 'reset' and 'fullPage' button containers to black background
+        resetButtonContainer.style.backgroundColor = '#141414';
+        fullPageButtonContainer.style.backgroundColor = '#141414';
+
+        // Change font-selector to black background, white text, and grey border
+        if (fontSelector) {
+            fontSelector.style.backgroundColor = '#141414';
+            fontSelector.style.color = 'white';
+            fontSelector.style.border = '1px solid grey';
+        }
+
+        // Swap colors for number input fields (background black, text white, grey border)
+        document.querySelectorAll('input[type="number"]').forEach(function(input) {
+            input.style.backgroundColor = '#141414';
+            input.style.color = 'white';
+            input.style.border = '1px solid grey';
+        });
+
+    } else {
+        // Revert to light mode
+        document.body.style.backgroundColor = 'white';
+        document.body.style.color = 'black'; // Set all text back to black
+
+        // Change all buttons, divs, labels, and .label-text to light background and black text,
+        // except buttons with IDs 'reset' and 'exit'
+        document.querySelectorAll('button, div, label, .label-text').forEach(function(element) {
+            if (element.id !== 'reset' && element.id !== 'exit' && element.id !== 'fullPage') {
+                element.style.backgroundColor = 'white';
+                element.style.color = 'black';
+            }
+        });
+
+        // Ensure <h3> elements revert to light mode
+        document.querySelectorAll('h3').forEach(function(element) {
+            element.style.backgroundColor = 'white';
+            element.style.color = 'black';
+        });
+
+        // Revert 'reset' and 'fullPage' button containers to light background
+        resetButtonContainer.style.backgroundColor = 'white';
+        fullPageButtonContainer.style.backgroundColor = 'white';
+
+        // Change font-selector to white background, black text, and grey border
+        if (fontSelector) {
+            fontSelector.style.backgroundColor = 'white';
+            fontSelector.style.color = 'black';
+            fontSelector.style.border = '1px solid grey';
+        }
+
+        // Swap colors for number input fields (background white, text black, grey border)
+        document.querySelectorAll('input[type="number"]').forEach(function(input) {
+            input.style.backgroundColor = 'white';
+            input.style.color = 'black';
+            input.style.border = '1px solid grey';
+        });
+    }
+}
+//Darkmode logic
+
+
+
 //Main body
     document.addEventListener('DOMContentLoaded', () => {
-        chrome.storage.sync.get(['readingSpeed', 'fixedSizeBackground', 'textSize', 'textColour', 'backgroundColour', 'pausePunctuation', 'pausePunctuationLength', 'fontType', 'manualMode', 'highlightSelectedText', 'pausePunctuationPercentage'], (result) => { //1st storage change
+        chrome.storage.sync.get(['readingSpeed', 'fixedSizeBackground', 'textSize', 'textColour', 'backgroundColour', 'pausePunctuation', 'pausePunctuationLength', 'fontType', 'manualMode', 'highlightSelectedText', 'pausePunctuationPercentage', 'darkMode'], (result) => { //1st storage change
 
             //2nd storage change
             const savedSpeed = result.readingSpeed || 4;
@@ -28,6 +114,7 @@ let isPopupClosed = false; // Flag to track if the popup has been closed
             const manualMode = result.manualMode || false
             const highlightSelectedText = result.highlightSelectedText !== undefined ? result.highlightSelectedText : true;
             const pausePunctuationPercentage = result.pausePunctuationPercentage || 40;
+            const darkMode = result.darkMode || false;
 
 
             // Set the values for speed and text size elements //3rd storage change
@@ -46,6 +133,7 @@ let isPopupClosed = false; // Flag to track if the popup has been closed
             document.getElementById('highlightSelectedText').checked = highlightSelectedText;
             document.getElementById('pausePunctuationPercentageRange').value = pausePunctuationPercentage;
             document.getElementById('pausePunctuationPercentageNumber').value = pausePunctuationPercentage;
+            document.getElementById('colorModeToggle').checked = darkMode;
             
 
             if(pausePunctuation == true){
@@ -56,6 +144,8 @@ let isPopupClosed = false; // Flag to track if the popup has been closed
                 document.getElementById('pausePunctuationNumber').parentElement.style.display = 'none';
                 document.getElementById('pausePunctuationPercentageNumber').parentElement.style.display = 'none';
             }
+
+            darkModeLogic(darkMode);
 
             chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
                 chrome.scripting.executeScript({
@@ -93,6 +183,7 @@ let isPopupClosed = false; // Flag to track if the popup has been closed
         document.getElementById('highlightSelectedText').addEventListener('change', updateHighlightSelectedText);
         document.getElementById('pausePunctuationPercentageRange').addEventListener('input', updatePausePunctuationPercentageLength);
         document.getElementById('pausePunctuationPercentageNumber').addEventListener('input', updatePausePunctuationPercentageLength);
+        document.getElementById('colorModeToggle').addEventListener('change', updatedarkMode);
     });
 //Main body
 
@@ -300,6 +391,18 @@ let isPopupClosed = false; // Flag to track if the popup has been closed
         chrome.storage.sync.set({ highlightSelectedText: highlightSelectedText }); // Save the current state to storage
     }
 
+    function updatedarkMode(event){
+        const darkMode = event.target.checked; // Get the current state of the checkbox
+        document.getElementById('colorModeToggle').checked = darkMode;
+        chrome.storage.sync.set({ darkMode: darkMode }); // Save the current state to storage
+
+        chrome.storage.sync.get(['darkMode'], (result) => { //1st storage change
+            const darkMode = result.darkMode || false;
+            darkModeLogic(darkMode);
+        }
+        );
+    }
+
     function updatePausePunctuationPercentageLength(event) {
         const pausePunctuationPercentage = event.target.value;
         document.getElementById('pausePunctuationPercentageRange').value = pausePunctuationPercentage;
@@ -365,6 +468,7 @@ let isPopupClosed = false; // Flag to track if the popup has been closed
         const defaultManualMode = false;
         const defaultHighlightSelectedText = true;
         const defaultPausePunctuationPercentage = 40;
+        const defaultDarkMode = false;
 
 
         chrome.storage.sync.set({ readingSpeed: parseFloat(defaultSpeed) });
@@ -379,8 +483,9 @@ let isPopupClosed = false; // Flag to track if the popup has been closed
         chrome.storage.sync.set({ manualMode: defaultManualMode });
         chrome.storage.sync.set({ highlightSelectedText: defaultHighlightSelectedText });
         chrome.storage.sync.set({ pausePunctuationPercentage: defaultPausePunctuationPercentage });
+        chrome.storage.sync.set({ darkMode: defaultDarkMode });
 
-        
+
         document.getElementById('speedRange').value = defaultSpeed;
         document.getElementById('speedNumber').value = defaultSpeed;
         document.getElementById('backgroundColour').value = defaultBackgroundColour;
@@ -396,6 +501,13 @@ let isPopupClosed = false; // Flag to track if the popup has been closed
         document.getElementById('highlightSelectedText').checked = defaultHighlightSelectedText;
         document.getElementById('pausePunctuationPercentageRange').checked = defaultPausePunctuationPercentage;
         document.getElementById('pausePunctuationPercentageNumber').checked = defaultPausePunctuationPercentage;
+        document.getElementById('colorModeToggle').checked = defaultDarkMode;
+
+        chrome.storage.sync.get(['darkMode'], (result) => { //1st storage change
+            const darkMode = result.darkMode || false;
+            darkModeLogic(darkMode);
+        }
+        );
     }
 // Reset settings button
 
@@ -487,56 +599,3 @@ let isPopupClosed = false; // Flag to track if the popup has been closed
         exitButton.style.transform = settingsDetails.open ? 'translateY(-20px)' : 'translateY(0)';
     });
 //Donation button logic
-
-
-
-//Dark mode logic
-    document.getElementById('colorModeToggle').addEventListener('change', function() {
-        if (this.checked) {
-            // Enable dark mode
-            document.body.style.backgroundColor = '#141414';
-            document.body.style.color = 'white'; // Set all text to white
-
-            // Change all buttons, divs, labels, and .label-text to dark background and white text,
-            // except buttons with IDs 'reset' and 'exit'
-            document.querySelectorAll('button, div, label, .label-text').forEach(function(element) {
-                if (element.id !== 'reset' && element.id !== 'exit' && element.id !== 'fullPage') {
-                    element.style.backgroundColor = '#222222';
-                    element.style.color = 'white';
-                }
-            });
-
-            // Ensure <h3> elements keep a black background and white text
-            document.querySelectorAll('h3').forEach(function(element) {
-                element.style.backgroundColor = '#141414';
-                element.style.color = 'white';
-            });
-
-            // Set 'reset' button container to black background
-            const resetButtonContainer = document.getElementById('reset').parentElement;
-            const fullPageButtonContainer = document.getElementById('fullPage').parentElement;
-            resetButtonContainer.style.backgroundColor = ' #141414';
-            fullPageButtonContainer.style.backgroundColor = ' #141414';
-
-        } else {
-            // Revert to light mode
-            document.body.style.backgroundColor = 'white';
-            document.body.style.color = 'black'; // Set all text back to black
-
-            // Change all buttons, divs, labels, and .label-text to light background and black text,
-            // except buttons with IDs 'reset' and 'exit'
-            document.querySelectorAll('button, div, label, .label-text').forEach(function(element) {
-                if (element.id !== 'reset' && element.id !== 'exit' && element.id !== 'fullPage') {
-                    element.style.backgroundColor = 'white';
-                    element.style.color = 'black';
-                }
-            });
-
-            // Ensure <h3> elements revert to light mode
-            document.querySelectorAll('h3').forEach(function(element) {
-                element.style.backgroundColor = 'white';
-                element.style.color = 'black';
-            });
-        }
-    });
-//Dark mode logic
