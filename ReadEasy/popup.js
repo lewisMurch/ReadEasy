@@ -468,7 +468,6 @@ let isPopupClosed = false; // Flag to track if the popup has been closed
 
 
 
-
 //Donation button logic
     // Get the donation, settings dropdown objects, and the buttons with IDs 'fullPage' and 'exit', and set them to constants
     const donationDetails = document.querySelector('.donation-buttons');
@@ -491,54 +490,53 @@ let isPopupClosed = false; // Flag to track if the popup has been closed
 
 
 
+//Dark mode logic
+    document.getElementById('colorModeToggle').addEventListener('change', function() {
+        if (this.checked) {
+            // Enable dark mode
+            document.body.style.backgroundColor = '#141414';
+            document.body.style.color = 'white'; // Set all text to white
 
-document.getElementById('colorModeToggle').addEventListener('change', function() {
-    if (this.checked) {
-        // Enable dark mode
-        document.body.style.backgroundColor = '#141414';
-        document.body.style.color = 'white'; // Set all text to white
+            // Change all buttons, divs, labels, and .label-text to dark background and white text,
+            // except buttons with IDs 'reset' and 'exit'
+            document.querySelectorAll('button, div, label, .label-text').forEach(function(element) {
+                if (element.id !== 'reset' && element.id !== 'exit' && element.id !== 'fullPage') {
+                    element.style.backgroundColor = '#222222';
+                    element.style.color = 'white';
+                }
+            });
 
-        // Change all buttons, divs, labels, and .label-text to dark background and white text,
-        // except buttons with IDs 'reset' and 'exit'
-        document.querySelectorAll('button, div, label, .label-text').forEach(function(element) {
-            if (element.id !== 'reset' && element.id !== 'exit') {
-                element.style.backgroundColor = '#222222';
+            // Ensure <h3> elements keep a black background and white text
+            document.querySelectorAll('h3').forEach(function(element) {
+                element.style.backgroundColor = '#141414';
                 element.style.color = 'white';
-            }
-        });
+            });
 
-        // Ensure <h3> elements keep a black background and white text
-        document.querySelectorAll('h3').forEach(function(element) {
-            element.style.backgroundColor = '#141414';
-            element.style.color = 'white';
-        });
+            // Set 'reset' button container to black background
+            const resetButtonContainer = document.getElementById('reset').parentElement;
+            const fullPageButtonContainer = document.getElementById('fullPage').parentElement;
+            resetButtonContainer.style.backgroundColor = ' #141414';
+            fullPageButtonContainer.style.backgroundColor = ' #141414';
 
-        // Set 'reset' button container to black background
-        const resetButtonContainer = document.getElementById('reset').parentElement;
-        resetButtonContainer.style.backgroundColor = ' #141414';
+        } else {
+            // Revert to light mode
+            document.body.style.backgroundColor = 'white';
+            document.body.style.color = 'black'; // Set all text back to black
 
-    } else {
-        // Revert to light mode
-        document.body.style.backgroundColor = 'white';
-        document.body.style.color = 'black'; // Set all text back to black
+            // Change all buttons, divs, labels, and .label-text to light background and black text,
+            // except buttons with IDs 'reset' and 'exit'
+            document.querySelectorAll('button, div, label, .label-text').forEach(function(element) {
+                if (element.id !== 'reset' && element.id !== 'exit' && element.id !== 'fullPage') {
+                    element.style.backgroundColor = 'white';
+                    element.style.color = 'black';
+                }
+            });
 
-        // Change all buttons, divs, labels, and .label-text to light background and black text,
-        // except buttons with IDs 'reset' and 'exit'
-        document.querySelectorAll('button, div, label, .label-text').forEach(function(element) {
-            if (element.id !== 'reset' && element.id !== 'exit' && element.id !== 'fullPage') {
+            // Ensure <h3> elements revert to light mode
+            document.querySelectorAll('h3').forEach(function(element) {
                 element.style.backgroundColor = 'white';
                 element.style.color = 'black';
-            }
-        });
-
-        // Ensure <h3> elements revert to light mode
-        document.querySelectorAll('h3').forEach(function(element) {
-            element.style.backgroundColor = 'white';
-            element.style.color = 'black';
-        });
-
-        // Revert 'reset' button container to light mode
-        const resetButtonContainer = document.getElementById('reset').parentElement;
-        resetButtonContainer.style.backgroundColor = 'white';
-    }
-});
+            });
+        }
+    });
+//Dark mode logic
